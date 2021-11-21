@@ -1,9 +1,12 @@
+import { myDB } from './assets/db/myDB'
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'personal_portfolio_website',
+    title: "Yousef Roshandel",
+    description: "Yousef Roshandel's personal website",
     htmlAttrs: {
-      lang: 'en'
+      lang: 'fa'
     },
     meta: [
       { charset: 'utf-8' },
@@ -31,6 +34,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    "@nuxtjs/style-resources"
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -89,9 +93,35 @@ export default {
           ]
         },
       ]
-    }]
+    }],
+
+    '@nuxtjs/i18n',
 
   ],
+
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US'
+      },
+      {
+        code: 'fa',
+        iso: 'fa-FA'
+      },
+    ],
+    defaultLocale: 'fa',
+    vueI18n: {
+      fallbackLocale: 'fa',
+      ...myDB
+    },
+    baseUrl: 'https://yrlp.ir'
+  },
+
+  // module settings
+  styleResources: {
+    scss: ["@/assets/css/query.scss"],
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

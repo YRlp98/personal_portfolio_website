@@ -1,0 +1,31 @@
+// Tablet: (min-width: 601px) and (max-width: 768px)
+// Desktop: (min-width: 768px),
+
+$breakPoints: (
+    xm: 100px,
+    sm: 576px,
+    md: 768px, // Tablet
+    lg-2: 900px,
+    lg: 992px,
+    xl: 1280px, // Desktop
+    xl-2: 1400px,
+);
+
+// Use Media Queries
+@mixin mediaQueryMinMax($min, $max) {
+    @media (min-width: map-get($breakPoints, $min)) and (max-width: map-get($breakPoints, $max)) {
+        @content;
+    }
+}
+
+@mixin mediaQueryMin($min) {
+    @media (min-width: map-get($breakPoints, $min)) {
+        @content;
+    }
+}
+
+@mixin mediaQueryMax($max) {
+    @media (max-width: map-get($breakPoints, $max)) {
+        @content;
+    }
+}
