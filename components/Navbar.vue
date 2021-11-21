@@ -26,11 +26,6 @@
 <script>
 export default {
   name: "Navbar",
-  data() {
-    return {
-      activeLocale: "en",
-    };
-  },
 };
 </script>
 
@@ -85,24 +80,23 @@ export default {
         }
       }
     }
+
+    .navbar-more {
+      display: flex;
+      cursor: pointer;
+    }
   }
 }
 
 // Desktop
 @include mediaQueryMin("xl") {
   .navbar-container {
-    background-color: #ffbbbb;
     .navbar-items {
       display: flex;
 
       li {
         left: 100;
       }
-    }
-
-    .navbar-more {
-      display: flex;
-      cursor: pointer;
     }
   }
 }

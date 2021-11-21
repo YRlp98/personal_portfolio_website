@@ -27,6 +27,16 @@
     padding: 0;
     margin: 0;
     border: 0;
+    *::after {
+        padding: 0;
+        margin: 0;
+        border: 0;
+    }
+    *::before {
+        padding: 0;
+        margin: 0;
+        border: 0;
+    }
 }
 
 html,
@@ -34,7 +44,7 @@ body {
     box-sizing: border-box;
     overflow-x: hidden !important;
     overflow-y: auto;
-    font-family: "eydaWeb-Regular", "Courier New", Courier, monospace;
+    font-family: "PeydaWeb-Regular", "Courier New", Courier, monospace;
     color: var(--white-1);
     background: var(--gray-2);
 

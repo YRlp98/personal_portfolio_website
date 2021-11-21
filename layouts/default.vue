@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <NavbarMobile />
     <Navbar />
     <Nuxt />
@@ -14,6 +14,11 @@ export default {
   components: {
     NavbarMobile,
     Navbar,
+  },
+  data() {
+    return {
+      activeLocale: "fa",
+    };
   },
 };
 </script>
