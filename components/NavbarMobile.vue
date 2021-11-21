@@ -41,6 +41,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.hamburger-menu {
+  position: absolute;
+}
+
 #menu__toggle {
   opacity: 0;
 }
