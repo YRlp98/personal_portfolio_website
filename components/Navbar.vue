@@ -45,10 +45,15 @@ export default {
 @include mediaQueryMin("md") {
   .navbar-container {
     display: flex;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    left: 20px;
+    width: 768px;
+    margin: 0 auto;
     align-items: center;
     justify-content: space-between;
-    margin-top: 30px;
-    background-color: brown;
+    background-color: transparent;
 
     .navbar-items {
       display: flex;
@@ -91,6 +96,8 @@ export default {
 // Desktop
 @include mediaQueryMin("xl") {
   .navbar-container {
+    width: 1280px;
+
     .navbar-items {
       display: flex;
 

@@ -15,7 +15,6 @@ export default {};
 
 <style lang="scss" scoped>
 .heroSection-container {
-  background-color: royalblue;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -31,14 +30,12 @@ export default {};
       font-size: 50px;
       font-weight: normal;
       color: white;
-      word-spacing: -10px;
     }
 
     h2 {
       padding-top: 20px;
       font-size: 24px;
       color: var(--green-1);
-      word-spacing: -5px;
     }
   }
 }

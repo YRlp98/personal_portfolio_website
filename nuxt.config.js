@@ -46,7 +46,7 @@ export default {
       fonts: [
         // Font PeydaWeb
         {
-          fileExtensions: ['ttf'],
+          fileExtensions: ['woff2', 'woff'],
           fontFamily: 'PeydaWeb',
           fontFaces: [
             // PeydaWeb-Black
