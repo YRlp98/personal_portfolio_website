@@ -1,8 +1,11 @@
 <template>
   <nav class="navbar-container">
-    <span class="navbar-more">
+    <span class="navbar-more" @click="isOpen = !isOpen">
       <img src="~assets/images/icons/more.svg" alt="" />
     </span>
+    <transition name="fade" appear>
+      <SettingsMenu class="settingsMenu" v-if="isOpen" />
+    </transition>
     <ul class="navbar-items">
       <li>
         <nuxt-link to="/">{{ $t("navbarHome") }}</nuxt-link>
@@ -24,8 +27,18 @@
 </template>
 
 <script>
+import SettingsMenu from "./SettingsMenu.vue";
+
 export default {
   name: "Navbar",
+  components: {
+    SettingsMenu,
+  },
+  data() {
+    return {
+      isOpen: false,
+    };
+  },
 };
 </script>
 
@@ -54,6 +67,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     background-color: transparent;
+    z-index: 99;
 
     .navbar-items {
       display: flex;
@@ -89,6 +103,20 @@ export default {
     .navbar-more {
       display: flex;
       cursor: pointer;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: all 0.5s ease-out;
+    }
+
+    .fade-enter,
+    .fade-leave-active {
+      opacity: 0;
+    }
+
+    .settingsMenu {
+      top: 30px;
     }
   }
 }

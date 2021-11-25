@@ -23,7 +23,7 @@
       </li>
 
       <div class="settings-menu">
-        <SettingsMenu />
+        <SettingsMenu class="settingsMenu" />
       </div>
     </ul>
   </div>
@@ -43,6 +43,11 @@ export default {
 <style lang="scss" scoped>
 .hamburger-menu {
   position: absolute;
+  z-index: 99;
+
+  .settingsMenu {
+    top: 65px;
+  }
 }
 
 #menu__toggle {

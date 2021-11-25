@@ -1,41 +1,57 @@
 <template>
-  <div class="heroSection-container">
-    <div class="heroSection-welcome">
-      <h1>{{ $t("homePageHello") }}</h1>
-      <h1>{{ $t("homePageName") }}</h1>
-      <h2>{{ $t("homePageJobTitleP1") }}</h2>
-      <h2>{{ $t("homePageJobTitleP2") }}</h2>
+  <div class="index-container">
+    <HeroSection class="heroSection" />
+    <div class="aboutMe-container">
+      <WaveBackground class="waveBackground" />
+      <div class="aboutMe defualt-margin">
+        <h1>Test title...</h1>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia,
+          corrupti esse, ex exercitationem distinctio mollitia voluptas atque
+          doloribus labore illum sequi molestias voluptatibus repellat, ut a
+          quae modi eveniet reiciendis.
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import HeroSection from "../components/pages/home/HeroSection.vue";
+import WaveBackground from "../components/backgrounds/WaveBackground";
+
+export default {
+  components: {
+    HeroSection,
+    WaveBackground,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.heroSection-container {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  direction: rtl;
-  top: 0;
+.index-container {
+  position: relative;
+  overflow: hidden;
+}
 
-  .heroSection-welcome {
-    padding-top: 150px;
+.aboutMe-container {
+  position: relative;
 
-    h1 {
-      font-size: 50px;
-      font-weight: normal;
-      color: white;
-    }
+  .waveBackground {
+    top: -200px;
+  }
 
-    h2 {
-      padding-top: 20px;
-      font-size: 24px;
-      color: var(--green-1);
+  .aboutMe {
+    margin-top: 50px;
+    background-color: red;
+  }
+
+  // Tablet
+  @include mediaQueryMin("md") {
+    margin-top: 150px;
+
+    .waveBackground {
+      top: -310px;
     }
   }
 }

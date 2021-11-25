@@ -50,6 +50,27 @@ export default {
   name: "SettingsMenu",
   data() {
     return {
+      // themes: [
+      //   {
+      //     title: "Dark Mode",
+      //     isDark: true,
+      //   },
+      //   {
+      //     title: "Light Mode",
+      //     isDark: false,
+      //   },
+      // ],
+      // languages: [
+      //   {
+      //     title: "Farsi",
+      //     isFarsi: true,
+      //   },
+      //   {
+      //     title: "English",
+      //     isFarsi: false,
+      //   },
+      // ],
+
       isDark: true,
       isFarsi: true,
     };
@@ -68,7 +89,6 @@ export default {
 <style lang="scss" scoped>
 .settings-menu-container {
   position: absolute;
-  top: 65px;
   display: flex;
   flex-direction: column;
   width: 215px;

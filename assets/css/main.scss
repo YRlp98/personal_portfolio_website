@@ -49,20 +49,20 @@ body {
     background: var(--gray-2);
 
     // Mobile
-    .container {
+    .defualt-margin {
         margin: 0 1.5rem;
     }
 
     // Tablet
     @include mediaQueryMin("md") {
-        .container {
+        .defualt-margin {
             margin: 0 1.5rem;
         }
     }
 
     // Desktop
     @include mediaQueryMin("xl") {
-        .container {
+        .defualt-margin {
             margin: 0 20rem;
         }
     }

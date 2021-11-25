@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="defualt-container">
     <NavbarMobile />
     <Navbar />
     <Nuxt />
