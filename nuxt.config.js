@@ -69,7 +69,7 @@ export default {
               localSrc: ['PeydaWeb-ExtraBold'],
               src: '@/assets/fonts/PeydaWeb-ExtraBold',
               fontWeight: 'ExtraBold',
-              fontStyle: 'normal'
+              fontStyle: 'normal',
             },
             // PeydaWeb-Medium
             {

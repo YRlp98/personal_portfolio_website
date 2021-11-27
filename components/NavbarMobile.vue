@@ -43,7 +43,7 @@ export default {
 <style lang="scss" scoped>
 .hamburger-menu {
   position: absolute;
-  z-index: 99;
+  z-index: 999;
 
   .settingsMenu {
     top: 65px;

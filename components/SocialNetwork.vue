@@ -1,0 +1,58 @@
+<template>
+  <div class="socialNetwork-container">
+    <div class="items">
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/linkedin.svg" alt="LinkedIn"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/github.svg" alt="GitHub"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/dribbble.svg" alt="Dribble"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/youtube.svg" alt="Youtube"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/twitter.svg" alt="Twitter"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/facebook.svg" alt="Facebook"
+      /></a>
+      <a href="https://www.linkedin.com/in/yrlp98/" target="_blank">
+        <img src="../assets/images/icons/instagram.svg" alt="Instagram"
+      /></a>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "SocialNetwork",
+};
+</script>
+
+<style lang="scss" scoped>
+.socialNetwork-container {
+  .items {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    direction: ltr;
+
+    a {
+      margin-right: 20px;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+</style>

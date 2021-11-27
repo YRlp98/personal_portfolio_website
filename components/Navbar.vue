@@ -67,7 +67,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     background-color: transparent;
-    z-index: 99;
+    z-index: 999;
 
     .navbar-items {
       display: flex;

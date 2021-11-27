@@ -14,7 +14,7 @@ export default {
   z-index: 100;
   height: 200px;
   width: 100%;
-  background: url("../../assets/images/wave3.svg");
+  background: url("../../assets/images/wave2.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }

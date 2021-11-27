@@ -95,6 +95,7 @@ export default {
   background: var(--gray-3);
   border-radius: 5px;
   padding: 20px 20px;
+  z-index: 999;
 
   ul {
     list-style: none;

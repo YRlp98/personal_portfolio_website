@@ -3,15 +3,7 @@
     <HeroSection class="heroSection" />
     <div class="aboutMe-container">
       <WaveBackground class="waveBackground" />
-      <div class="aboutMe defualt-margin">
-        <h1>Test title...</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia,
-          corrupti esse, ex exercitationem distinctio mollitia voluptas atque
-          doloribus labore illum sequi molestias voluptatibus repellat, ut a
-          quae modi eveniet reiciendis.
-        </p>
-      </div>
+      <AboutMe class="defualt-margin" />
     </div>
   </div>
 </template>
@@ -19,11 +11,13 @@
 <script>
 import HeroSection from "../components/pages/home/HeroSection.vue";
 import WaveBackground from "../components/backgrounds/WaveBackground";
+import AboutMe from "../components/pages/home/AboutMe.vue";
 
 export default {
   components: {
     HeroSection,
     WaveBackground,
+    AboutMe,
   },
 };
 </script>
@@ -40,14 +34,11 @@ export default {
   .waveBackground {
     top: -200px;
   }
+}
 
-  .aboutMe {
-    margin-top: 50px;
-    background-color: red;
-  }
-
-  // Tablet
-  @include mediaQueryMin("md") {
+// Tablet
+@include mediaQueryMin("md") {
+  .aboutMe-container {
     margin-top: 150px;
 
     .waveBackground {
