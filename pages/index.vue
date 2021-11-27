@@ -5,6 +5,9 @@
       <WaveBackground class="waveBackground" />
       <AboutMe class="defualt-margin" />
     </div>
+    <div class="defualt-margin education-container">
+      <Education />
+    </div>
   </div>
 </template>
 
@@ -12,12 +15,14 @@
 import HeroSection from "../components/pages/home/HeroSection.vue";
 import WaveBackground from "../components/backgrounds/WaveBackground";
 import AboutMe from "../components/pages/home/AboutMe.vue";
+import Education from "../components/pages/home/Education.vue";
 
 export default {
   components: {
     HeroSection,
     WaveBackground,
     AboutMe,
+    Education,
   },
 };
 </script>
@@ -36,6 +41,11 @@ export default {
   }
 }
 
+.education-container {
+  position: relative;
+  margin-top: 150px;
+}
+
 // Tablet
 @include mediaQueryMin("md") {
   .aboutMe-container {
@@ -44,6 +54,10 @@ export default {
     .waveBackground {
       top: -310px;
     }
+  }
+  .education-container {
+    position: relative;
+    margin-top: 250px;
   }
 }
 </style>
