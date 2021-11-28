@@ -8,6 +8,9 @@
     <div class="defualt-margin education-container">
       <Education />
     </div>
+    <div class="defualt-margin experience-container">
+      <Experience />
+    </div>
   </div>
 </template>
 
@@ -16,6 +19,7 @@ import HeroSection from "../components/pages/home/HeroSection.vue";
 import WaveBackground from "../components/backgrounds/WaveBackground";
 import AboutMe from "../components/pages/home/AboutMe.vue";
 import Education from "../components/pages/home/Education.vue";
+import Experience from "../components/pages/home/Experience.vue";
 
 export default {
   components: {
@@ -23,6 +27,7 @@ export default {
     WaveBackground,
     AboutMe,
     Education,
+    Experience,
   },
 };
 </script>
@@ -43,6 +48,10 @@ export default {
 
 .education-container {
   position: relative;
+  margin-top: 150px;
+}
+
+.experience-container {
   margin-top: 150px;
 }
 

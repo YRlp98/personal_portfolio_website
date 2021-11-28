@@ -88,6 +88,8 @@ export default {
 // Tablet
 @include mediaQueryMin("md") {
   .aboutMe-container {
+    position: relative;
+
     .aboutMe-title {
       position: absolute;
       top: 40px;
@@ -104,20 +106,15 @@ export default {
       margin-right: 90px;
     }
 
+    .socialNetwork {
+      z-index: 99;
+    }
+
     .titleBackground {
       top: 40px;
       left: 0;
       transform: rotate(0deg);
     }
-  }
-}
-
-// Desktop
-@include mediaQueryMin("xl") {
-  .socialNetwork {
-    position: absolute;
-    left: 0;
-    bottom: 0;
   }
 }
 </style>

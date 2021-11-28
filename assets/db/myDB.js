@@ -6,6 +6,15 @@ export const myDB = {
             emailAddress: "Yousef.r1999@gmail.com",
             telegramId: "YRlp98@",
             education: "تحصیلات",
+            experience: "تجربیات",
+            xeniac: 'زنیاک',
+            xeniacDesc: 'تیم طراحی و توسعه نرم‌فزار',
+            samArea: 'سام‌آرنا',
+            samAreaDesc: 'وب‌سایت خبری و رام‌سنتر سامسونگ',
+            toranji: 'ترنجی',
+            toranjiDesc: 'وب‌سایت خبری ترنجی',
+            cafeDL: 'کافه دانلود',
+            cafeDLDesc: 'مرکز دانلود و آموزش',
 
             // Navbar
             navbarHome: 'صفحه اصلی',
@@ -28,9 +37,25 @@ export const myDB = {
 
             // HomePage - Education
             homePageEducationAssociate: 'کاردانی مهندسی تکنولوژی نرم افزار',
-            homePageEducationAssociateDate: "مهر ۱۳۹۵ تا بهمن ۱۳۹۷",
+            homePageEducationAssociateDate: "مهر ۱۳۹۵ - بهمن ۱۳۹۷",
             homePageEducationBachelor: 'کارشناسی مهندسی نرم افزار',
-            homePageEducationBachelorDate: "مهر ۱۳۹۷ تا بهمن ۱۴۰۰",
+            homePageEducationBachelorDate: "مهر ۱۳۹۷ - بهمن ۱۴۰۰",
+
+            // HomePage - Experience
+            HomePageExperienceMain: "تخصصی",
+            HomePageExperiencXeniacFrontEnd: "توسعه‌دهنده فرانت-اند",
+            HomePageExperiencXeniacFrontEndDate: "فروردین ۱۴۰۰ - هم‌اکنون",
+            HomePageExperiencXeniacUIUX: "طراح رابط/تجربه کاربری",
+            HomePageExperiencXeniacUIUXDate: "آبان ۱۳۹۷ - هم‌اکنون",
+            HomePageExperiencXeniacMobile: "توسعه‌دهنده نرم‌افزار موبایل",
+            HomePageExperiencXeniacMobileDate: "آبان ۱۳۹۷ تا فروردین ۱۴۰۰",
+            HomePageExperienceOther: "متفرقه",
+            HomePageExperiencSamArena: "مدیریت بخش رام‌سنتر",
+            HomePageExperiencSamArenaDate: "آبان ۱۳۹۷ - اردیبهشت ۱۳۹۸",
+            HomePageExperiencToranji: "نویسنده خبر",
+            HomePageExperiencToranjiDate: "شهریور ۱۳۹۶ - آذر ۱۳۹۶",
+            HomePageExperiencCafeDL: "بنیانگذار و سردبیر",
+            HomePageExperiencCafeDLDate: "بهمن ۱۳۹۵ - دی ۱۳۹۸",
         },
         en: {
             // Other
@@ -38,6 +63,15 @@ export const myDB = {
             emailAddress: "Yousef.r1999@gmail.com",
             telegramId: "@YRlp98",
             education: "Education",
+            experience: "Experience",
+            xeniac: 'Xeniac',
+            xeniacDesc: 'Software Production',
+            samArea: 'Sam Arena',
+            samAreaDesc: 'Samsung News and ROM Center',
+            toranji: 'Torani',
+            toranjiDesc: 'Technology News Website',
+            cafeDL: 'CafeDL',
+            cafeDLDesc: 'Download and Instruction Center',
 
             // Navbar
             navbarHome: 'Home',
@@ -62,6 +96,22 @@ export const myDB = {
             homePageEducationAssociateDate: "September 2016 - January 2018",
             homePageEducationBachelor: "Bachelor's degree Computer Software Engineering",
             homePageEducationBachelorDate: "January 2018 - January 2021",
+
+            // HomePage - Experience
+            HomePageExperienceMain: "Specialist",
+            HomePageExperiencXeniacFrontEnd: "Front-end Developer",
+            HomePageExperiencXeniacFrontEndDate: "Aprill 2021 - Present",
+            HomePageExperiencXeniacUIUX: "UI/UX Designer",
+            HomePageExperiencXeniacUIUXDate: "آبان ۱۳۹۷ - هم‌اکنون",
+            HomePageExperiencXeniacMobile: "Mobile Application Developer",
+            HomePageExperiencXeniacMobileDate: "Nov 2018 - Aprill 2021",
+            HomePageExperienceOther: "Other",
+            HomePageExperiencSamArena: "ROM Center Manager",
+            HomePageExperiencSamArenaDate: "November 2018 - May 2019",
+            HomePageExperiencToranji: "News Author",
+            HomePageExperiencToranjiDate: "Sep 2017 - December 2017",
+            HomePageExperiencCafeDL: "Founder and Chief Editor",
+            HomePageExperiencCafeDLDate: "February 2017 - January 2020",
         },
     }
 }
