@@ -8,19 +8,19 @@
     </transition>
     <ul class="navbar-items">
       <li>
-        <nuxt-link to="/">{{ $t("navbarHome") }}</nuxt-link>
+        <nuxt-link to="/">{{ $t("home") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/">{{ $t("navbarAboutMe") }}</nuxt-link>
+        <nuxt-link to="/">{{ $t("aboutMe") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/">{{ $t("navbarSkills") }}</nuxt-link>
+        <nuxt-link to="/">{{ $t("skills") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/">{{ $t("navbarProjects") }}</nuxt-link>
+        <nuxt-link to="/">{{ $t("projects") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link to="/">{{ $t("navbarBlog") }}</nuxt-link>
+        <nuxt-link to="/">{{ $t("blog") }}</nuxt-link>
       </li>
     </ul>
   </nav>

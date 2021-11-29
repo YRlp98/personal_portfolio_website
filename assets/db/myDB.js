@@ -15,13 +15,11 @@ export const myDB = {
             toranjiDesc: 'وب‌سایت خبری ترنجی',
             cafeDL: 'کافه دانلود',
             cafeDLDesc: 'مرکز دانلود و آموزش',
-
-            // Navbar
-            navbarHome: 'صفحه اصلی',
-            navbarAboutMe: 'درباره من',
-            navbarSkills: 'مهارت‌ها',
-            navbarProjects: 'پروژه‌ها',
-            navbarBlog: 'بلاگ',
+            home: 'صفحه اصلی',
+            aboutMe: 'درباره من',
+            skills: 'مهارت‌ها',
+            projects: 'پروژه‌ها',
+            blog: 'بلاگ',
 
             // HomePage - Hero
             homePageHello: 'سلام!',
@@ -56,6 +54,10 @@ export const myDB = {
             HomePageExperiencToranjiDate: "شهریور ۱۳۹۶ - آذر ۱۳۹۶",
             HomePageExperiencCafeDL: "بنیانگذار و سردبیر",
             HomePageExperiencCafeDLDate: "بهمن ۱۳۹۵ - دی ۱۳۹۸",
+
+            // HomePAge - Skills
+            homePageSkillsMain: ":مهارت‌های تخصصی من",
+            homePageSkillsOther: ":سایر مهارت‌ها",
         },
         en: {
             // Other
@@ -72,13 +74,11 @@ export const myDB = {
             toranjiDesc: 'Technology News Website',
             cafeDL: 'CafeDL',
             cafeDLDesc: 'Download and Instruction Center',
-
-            // Navbar
-            navbarHome: 'Home',
-            navbarAboutMe: 'About Me',
-            navbarSkills: 'Skills',
-            navbarProjects: 'Projects',
-            navbarBlog: 'Blog',
+            home: 'Home',
+            aboutMe: 'About Me',
+            skills: 'Skills',
+            projects: 'Projects',
+            blog: 'Blog',
 
             // HomePage - Hero
             homePageHello: 'Hello!',
@@ -112,6 +112,10 @@ export const myDB = {
             HomePageExperiencToranjiDate: "Sep 2017 - December 2017",
             HomePageExperiencCafeDL: "Founder and Chief Editor",
             HomePageExperiencCafeDLDate: "February 2017 - January 2020",
+
+            // HomePAge - Skills
+            homePageSkillsMain: "My Main Skills:",
+            homePageSkillsOther: "Other Skills:",
         },
     }
 }

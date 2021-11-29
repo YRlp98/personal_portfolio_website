@@ -7,7 +7,7 @@
       <ImageListCard
         class="imageListCard"
         link="https://xeniac.ir"
-        imageUrl="https://s21.picofile.com/file/8444387576/xeniac_logo.png"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Xeniac.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1hlbmlhYy5wbmciLCJpYXQiOjE2MzgxOTk5NDAsImV4cCI6MTk1MzU1OTk0MH0.qQ9NDn-b5zKjTFDMJZCPCMCMBcZZ2eBParqm7-njpqw"
         imageAlt="Xeniac"
         :title="$t('xeniac')"
         :description="$t('xeniacDesc')"
@@ -37,7 +37,7 @@
       <ImageListCard
         class="imageListCard"
         link="https://samarena.ir/"
-        imageUrl="https://s21.picofile.com/file/8444410692/samsung_logo.png"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Samsung.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1NhbXN1bmcucG5nIiwiaWF0IjoxNjM4MTk5OTYxLCJleHAiOjE5NTM1NTk5NjF9.yXjD1MS9mEy8jIPkQOZwWdytYh8BB2b8_N7KaaOKepg"
         imageAlt="Sam Arena"
         :title="$t('samArea')"
         :description="$t('samAreaDesc')"
@@ -53,7 +53,7 @@
       <ImageListCard
         class="imageListCard"
         link="https://toranji.ir"
-        imageUrl="https://s20.picofile.com/file/8444411292/toranji_logo.png"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Toranji.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1RvcmFuamkucG5nIiwiaWF0IjoxNjM4MTk5OTc5LCJleHAiOjE5NTM1NTk5Nzl9.-ShWOeep1YCyK36OPtv7t_Owv2mrbA0JGbnrZbY6Apg"
         imageAlt="Toranji"
         :title="$t('toranji')"
         :description="$t('toranjiDesc')"
@@ -69,7 +69,7 @@
       <ImageListCard
         class="imageListCard"
         link="https://cafedl.com/"
-        imageUrl="https://s20.picofile.com/file/8444411300/cafedl_logo.png"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/CafeDL.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL0NhZmVETC5wbmciLCJpYXQiOjE2MzgxOTk4NzgsImV4cCI6MTk1MzU1OTg3OH0.PRTCKt4arzv1Xc6uwXmFw0fPS8SU1BwshwsudyaAkLI"
         imageAlt="CafeDL"
         :title="$t('cafeDL')"
         :description="$t('cafeDLDesc')"
@@ -167,27 +167,22 @@ export default {
       top: 40px;
       right: 50%;
     }
+    .catTitle {
+      font-size: 1.375rem;
+      text-align: right;
+    }
 
-    .experience {
+    .imageListCard {
       margin-top: 40px;
+    }
 
-      .catTitle {
-        font-size: 1.375rem;
-        text-align: right;
-      }
+    .subExperiences {
+      margin-top: 25px;
 
-      .imageListCard {
-        margin-top: 40px;
-      }
-
-      .subExperiences {
-        margin-top: 25px;
-
-        .titleSubCard {
-          position: relative;
-          margin-top: 15px;
-          margin-right: 55px;
-        }
+      .titleSubCard {
+        position: relative;
+        margin-top: 15px;
+        margin-right: 55px;
       }
     }
   }

@@ -3,7 +3,7 @@
     <h1 class="aboutMe-title">{{ $t("homePageAboutMe") }}</h1>
     <div class="aboutMe-avatar">
       <img
-        src="https://cdn.dribbble.com/users/2181241/avatars/normal/ee6d18f8a8142186aba971e05b895c8d.jpg?1618169853"
+        src="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Yousef_Roshandel.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1lvdXNlZl9Sb3NoYW5kZWwud2VicCIsImlhdCI6MTYzODE5OTg4NSwiZXhwIjoxOTUzNTU5ODg1fQ.VKVFopNxk-Ewlr32JwQdmybEs9oPvsxP5OXNZrxjBNs"
         alt="Yousef Roshandel"
       />
       <div class="square"></div>

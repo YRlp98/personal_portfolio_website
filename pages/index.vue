@@ -11,6 +11,9 @@
     <div class="defualt-margin experience-container">
       <Experience />
     </div>
+    <div class="skills-container">
+      <Skills />
+    </div>
   </div>
 </template>
 
@@ -20,6 +23,7 @@ import WaveBackground from "../components/backgrounds/WaveBackground";
 import AboutMe from "../components/pages/home/AboutMe.vue";
 import Education from "../components/pages/home/Education.vue";
 import Experience from "../components/pages/home/Experience.vue";
+import Skills from "../components/pages/home/Skills.vue";
 
 export default {
   components: {
@@ -28,6 +32,7 @@ export default {
     AboutMe,
     Education,
     Experience,
+    Skills,
   },
 };
 </script>
@@ -55,6 +60,10 @@ export default {
   margin-top: 150px;
 }
 
+.skills-container {
+  margin-top: 150px;
+}
+
 // Tablet
 @include mediaQueryMin("md") {
   .aboutMe-container {
@@ -67,6 +76,14 @@ export default {
   .education-container {
     position: relative;
     margin-top: 250px;
+  }
+
+  .experience-container {
+    margin-top: 250px;
+  }
+
+  .skills-container {
+    margin-top: 450px;
   }
 }
 </style>
