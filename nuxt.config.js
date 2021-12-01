@@ -60,7 +60,7 @@ export default {
               preload: true,
               localSrc: ['PeydaWeb-Black'],
               src: '@/assets/fonts/PeydaWeb-Black',
-              fontWeight: 'black',
+              fontWeight: '800',
               fontStyle: 'normal'
             },
             // PeydaWeb-ExtraBold
@@ -68,7 +68,7 @@ export default {
               preload: true,
               localSrc: ['PeydaWeb-ExtraBold'],
               src: '@/assets/fonts/PeydaWeb-ExtraBold',
-              fontWeight: 'ExtraBold',
+              fontWeight: '900',
               fontStyle: 'normal',
             },
             // PeydaWeb-Medium

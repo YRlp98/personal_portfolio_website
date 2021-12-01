@@ -176,7 +176,7 @@
             alt="languages"
             title="languages"
           />
-          <div class="languages">
+          <div class="languages lanMargin">
             <h4>. Persian</h4>
             <p>(Native)</p>
           </div>
@@ -259,6 +259,10 @@ export default {
     }
 
     .skillSimple {
+      margin-top: 10px;
+    }
+
+    .lanMargin {
       margin-top: 10px;
     }
 

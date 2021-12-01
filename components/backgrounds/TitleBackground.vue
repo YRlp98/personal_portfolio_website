@@ -24,7 +24,7 @@ export default {
   h1 {
     text-transform: uppercase;
     font-size: 6.25rem;
-    font-weight: bolder;
+    font-weight: 800;
     color: black;
     opacity: 0.15;
     user-select: none;

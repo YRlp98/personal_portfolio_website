@@ -20,6 +20,7 @@ export const myDB = {
             skills: 'مهارت‌ها',
             projects: 'پروژه‌ها',
             blog: 'بلاگ',
+            viewAll: 'مشاهده همه',
 
             // HomePage - Hero
             homePageHello: 'سلام!',
@@ -79,6 +80,7 @@ export const myDB = {
             skills: 'Skills',
             projects: 'Projects',
             blog: 'Blog',
+            viewAll: 'View all',
 
             // HomePage - Hero
             homePageHello: 'Hello!',

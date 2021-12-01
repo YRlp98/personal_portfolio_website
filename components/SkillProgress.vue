@@ -15,11 +15,6 @@
 <script>
 export default {
   name: "SkillProgress",
-  data() {
-    return {
-      isOpen: false,
-    };
-  },
   props: {
     title: {
       type: String,

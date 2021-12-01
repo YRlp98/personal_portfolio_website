@@ -14,6 +14,9 @@
     <div class="skills-container">
       <Skills />
     </div>
+    <div class="defualt-margin projects-container">
+      <Projects />
+    </div>
   </div>
 </template>
 
@@ -24,6 +27,7 @@ import AboutMe from "../components/pages/home/AboutMe.vue";
 import Education from "../components/pages/home/Education.vue";
 import Experience from "../components/pages/home/Experience.vue";
 import Skills from "../components/pages/home/Skills.vue";
+import Projects from "../components/pages/home/Projects";
 
 export default {
   components: {
@@ -33,6 +37,7 @@ export default {
     Education,
     Experience,
     Skills,
+    Projects,
   },
 };
 </script>
@@ -64,6 +69,10 @@ export default {
   margin-top: 150px;
 }
 
+.projects-container {
+  margin-top: 150px;
+}
+
 // Tablet
 @include mediaQueryMin("md") {
   .aboutMe-container {
@@ -84,6 +93,10 @@ export default {
 
   .skills-container {
     margin-top: 450px;
+  }
+
+  .projects-container {
+    margin-top: 250px;
   }
 }
 </style>
