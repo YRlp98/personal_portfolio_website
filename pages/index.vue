@@ -20,6 +20,9 @@
     <div class="defualt-margin blog-container">
       <Blog />
     </div>
+    <div class="followMe-container">
+      <FollowMe />
+    </div>
   </div>
 </template>
 
@@ -32,6 +35,7 @@ import Experience from "../components/pages/home/Experience.vue";
 import Skills from "../components/pages/home/Skills.vue";
 import Projects from "../components/pages/home/Projects";
 import Blog from "../components/pages/home/Blog.vue";
+import FollowMe from "../components/pages/home/FollowMe.vue";
 
 export default {
   components: {
@@ -43,6 +47,7 @@ export default {
     Skills,
     Projects,
     Blog,
+    FollowMe,
   },
 };
 </script>
@@ -80,7 +85,10 @@ export default {
 
 .blog-container {
   margin-top: 150px;
-  margin-bottom: 150px;
+}
+
+.followMe-container {
+  margin-top: 150px;
 }
 
 // Tablet
@@ -110,6 +118,10 @@ export default {
   }
 
   .blog-container {
+    margin-top: 250px;
+  }
+
+  .followMe-container {
     margin-top: 250px;
   }
 }

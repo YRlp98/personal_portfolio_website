@@ -34,12 +34,14 @@ export default {
 
 <style lang="scss" scoped>
 .socialNetwork-container {
+
   .items {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
     direction: ltr;
+      height: 0;
 
     a {
       margin-right: 20px;

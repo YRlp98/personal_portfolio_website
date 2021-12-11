@@ -56,9 +56,12 @@ export const myDB = {
             HomePageExperiencCafeDL: "بنیانگذار و سردبیر",
             HomePageExperiencCafeDLDate: "بهمن ۱۳۹۵ - دی ۱۳۹۸",
 
-            // HomePAge - Skills
+            // HomePage - Skills
             homePageSkillsMain: ":مهارت‌های تخصصی من",
             homePageSkillsOther: ":سایر مهارت‌ها",
+
+            // HomePage - FollowMe
+            homePageFollowMeSN: "من در شبکه‌های اجتماعی",
         },
         en: {
             // Other
@@ -115,9 +118,12 @@ export const myDB = {
             HomePageExperiencCafeDL: "Founder and Chief Editor",
             HomePageExperiencCafeDLDate: "February 2017 - January 2020",
 
-            // HomePAge - Skills
+            // HomePage - Skills
             homePageSkillsMain: "My Main Skills:",
             homePageSkillsOther: "Other Skills:",
+
+            // HomePage - FollowMe
+            homePageFollowMeSN: "Me on Social Network",
         },
     }
 }

@@ -27,11 +27,11 @@ export default {
       required: false,
       default: "/",
     },
-    iconUrl: {
-      type: String,
-      required: true,
-      default: "../assets/images/icons/education.svg",
-    },
+    // iconUrl: {
+    //   type: String,
+    //   required: true,
+    //   default: "../assets/images/icons/education.svg",
+    // },
     iconAlt: {
       type: String,
       required: false,

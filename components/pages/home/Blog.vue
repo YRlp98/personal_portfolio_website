@@ -23,7 +23,7 @@ import TitleBackground from "../../../components/backgrounds/TitleBackground.vue
 import TextOnlyButton from "../../../components/TextOnlyButton.vue";
 
 export default {
-  name: " Blog",
+  name: "Blog",
   components: {
     BlogCard,
     TitleBackground,
