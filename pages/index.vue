@@ -23,6 +23,9 @@
     <div class="followMe-container">
       <FollowMe />
     </div>
+    <div class="defualt-margin footer-container">
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -36,6 +39,7 @@ import Skills from "../components/pages/home/Skills.vue";
 import Projects from "../components/pages/home/Projects";
 import Blog from "../components/pages/home/Blog.vue";
 import FollowMe from "../components/pages/home/FollowMe.vue";
+import Footer from "../components/Footer.vue";
 
 export default {
   components: {
@@ -48,6 +52,7 @@ export default {
     Projects,
     Blog,
     FollowMe,
+    Footer,
   },
 };
 </script>
