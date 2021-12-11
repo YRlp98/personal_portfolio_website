@@ -20,7 +20,6 @@
 import ProjectCard from "../../ProjectCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
 import TextOnlyButton from "../../../components/TextOnlyButton.vue";
-
 export default {
   name: "Projects",
   components: {
@@ -122,6 +121,7 @@ export default {
       margin-top: 40px;
     }
   }
+
   .titleBackground {
     z-index: 1;
     left: -200px;
@@ -156,7 +156,7 @@ export default {
   }
 }
 
-// Tablet
+// Desktop
 @include mediaQueryMin("xl") {
   .projectCard {
     width: 400px;
