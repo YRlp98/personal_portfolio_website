@@ -25,8 +25,10 @@ export default {
 <style lang="scss" scoped>
 .blogCard-container {
   position: relative;
-  max-width: 400px;
-  max-height: 400px;
+  width: 340px;
+  height: 400px;
+  // width: 400px;
+  // min-height: 400px;
   border-radius: 5px;
   background: transparent;
   display: flex;

@@ -50,6 +50,11 @@ export default {
 
       .iconListCard {
         margin-top: 40px;
+
+        &:hover {
+          transition: all 0.4s ease-in-out;
+          transform: scale(1.1);
+        }
       }
     }
   }

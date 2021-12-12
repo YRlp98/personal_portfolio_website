@@ -53,6 +53,7 @@ export default {
   .footer-container {
     .footer {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
 
       ul {
@@ -85,11 +86,16 @@ export default {
           }
         }
       }
-
-      p {
-        margin-top: 40px;
-      }
     }
+  }
+}
+
+// Desktop
+@include mediaQueryMin("xl") {
+  .footer {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
   }
 }
 </style>

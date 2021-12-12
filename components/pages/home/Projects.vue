@@ -9,8 +9,8 @@
           :key="project.id"
           :project="project"
         />
-        <TextOnlyButton :text="$t('viewAll')" link="#" class="textOnlyButton" />
       </div>
+      <TextOnlyButton :text="$t('viewAll')" link="#" class="textOnlyButton" />
     </div>
     <TitleBackground title="Projects" class="titleBackground" />
   </div>
@@ -104,21 +104,26 @@ export default {
   }
 
   .projects {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
     .projects-cards {
       margin-top: 40px;
-      margin-bottom: 80px;
+      margin-bottom: 40px;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
 
-      :not(:last-child).projectCard {
-        margin-bottom: 30px;
+      .projectCard {
+        margin: 10px auto;
+
+        // Tablet
+        @include mediaQueryMin("md") {
+          width: 340px;
+          height: 245px;
+        }
       }
-    }
-
-    .textOnlyButton {
-      margin-top: 40px;
     }
   }
 
@@ -127,44 +132,6 @@ export default {
     left: -200px;
     top: 180px;
     transform: rotate(-90deg);
-  }
-}
-
-// Tablet
-@include mediaQueryMin("md") {
-  .projects-container {
-    .projects {
-      .projects-cards {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        position: relative;
-        justify-content: space-between;
-
-        .projectCard {
-          width: 340px;
-          height: 245px;
-        }
-
-        .textOnlyButton {
-          position: absolute;
-          z-index: 100;
-          bottom: -90px;
-        }
-      }
-    }
-  }
-}
-
-// Desktop
-@include mediaQueryMin("xl") {
-  .projectCard {
-    width: 400px;
-    height: 285px;
-  }
-
-  .textOnlyButton {
-    left: 0;
   }
 }
 </style>

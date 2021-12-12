@@ -1,28 +1,30 @@
 <template>
   <nav class="navbar-container">
-    <span class="navbar-more" @click="isOpen = !isOpen">
-      <img src="~assets/images/icons/more.svg" alt="" />
-    </span>
-    <transition name="fade" appear>
-      <SettingsMenu class="settingsMenu" v-if="isOpen" />
-    </transition>
-    <ul class="navbar-items">
-      <li>
-        <nuxt-link to="/">{{ $t("home") }}</nuxt-link>
-      </li>
-      <li>
-        <nuxt-link to="/">{{ $t("aboutMe") }}</nuxt-link>
-      </li>
-      <li>
-        <nuxt-link to="/">{{ $t("skills") }}</nuxt-link>
-      </li>
-      <li>
-        <nuxt-link to="/">{{ $t("projects") }}</nuxt-link>
-      </li>
-      <li>
-        <nuxt-link to="/">{{ $t("blog") }}</nuxt-link>
-      </li>
-    </ul>
+    <div class="navbar defualt-margin">
+      <span class="navbar-more" @click="isOpen = !isOpen">
+        <img src="~assets/images/icons/more.svg" alt="" />
+      </span>
+      <transition name="fade" appear>
+        <SettingsMenu class="settingsMenu" v-if="isOpen" />
+      </transition>
+      <ul class="navbar-items">
+        <li>
+          <nuxt-link to="/">{{ $t("home") }}</nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/">{{ $t("aboutMe") }}</nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/">{{ $t("skills") }}</nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/">{{ $t("projects") }}</nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/">{{ $t("blog") }}</nuxt-link>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
@@ -57,80 +59,65 @@ export default {
 // Tablet
 @include mediaQueryMin("md") {
   .navbar-container {
-    display: flex;
     position: absolute;
-    top: 20px;
-    right: 20px;
-    left: 20px;
-    width: 768px;
-    margin: 0 auto;
-    align-items: center;
-    justify-content: space-between;
-    background-color: transparent;
+    inset: 0;
     z-index: 999;
+    top: 20px;
+    height: 25px;
 
-    .navbar-items {
+    .navbar {
       display: flex;
-      direction: rtl;
+      align-items: center;
+      justify-content: space-between;
 
-      li {
-        list-style: none;
+      .navbar-items {
         display: flex;
+        direction: rtl;
 
-        .nuxt-link-exact-active {
-          color: var(--white-1);
-          text-decoration: none;
-          font-size: 1rem;
-          font-weight: regular;
+        li {
+          list-style: none;
+          display: flex;
 
-          &:hover {
-            color: var(--green-1);
+          .nuxt-link-exact-active {
+            color: var(--white-1);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: regular;
+
+            &:hover {
+              color: var(--green-1);
+            }
+          }
+
+          &::after {
+            content: " \00b7";
+            color: var(--gray-1);
+            padding: 0 1rem;
+          }
+
+          &:last-child:after {
+            content: none;
           }
         }
-
-        &::after {
-          content: " \00b7";
-          color: var(--gray-1);
-          padding: 0 1rem;
-        }
-
-        &:last-child:after {
-          content: none;
-        }
       }
-    }
 
-    .navbar-more {
-      display: flex;
-      cursor: pointer;
-    }
+      .navbar-more {
+        display: flex;
+        cursor: pointer;
+      }
 
-    .fade-enter-active,
-    .fade-leave-active {
-      transition: all 0.5s ease-out;
-    }
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: all 0.5s ease-out;
+      }
 
-    .fade-enter,
-    .fade-leave-active {
-      opacity: 0;
-    }
+      .fade-enter,
+      .fade-leave-active {
+        opacity: 0;
+      }
 
-    .settingsMenu {
-      top: 30px;
-    }
-  }
-}
-
-// Desktop
-@include mediaQueryMin("xl") {
-  .navbar-container {
-    width: 1280px;
-
-    .navbar-items {
-      display: flex;
-
-      li {
-        left: 100;
+      .settingsMenu {
+        top: 30px;
       }
     }
   }

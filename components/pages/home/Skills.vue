@@ -187,7 +187,7 @@
         </div>
       </div>
     </div>
-    <TitleBackground class="titleBackground" title="skills" />
+    <TitleBackground class="titleBackground defualt-margin" title="skills" />
   </div>
 </template>
 
@@ -218,6 +218,7 @@ export default {
     linear-gradient(var(--gray-3), var(--gray-3)) content-box;
   background-repeat: no-repeat;
 
+  position: relative;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -228,6 +229,10 @@ export default {
 
     .main-skills {
       margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-right: 50%;
     }
   }
 
@@ -237,6 +242,14 @@ export default {
 
     .other-skills {
       margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-tracks: flex-end;
+      justify-content: space-between;
+
+      .skills {
+        margin: 0 5px;
+      }
     }
   }
 
@@ -276,6 +289,7 @@ export default {
         font-size: 1.125rem;
         color: white;
       }
+
       p {
         font-size: 0.75rem;
         color: white;
@@ -283,55 +297,19 @@ export default {
       }
     }
   }
-}
-
-// Tablet
-@include mediaQueryMin("md") {
-  .skills-container {
-    .main-skills-container {
-      margin-top: 40px;
-      margin-bottom: 40px;
-
-      .main-skills {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-evenly;
-        align-items: flex-start;
-      }
-    }
-
-    .other-skills-container {
-      margin-top: 40px;
-      margin-bottom: 40px;
-
-      .other-skills {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: flex-start;
-      }
-    }
-  }
 
   .titleBackground {
-    z-index: 0;
-    top: 450px;
-    left: 5%;
+    z-index: 1;
+    left: -120px;
+    top: 280px;
     transform: rotate(-90deg);
   }
 }
 
-// Desktop
-@include mediaQueryMin("xl") {
-  .skills-container {
-    .main-skills-container {
-      .main-skills {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        margin-right: 50%;
-      }
-    }
+// Tablet
+@include mediaQueryMin("md") {
+  .titleBackground {
+    margin-top: 100px;
   }
 }
 </style>

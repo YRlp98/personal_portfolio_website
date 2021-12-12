@@ -100,7 +100,7 @@ export default {
 
     .aboutMe-text {
       position: absolute;
-      top: 40px + 40px;
+      top: 80px;
       right: 220px;
       z-index: 1;
       margin-right: 90px;
@@ -108,6 +108,7 @@ export default {
 
     .socialNetwork {
       z-index: 99;
+      margin-top: 80px;
     }
 
     .titleBackground {

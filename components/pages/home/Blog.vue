@@ -76,24 +76,25 @@ export default {
   }
 
   .blog {
-    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
     .blog-cards {
       margin-top: 40px;
+      margin-bottom: 40px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: center;
 
       .blogCard {
-        margin-bottom: 40px;
-        max-width: 400px;
-      }
-    }
+        margin: 10px 10px;
 
-    .textOnlyButton {
-      display: flex;
-      justify-self: center;
-      margin-top: 40px;
+        // Tablet
+        @include mediaQueryMin("md") {
+          width: 400px;
+        }
+      }
     }
   }
 
@@ -109,7 +110,7 @@ export default {
 @include mediaQueryMin("md") {
   .blog-container {
     .titleBackground {
-      left: -80px;
+      // left: -80px;
     }
   }
 }
@@ -117,14 +118,8 @@ export default {
 // Desktop
 @include mediaQueryMin("xl") {
   .blog-container {
-    .blog {
-      .textOnlyButton {
-        justify-self: flex-start;
-      }
-    }
-
     .titleBackground {
-      left: -120px;
+      // left: -120px;
     }
   }
 }
