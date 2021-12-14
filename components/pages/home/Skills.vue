@@ -53,13 +53,9 @@
           />
           <SkillSimple
             class="skillSimple"
-            title="Agile"
-            link="https://en.wikipedia.org/wiki/Agile_software_development"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="Scrum"
-            link="https://en.wikipedia.org/wiki/Scrum_(software_development)"
+            v-for="skill in softwareSkills"
+            :key="skill.id"
+            :skill="skill"
           />
         </div>
         <!-- Mobile -->
@@ -73,23 +69,9 @@
           />
           <SkillSimple
             class="skillSimple"
-            title="Flutter"
-            link="https://en.wikipedia.org/wiki/Flutter_(software)"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="Dart"
-            link="https://en.wikipedia.org/wiki/Dart_(programming_language)"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="Java"
-            link="https://en.wikipedia.org/wiki/Java_(programming_language)"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="XML"
-            link="https://en.wikipedia.org/wiki/XML"
+            v-for="skill in mobileSkills"
+            :key="skill.id"
+            :skill="skill"
           />
         </div>
         <!-- Others -->
@@ -103,18 +85,9 @@
           />
           <SkillSimple
             class="skillSimple"
-            title="Git"
-            link="https://en.wikipedia.org/wiki/Git"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="REST API"
-            link="https://en.wikipedia.org/wiki/Representational_state_transfer"
-          />
-          <SkillSimple
-            class="skillSimple"
-            title="Linux"
-            link="https://en.wikipedia.org/wiki/Linux"
+            v-for="skill in othersSkills"
+            :key="skill.id"
+            :skill="skill"
           />
         </div>
         <!-- Languages -->
@@ -210,6 +183,48 @@ export default {
           title: "Adobe Illustrator",
           width: "50",
           link: "https://en.wikipedia.org/wiki/Adobe_Illustrator",
+        },
+      ],
+      softwareSkills: [
+        {
+          title: "Agile",
+          link: "https://en.wikipedia.org/wiki/Agile_software_development",
+        },
+        {
+          title: "Scrum",
+          link: "https://en.wikipedia.org/wiki/Scrum_(software_development)",
+        },
+      ],
+      mobileSkills: [
+        {
+          title: "Flutter",
+          link: "https://en.wikipedia.org/wiki/Flutter_(software)",
+        },
+        {
+          title: "Dart",
+          link: "https://en.wikipedia.org/wiki/Dart_(programming_language)",
+        },
+        {
+          title: "Java",
+          link: "https://en.wikipedia.org/wiki/Java_(programming_language)",
+        },
+        {
+          title: "XML",
+          link: "https://en.wikipedia.org/wiki/XML",
+        },
+      ],
+      othersSkills: [
+        {
+          title: "Git",
+          link: "https://en.wikipedia.org/wiki/Git",
+        },
+        {
+          title: "REST API",
+          link: "https://en.wikipedia.org/wiki/Representational_state_transfer",
+        },
+        {
+          title: "Linux",
+          link: "https://en.wikipedia.org/wiki/Linux",
         },
       ],
     };

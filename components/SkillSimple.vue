@@ -1,8 +1,8 @@
 <template>
   <div class="skillProgress-container">
     <div class="skillProgress-title">
-      <h4>. {{ title }}</h4>
-      <a :href="link" target="_blank">
+      <h4>. {{ skill.title }}</h4>
+      <a :href="skill.link" target="_blank">
         <img src="../assets/images/icons/question_icon.svg" alt="About" />
       </a>
     </div>
@@ -13,14 +13,17 @@
 export default {
   name: "SkillSimple",
   props: {
-    title: {
-      type: String,
-      default: "Skill Title",
+    skill: {
+      type: Object,
     },
-    link: {
-      type: String,
-      default: "/",
-    },
+    // title: {
+    //   type: String,
+    //   default: "Skill Title",
+    // },
+    // link: {
+    //   type: String,
+    //   default: "/",
+    // },
   },
 };
 </script>
