@@ -14,39 +14,10 @@
           />
           <SkillProgress
             class="skillProgress"
-            title="HTML"
-            width="90"
-            link="https://en.wikipedia.org/wiki/HTML"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="CSS"
-            width="90"
-            link="https://en.wikipedia.org/wiki/CSS"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Vue.js"
-            width="90"
-            link="https://en.wikipedia.org/wiki/Vue.js"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Nuxt.js"
-            width="90"
-            link="https://en.wikipedia.org/wiki/Nuxt.js"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="JavaScript"
-            width="80"
-            link="https://en.wikipedia.org/wiki/JavaScript"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Node.js"
-            width="40"
-            link="https://en.wikipedia.org/wiki/Node.js"
+            v-for="skill in webSkills"
+            :key="skill.id"
+            :skill="skill"
+            color="#a0d039"
           />
         </div>
         <!-- UI/UX -->
@@ -60,31 +31,10 @@
           />
           <SkillProgress
             class="skillProgress"
-            title="Figma"
-            width="90"
+            v-for="skill in uiSkills"
+            :key="skill.id"
+            :skill="skill"
             color="#65d7bb"
-            link="https://en.wikipedia.org/wiki/Figma_(software)"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Adobe XD"
-            width="90"
-            color="#65d7bb"
-            link="https://en.wikipedia.org/wiki/Adobe_XD"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Adobe Photoshop"
-            width="80"
-            color="#65d7bb"
-            link="https://en.wikipedia.org/wiki/Adobe_Photoshop"
-          />
-          <SkillProgress
-            class="skillProgress"
-            title="Adobe Illustrator"
-            width="50"
-            color="#65d7bb"
-            link="https://en.wikipedia.org/wiki/Adobe_Illustrator"
           />
         </div>
       </div>
@@ -205,6 +155,64 @@ export default {
     SkillProgress,
     SkillSimple,
     TitleBackground,
+  },
+  data() {
+    return {
+      webSkills: [
+        {
+          title: "HTML",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/HTML",
+        },
+        {
+          title: "CSS",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/CSS",
+        },
+        {
+          title: "Vue.js",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/Vue.js",
+        },
+        {
+          title: "Nuxt.js",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/Nuxt.js",
+        },
+        {
+          title: "JavaScript",
+          width: "80",
+          link: "https://en.wikipedia.org/wiki/JavaScript",
+        },
+        {
+          title: "Node.js",
+          width: "40",
+          link: "https://en.wikipedia.org/wiki/Node.js",
+        },
+      ],
+      uiSkills: [
+        {
+          title: "Figma",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/Figma_(software)",
+        },
+        {
+          title: "Adobe XD",
+          width: "90",
+          link: "https://en.wikipedia.org/wiki/Adobe_XD",
+        },
+        {
+          title: "Adobe Photoshop",
+          width: "80",
+          link: "https://en.wikipedia.org/wiki/Adobe_Photoshop",
+        },
+        {
+          title: "Adobe Illustrator",
+          width: "50",
+          link: "https://en.wikipedia.org/wiki/Adobe_Illustrator",
+        },
+      ],
+    };
   },
 };
 </script>

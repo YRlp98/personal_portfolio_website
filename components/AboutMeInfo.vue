@@ -1,19 +1,19 @@
 <template>
   <div class="aboutMeInfo-container">
     <div class="items">
-      <a href="/">
+      <div class="item">
         <img src="../assets/images/icons/calendar.svg" alt="Birthday" />
-        {{ $t("homePageAboutMeBirthday") }}</a
-      >
-      <a href="https://en.wikipedia.org/wiki/Iran" target="_blank">
+        {{ $t("homePageAboutMeBirthday") }}
+      </div>
+      <a class="item" href="https://en.wikipedia.org/wiki/Iran" target="_blank">
         <img src="../assets/images/icons/location.svg" alt="Location" />
         {{ $t("iran") }}</a
       >
-      <a href="mailto: yousef.r1999@gmail.com" target="_blank">
+      <a class="item" href="mailto: yousef.r1999@gmail.com" target="_blank">
         <img src="../assets/images/icons/email.svg" alt="Birthday" srcset="" />
         {{ $t("emailAddress") }}</a
       >
-      <a href="https://t.me/YRlp98" target="_blank">
+      <a class="item" href="https://t.me/YRlp98" target="_blank">
         <img src="../assets/images/icons/telegram.svg" alt="Telegram" />
         {{ $t("telegramId") }}</a
       >
@@ -36,7 +36,7 @@ export default {
     border-right: 1px solid var(--green-1);
     padding-right: 20px;
 
-    a {
+    .item {
       display: inline-flex;
       justify-content: center;
       text-decoration: none;

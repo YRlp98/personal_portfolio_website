@@ -1,8 +1,8 @@
 <template>
   <div class="skillProgress-container">
     <div class="skillProgress-title">
-      <h4>. {{ title }}</h4>
-      <a :href="link" target="_blank">
+      <h4>. {{ skill.title }}</h4>
+      <a :href="skill.link" target="_blank">
         <img src="../assets/images/icons/question_icon.svg" alt="About" />
       </a>
     </div>
@@ -16,28 +16,19 @@
 export default {
   name: "SkillProgress",
   props: {
-    title: {
-      type: String,
-      default: "Skill Title",
+    skill: {
+      type: Object,
     },
     color: {
       type: String,
       default: "#a0d039",
-    },
-    width: {
-      type: String,
-      default: "50%",
-    },
-    link: {
-      type: String,
-      default: "/",
     },
   },
   computed: {
     style() {
       return {
         "background-color": this.color,
-        width: `${this.width}%`,
+        width: `${this.skill.width}%`,
       };
     },
   },
