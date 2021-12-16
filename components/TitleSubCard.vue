@@ -41,13 +41,12 @@ export default {
     font-size: 1.063rem;
     color: white;
     text-align: right;
-    white-space: nowrap;
+    min-width: 300px;
   }
   .descriptiont {
     display: flex;
     flex-direction: row-reverse;
     margin-top: 5px;
-    white-space: nowrap;
 
     img {
       height: 15px;
