@@ -10,7 +10,7 @@
           :blog="blog"
         />
       </div>
-      <TextOnlyButton :text="$t('viewAll')" link="#" class="textOnlyButton" />
+      <TextOnlyButton :text="$t('viewAll')" link="https://virgool.io/@YRlp98" class="textOnlyButton" />
     </div>
     <TitleBackground title="Blog" class="titleBackground" />
   </div>

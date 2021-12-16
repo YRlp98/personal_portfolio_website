@@ -10,7 +10,7 @@
           :project="project"
         />
       </div>
-      <TextOnlyButton :text="$t('viewAll')" link="#" class="textOnlyButton" />
+      <TextOnlyButton :text="$t('viewAll')" link="https://github.com/YRlp98" class="textOnlyButton" />
     </div>
     <TitleBackground title="Projects" class="titleBackground" />
   </div>
