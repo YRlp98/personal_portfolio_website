@@ -1,13 +1,6 @@
 import { myDB } from './assets/db/myDB'
 
 export default {
-  target: 'static',
-  router: {
-    base: '/personal_portfolio_website/'
-  }
-}
-
-export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "Yousef Roshandel",
@@ -30,6 +23,11 @@ export default {
         referrerpolicy: "no-referrer"
       },
     ],
+  },
+
+  target: 'static',
+  router: {
+    base: '/personal_portfolio_website/'
   },
 
 
