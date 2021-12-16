@@ -1,12 +1,13 @@
 {
   "name": "personal_portfolio_website",
-  "version": "1.0.0",
+  "version": "0.1.0-Beta",
   "private": true,
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^7.2.0",
@@ -16,6 +17,7 @@
     "nuxt-font-loader-strategy": "^1.1.10"
   },
   "devDependencies": {
+    "push-dir": "^0.4.1",
     "sass": "^1.42.1",
     "sass-loader": "^10.1.0"
   }

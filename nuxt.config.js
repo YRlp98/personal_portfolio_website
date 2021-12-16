@@ -22,7 +22,11 @@ export default {
         crossorigin: "anonymous",
         referrerpolicy: "no-referrer"
       },
-    ]
+    ],
+    target: 'static',
+    router: {
+      base: '/personal_portfolio_website/'
+    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
