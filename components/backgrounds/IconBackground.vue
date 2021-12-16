@@ -22,6 +22,7 @@
           <i class="fas fa-gamepad"></i>
           <i class="fab fa-git-alt"></i>
           <i class="fab fa-hooli"></i>
+          <i class="fab fa-pied-piper-pp"></i>
           <i class="fa fa-database" aria-hidden="true"></i>
           <i class="fab fa-microsoft"></i>
           <i class="fas fa-pizza-slice"></i>
@@ -48,7 +49,6 @@
           <i class="fab fa-android"></i>
           <i class="fas fa-gamepad"></i>
           <i class="fab fa-git-alt"></i>
-          <i class="fab fa-hooli"></i>
           <i class="fa fa-database" aria-hidden="true"></i>
           <i class="fab fa-microsoft"></i>
           <i class="fas fa-pizza-slice"></i>
@@ -61,6 +61,7 @@
       </div>
       <div class="row">
         <div>
+          <i class="fab fa-pied-piper-pp"></i>
           <i class="fab fa-html5"></i>
           <i class="fas fa-tablet"></i>
           <i class="fab fa-css3-alt"></i>
@@ -96,6 +97,7 @@
           <i class="fas fa-pizza-slice"></i>
           <i class="fab fa-microsoft"></i>
           <i class="fa fa-database" aria-hidden="true"></i>
+          <i class="fab fa-pied-piper-pp"></i>
           <i class="fab fa-hooli"></i>
           <i class="fab fa-git-alt"></i>
           <i class="fas fa-gamepad"></i>
@@ -118,64 +120,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row" v-for="repeat in repeats" :key="repeat">
-      <div>
-        <i class="fa fa-bug" aria-hidden="true"></i>
-        <i class="fa fa-coffee" aria-hidden="true"></i>
-        <i class="fa fa-code-fork" aria-hidden="true"></i>
-        <i class="fab fa-apple"></i>
-        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-        <i class="fa fa-laptop" aria-hidden="true"></i>
-        <i class="fa fa-language" aria-hidden="true"></i>
-        <i class="fab fa-figma"></i>
-        <i class="fa fa-paint-brush" aria-hidden="true"></i>
-        <i class="fas fa-code"></i>
-        <i class="fa fa-rocket" aria-hidden="true"></i>
-        <i class="fa fa-life-ring" aria-hidden="true"></i>
-        <i class="fa fa-terminal" aria-hidden="true"></i>
-        <i class="fab fa-js-square"></i>
-        <i class="fab fa-vuejs"></i>
-        <i class="fab fa-android"></i>
-        <i class="fas fa-gamepad"></i>
-        <i class="fab fa-git-alt"></i>
-        <i class="fab fa-hooli"></i>
-        <i class="fa fa-database" aria-hidden="true"></i>
-        <i class="fab fa-microsoft"></i>
-        <i class="fas fa-pizza-slice"></i>
-        <i class="fab fa-stack-overflow"></i>
-        <i class="fa fa-desktop" aria-hidden="true"></i>
-        <i class="fab fa-css3-alt"></i>
-        <i class="fas fa-tablet"></i>
-        <i class="fab fa-html5"></i>
-        <i class="fa fa-bug" aria-hidden="true"></i>
-        <i class="fa fa-coffee" aria-hidden="true"></i>
-        <i class="fa fa-code-fork" aria-hidden="true"></i>
-        <i class="fab fa-apple"></i>
-        <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-        <i class="fa fa-laptop" aria-hidden="true"></i>
-        <i class="fa fa-language" aria-hidden="true"></i>
-        <i class="fab fa-figma"></i>
-        <i class="fa fa-paint-brush" aria-hidden="true"></i>
-        <i class="fas fa-code"></i>
-        <i class="fa fa-rocket" aria-hidden="true"></i>
-        <i class="fa fa-life-ring" aria-hidden="true"></i>
-        <i class="fa fa-terminal" aria-hidden="true"></i>
-        <i class="fab fa-js-square"></i>
-        <i class="fab fa-vuejs"></i>
-        <i class="fab fa-android"></i>
-        <i class="fas fa-gamepad"></i>
-        <i class="fab fa-git-alt"></i>
-        <i class="fab fa-hooli"></i>
-        <i class="fa fa-database" aria-hidden="true"></i>
-        <i class="fab fa-microsoft"></i>
-        <i class="fas fa-pizza-slice"></i>
-        <i class="fab fa-stack-overflow"></i>
-        <i class="fa fa-desktop" aria-hidden="true"></i>
-        <i class="fab fa-css3-alt"></i>
-        <i class="fas fa-tablet"></i>
-        <i class="fab fa-html5"></i>
-      </div>
-    </div> -->
   </section>
 </template>
 

@@ -78,7 +78,7 @@ export default {
           list-style: none;
           display: flex;
 
-          .nuxt-link-exact-active {
+          a {
             color: var(--white-1);
             text-decoration: none;
             font-size: 1rem;

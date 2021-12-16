@@ -25,7 +25,7 @@
       <p>Language</p>
       <ul class="menu-bar">
         <li>
-          <a @click="onChangeLanguage()" :class="{ active: isFarsi }" href="#">
+          <a @click="onChangeLanguage()" :class="{ active: isFarsi }" href="/">
             <span class="menu-icon">
               <img src="~assets/images/icons/ir.svg" alt="" />
             </span>
@@ -33,7 +33,11 @@
           </a>
         </li>
         <li>
-          <a @click="onChangeLanguage()" :class="{ active: !isFarsi }" href="#">
+          <a
+            @click="onChangeLanguage()"
+            :class="{ active: !isFarsi }"
+            href="en"
+          >
             <span class="menu-icon">
               <img src="~assets/images/icons/en.svg" alt="" />
             </span>
@@ -81,6 +85,14 @@ export default {
     },
     onChangeLanguage() {
       this.isFarsi = !this.isFarsi;
+    },
+  },
+  computed: {
+    isDark() {
+      return this.$store.state.isDark;
+    },
+    isFarsi() {
+      return this.$store.state.isFarsi;
     },
   },
 };

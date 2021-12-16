@@ -16,14 +16,6 @@ export default {
     skill: {
       type: Object,
     },
-    // title: {
-    //   type: String,
-    //   default: "Skill Title",
-    // },
-    // link: {
-    //   type: String,
-    //   default: "/",
-    // },
   },
 };
 </script>
