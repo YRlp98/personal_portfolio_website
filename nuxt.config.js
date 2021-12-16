@@ -113,20 +113,20 @@ export default {
   i18n: {
     locales: [
       {
-        code: 'en',
-        iso: 'en-US'
-      },
-      {
         code: 'fa',
         iso: 'fa-FA'
       },
+      {
+        code: 'en',
+        iso: 'en-US'
+      }
     ],
     defaultLocale: 'fa',
     vueI18n: {
       fallbackLocale: 'fa',
       ...myDB
     },
-    baseUrl: 'https://yrlp.ir'
+    baseUrl: ''
   },
 
   // module settings
