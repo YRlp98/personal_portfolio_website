@@ -111,6 +111,7 @@ export default {
   ],
 
   i18n: {
+    detectBrowserLanguage: false,
     locales: [
       {
         code: 'fa',
