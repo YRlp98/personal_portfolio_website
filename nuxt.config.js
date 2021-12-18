@@ -115,11 +115,13 @@ export default {
     locales: [
       {
         code: 'fa',
-        iso: 'fa-FA'
+        iso: 'fa-FA',
+        name: 'Farsi',
       },
       {
         code: 'en',
-        iso: 'en-US'
+        iso: 'en-US',
+        name: "English",
       }
     ],
     defaultLocale: 'fa',
@@ -127,7 +129,7 @@ export default {
       fallbackLocale: 'fa',
       ...myDB
     },
-    baseUrl: ''
+    baseUrl: 'https://yrlp.ir'
   },
 
   // module settings

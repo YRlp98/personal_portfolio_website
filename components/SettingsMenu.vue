@@ -5,17 +5,13 @@
       <ul class="menu-bar">
         <li>
           <a @click="onChangeTheme()" :class="{ active: isDark }" href="#">
-            <span class="menu-icon">
-              <img src="~assets/images/icons/dark.svg" alt="" />
-            </span>
+            <img src="~assets/images/icons/dark.svg" alt="dark mode" />
             Dark Mode
           </a>
         </li>
         <li>
           <a @click="onChangeTheme()" :class="{ active: !isDark }" href="#">
-            <span class="menu-icon">
-              <img src="~assets/images/icons/light.svg" alt="" />
-            </span>
+            <img src="~assets/images/icons/light.svg" alt="light mode" />
             Light Mode
           </a>
         </li>
@@ -25,24 +21,17 @@
       <p>Language</p>
       <ul class="menu-bar">
         <li>
-          <a @click="onChangeLanguage()" :class="{ active: isFarsi }" href="/">
-            <span class="menu-icon">
-              <img src="~assets/images/icons/ir.svg" alt="" />
-            </span>
-            Farsi
-          </a>
-        </li>
-        <li>
-          <a
-            @click="onChangeLanguage()"
-            :class="{ active: !isFarsi }"
-            href="en"
+          <nuxt-link
+            v-for="locale in availableLocales"
+            :key="locale.code"
+            :to="switchLocalePath(locale.code)"
           >
-            <span class="menu-icon">
-              <img src="~assets/images/icons/en.svg" alt="" />
-            </span>
-            English
-          </a>
+            <img
+              :src="`_nuxt/assets/images/icons/${locale.code}.svg`"
+              :alt="$i18n.locale"
+            />
+            {{ locale.name }}
+          </nuxt-link>
         </li>
       </ul>
     </div>
@@ -64,16 +53,6 @@ export default {
       //     isDark: false,
       //   },
       // ],
-      // languages: [
-      //   {
-      //     title: "Farsi",
-      //     isFarsi: true,
-      //   },
-      //   {
-      //     title: "English",
-      //     isFarsi: false,
-      //   },
-      // ],
 
       isDark: true,
       isFarsi: true,
@@ -88,6 +67,9 @@ export default {
     },
   },
   computed: {
+    availableLocales() {
+      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale);
+    },
     isDark() {
       return this.$store.state.isDark;
     },
@@ -121,21 +103,17 @@ export default {
         text-decoration: none;
         color: white;
         display: flex;
+        justify-content: flex-start;
         font-size: 0.813rem;
         padding: 1px 10px;
         align-items: center;
         border-radius: 5px;
 
-        span {
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        img {
+          margin-top: -2.5px;
           margin-right: 10px;
-
-          img {
-            width: 17px;
-            height: 17px;
-          }
+          width: 17px;
+          height: 17px;
         }
       }
 
