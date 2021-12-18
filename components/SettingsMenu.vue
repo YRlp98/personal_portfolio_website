@@ -27,7 +27,7 @@
             :to="switchLocalePath(locale.code)"
           >
             <img
-              :src="`_nuxt/assets/images/icons/${locale.code}.svg`"
+              :src="require(`~/assets/images/icons/${locale.code}.svg`)"
               :alt="$i18n.locale"
             />
             {{ locale.name }}
@@ -55,7 +55,6 @@ export default {
       // ],
 
       isDark: true,
-      isFarsi: true,
     };
   },
   methods: {
@@ -72,9 +71,6 @@ export default {
     },
     isDark() {
       return this.$store.state.isDark;
-    },
-    isFarsi() {
-      return this.$store.state.isFarsi;
     },
   },
 };
