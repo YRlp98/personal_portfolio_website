@@ -30,7 +30,11 @@
 <script>
 export default {
   name: "Footer",
-  components: {},
+  methods: {
+    goto(id) {
+      this.$router.push(id);
+    },
+  },
 };
 </script>
 
