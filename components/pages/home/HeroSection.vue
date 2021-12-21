@@ -1,5 +1,5 @@
 <template>
-  <div class="heroSection-container">
+  <div class="heroSection-container" id="#homeHeroSection">
     <div class="heroSection-content">
       <div class="heroSection-welcome">
         <h1>{{ $t("homePageHello") }}</h1>

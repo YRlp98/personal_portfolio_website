@@ -1,5 +1,5 @@
 <template>
-  <div class="skills-container">
+  <div class="skills-container" id="homeSkills">
     <div class="main-skills-container defualt-margin">
       <h1>{{ $t("homePageSkillsMain") }}</h1>
       <div class="main-skills">

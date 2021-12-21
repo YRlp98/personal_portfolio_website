@@ -3,19 +3,23 @@
     <div class="footer">
       <ul>
         <li>
-          <nuxt-link to="/">{{ $t("home") }}</nuxt-link>
+          <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link to="/">{{ $t("aboutMe") }}</nuxt-link>
+          <item class="item" @click="goto('#homeAboutMe')">
+            {{ $t("aboutMe") }}
+          </item>
         </li>
         <li>
-          <nuxt-link to="/">{{ $t("skills") }}</nuxt-link>
+          <item class="item" @click="goto('#homeSkills')">
+            {{ $t("skills") }}
+          </item>
         </li>
         <li>
-          <nuxt-link to="/">{{ $t("projects") }}</nuxt-link>
+          <nuxt-link class="item" to="#">{{ $t("projects") }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link to="/">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" to="#">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
       <p>. {{ $t("footerCopyright") }}</p>
@@ -64,11 +68,12 @@ export default {
           list-style: none;
           display: flex;
 
-          .nuxt-link-exact-active {
+          .item {
             color: var(--white-1);
             text-decoration: none;
             font-size: 1rem;
             font-weight: regular;
+            cursor: pointer;
 
             &:hover {
               color: var(--green-1);

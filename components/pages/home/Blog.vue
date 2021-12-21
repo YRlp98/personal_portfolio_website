@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-container">
+  <div class="blog-container" id="homeBlog">
     <h1>{{ $t("blog") }}</h1>
     <div class="blog">
       <div class="blog-cards">
@@ -10,7 +10,11 @@
           :blog="blog"
         />
       </div>
-      <TextOnlyButton :text="$t('viewAll')" link="https://virgool.io/@YRlp98" class="textOnlyButton" />
+      <TextOnlyButton
+        :text="$t('viewAll')"
+        link="https://virgool.io/@YRlp98"
+        class="textOnlyButton"
+      />
     </div>
     <TitleBackground title="Blog" class="titleBackground" />
   </div>
@@ -103,24 +107,6 @@ export default {
     left: -120px;
     top: 100px;
     transform: rotate(-90deg);
-  }
-}
-
-// Tablet
-@include mediaQueryMin("md") {
-  .blog-container {
-    .titleBackground {
-      // left: -80px;
-    }
-  }
-}
-
-// Desktop
-@include mediaQueryMin("xl") {
-  .blog-container {
-    .titleBackground {
-      // left: -120px;
-    }
   }
 }
 </style>

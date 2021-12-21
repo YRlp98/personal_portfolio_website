@@ -1,5 +1,5 @@
 <template>
-  <div class="aboutMe-container">
+  <div class="aboutMe-container" id="homeAboutMe">
     <h1 class="aboutMe-title">{{ $t("homePageAboutMe") }}</h1>
     <div class="aboutMe-avatar">
       <img

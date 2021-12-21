@@ -7,21 +7,24 @@
 
     <ul class="menu__box">
       <li>
-        <nuxt-link class="menu__item" to="/">Home / صفحه اصلی</nuxt-link>
+        <nuxt-link class="menu__item" to="/">{{ $t("home") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/">About Me / درباره من</nuxt-link>
+        <item class="menu__item" @click="goto('#homeAboutMe')">
+          {{ $t("aboutMe") }}
+        </item>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/">Skills / مهارت‌ها</nuxt-link>
+        <item class="menu__item" @click="goto('#homeSkills')">
+          {{ $t("skills") }}
+        </item>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/">Projects / پروژه‌ها</nuxt-link>
+        <nuxt-link class="menu__item" to="#">{{ $t("projects") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/">‌Blog / بلاگ</nuxt-link>
+        <nuxt-link class="menu__item" to="#">‌{{ $t("blog") }}</nuxt-link>
       </li>
-
       <div class="settings-menu">
         <SettingsMenu class="settingsMenu" />
       </div>
@@ -34,8 +37,13 @@ import SettingsMenu from "./SettingsMenu.vue";
 
 export default {
   name: "NavbarMobile",
-  computed: {
+  components: {
     SettingsMenu,
+  },
+  methods: {
+    goto(id) {
+      this.$router.push(id);
+    },
   },
 };
 </script>
@@ -76,8 +84,8 @@ export default {
   position: fixed;
   top: 20px;
   left: 20px;
-  width: 18px; // 26
-  height: 18px; // 26
+  width: 18px;
+  height: 18px;
   cursor: pointer;
   z-index: 1;
 }
@@ -126,9 +134,9 @@ export default {
   display: block;
   padding: 12.5px 24px;
   color: white;
-  // font-size: 1.063rem;
   text-decoration: none;
   transition-duration: 0.25s;
+  cursor: pointer;
 }
 
 .menu__item:hover {

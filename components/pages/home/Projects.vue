@@ -1,5 +1,5 @@
 <template>
-  <div class="projects-container">
+  <div class="projects-container" id="homeProjects">
     <h1>{{ $t("projects") }}</h1>
     <div class="projects">
       <div class="projects-cards">
