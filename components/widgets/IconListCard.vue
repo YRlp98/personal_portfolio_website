@@ -1,8 +1,8 @@
 <template>
-  <div class="imageListCard-container">
-    <a class="imageListCard" :href="link" target="_blank">
-      <div class="image">
-        <img :src="imageUrl" :alt="imageAlt" />
+  <div class="iconListCard-container">
+    <a class="iconListCard" :href="link" target="_blank">
+      <div class="icon">
+        <img src="~/assets/images/icons/education.svg" :alt="iconAlt" />
       </div>
       <TitleSubCard
         class="titleSubCard"
@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import TitleSubCard from "../components/TitleSubCard.vue";
+import TitleSubCard from "~/components/widgets/TitleSubCard.vue";
 
 export default {
-  name: "ImageListCard",
+  name: "IconListCard",
   components: {
     TitleSubCard,
   },
@@ -27,12 +27,12 @@ export default {
       required: false,
       default: "/",
     },
-    imageUrl: {
-      type: String,
-      required: true,
-      default: "https://s21.picofile.com/file/8444387576/xeniac_logo.png",
-    },
-    imageAlt: {
+    // iconUrl: {
+    //   type: String,
+    //   required: true,
+    //   default: "~/assets/images/icons/education.svg",
+    // },
+    iconAlt: {
       type: String,
       required: false,
     },
@@ -51,16 +51,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.imageListCard-container {
+.iconListCard-container {
   display: flex;
   justify-content: flex-end;
 
-  .imageListCard {
+  .iconListCard {
     display: flex;
     flex-direction: row-reverse;
     justify-content: flex-end;
     align-items: center;
     text-decoration: none;
+
+    .icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 50px;
+      width: 50px;
+      border-radius: 5px;
+      background-color: white;
+
+      img {
+        height: 30px;
+        width: 30px;
+      }
+    }
 
     .titleSubCard {
       margin-right: 15px;

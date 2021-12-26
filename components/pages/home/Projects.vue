@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import ProjectCard from "../../ProjectCard.vue";
+import ProjectCard from "../../widgets/ProjectCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
-import TextOnlyButton from "../../../components/TextOnlyButton.vue";
+import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
 export default {
   name: "Projects",
   components: {

@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import HomeTitle from "../../HomeTitle.vue";
-import TitleSubCard from "../../TitleSubCard.vue";
-import IconListCard from "../../IconListCard.vue";
+import HomeTitle from "./HomeTitle.vue";
+import TitleSubCard from "~/components/widgets/TitleSubCard.vue";
+import IconListCard from "~/components/widgets/IconListCard.vue";
 
 export default {
   name: "Education",

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import SettingsMenu from "./SettingsMenu.vue";
+import SettingsMenu from "./widgets/SettingsMenu.vue";
 
 export default {
   name: "Navbar",

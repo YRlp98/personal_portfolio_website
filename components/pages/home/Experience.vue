@@ -86,11 +86,15 @@
 </template>
 
 <script>
-import ImageListCard from "../../ImageListCard.vue";
+import ImageListCard from "~/components/widgets/ImageListCard.vue";
+import TitleSubCard from "~/components/widgets/TitleSubCard.vue";
 
 export default {
   name: "Experience",
-  ImageListCard,
+  components: {
+    ImageListCard,
+    TitleSubCard,
+  },
 };
 </script>
 

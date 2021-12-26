@@ -3,7 +3,7 @@
     <div class="titleSubCard">
       <h4>{{ title }}</h4>
       <div class="descriptiont">
-        <img src="../assets/images/icons/calendar_gray.svg" />
+        <img src="~/assets/images/icons/calendar_gray.svg" />
         <p>{{ description }}</p>
       </div>
     </div>

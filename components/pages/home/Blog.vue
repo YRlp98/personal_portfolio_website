@@ -22,9 +22,9 @@
 
 
 <script>
-import BlogCard from "../../BlogCard.vue";
+import BlogCard from "../../widgets/BlogCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
-import TextOnlyButton from "../../../components/TextOnlyButton.vue";
+import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
 
 export default {
   name: "Blog",

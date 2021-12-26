@@ -116,9 +116,9 @@
 
 
 <script>
-import IconTitle from "../../iconTitle.vue";
-import SkillProgress from "../../SkillProgress.vue";
-import SkillSimple from "../../SkillSimple.vue";
+import IconTitle from "../../widgets/iconTitle.vue";
+import SkillProgress from "./SkillProgress.vue";
+import SkillSimple from "./SkillSimple.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
 
 export default {

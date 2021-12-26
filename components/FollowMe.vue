@@ -13,8 +13,8 @@
 
 
 <script>
-import SocialNetwork from "../../SocialNetwork.vue";
-import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
+import SocialNetwork from "~/components/widgets/SocialNetwork.vue";
+import TitleBackground from "~/components/backgrounds/TitleBackground.vue";
 
 export default {
   name: "FollowMe",

@@ -3,7 +3,7 @@
     <div class="skillProgress-title">
       <h4>. {{ skill.title }}</h4>
       <a :href="skill.link" target="_blank">
-        <img src="../assets/images/icons/question_icon.svg" alt="About" />
+        <img src="~/assets/images/icons/question_icon.svg" alt="About" />
       </a>
     </div>
   </div>

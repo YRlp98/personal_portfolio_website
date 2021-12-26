@@ -38,7 +38,7 @@ import Experience from "../components/pages/home/Experience.vue";
 import Skills from "../components/pages/home/Skills.vue";
 import Projects from "../components/pages/home/Projects";
 import Blog from "../components/pages/home/Blog.vue";
-import FollowMe from "../components/pages/home/FollowMe.vue";
+import FollowMe from "../components/FollowMe.vue";
 import Footer from "../components/Footer.vue";
 
 export default {

@@ -16,8 +16,8 @@
 </template>
 
 <script>
-import AboutMeInfo from "../../AboutMeInfo.vue";
-import SocialNetwork from "../../SocialNetwork.vue";
+import AboutMeInfo from "./AboutMeInfo.vue";
+import SocialNetwork from "../../widgets/SocialNetwork.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
 
 export default {
