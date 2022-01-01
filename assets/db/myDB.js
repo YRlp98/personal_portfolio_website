@@ -30,9 +30,7 @@ export const myDB = {
 
             // HomePage - About
             homePageAboutMe: 'درباره من',
-            homePageAboutMeText: `من یوسف روشندل متولد اسفند ۱۳۷۷ از شهر اراک، فارغ‌التحصیل رشته مهندسی نرم‌افزار از دانشگاه امیرکبیر اراک هستم و هم اکنون به‌عنوان توسعه‌دهنده فرانت-اند در تیم زنیاک مشغول به‌کار هستم.
-            از بچگی علاقه زیادی به کامپیوتر داشتم و برنامه‌نویسی رو برای اولین بار در سال ۱۳۹۳ با زبان C# شروع کردم و سپس به سراغ زبان‌های HTML/CSS و Java رفتم. اما تخصص اصلی من توسعه فرانت-اند بوده ولی به کار طراحی بخصوص طراحی رابط/تجربه کاربری هم علاقه زیادی دارم و در کنار کار اصلیم به کار طراحی نیز میپزدازم. همچنین، قبل از ورود به حوزه وب، برنامه‌نویسی موبایل با فریم‌ورک فلاتر و قبل‌تر از اون، برنامه‌نویسی اندروید با زبان جاوا می‌کردم و اما بعدا متوجه شدم که به وب علاقه بیشتری دارم و تا امروز همچنان مشغول این کار هستم. `,
-            homePageAboutMeBirthday: `۱۱ اسفند ۱۳۷۷`,
+            homePageAboutMeText: `من یوسف روشندل متولد اسفندماه 1377 از شهر اراک و فارغ‌التحصیل رشته مهندسی نرم‌افزار از دانشگاه امیرکبیر اراک هستم. هم اکنون در تیم زنیاک به عنوان توسعه‌دهنده فرانت-اند مشغول به کار هستم. برنامه‌نویسی را در سال 1393 با زبان #C شروع کردم. سپس به سراغ یادگیری HTML/CSS و JAVA رفتم. تخصص اصلی من، توسعه فرانت-اند بوده اما علاقه زیادی به طراحی رابط کاربری نیز دارم. قبل از ورود به حوزه وب، توسعه‌دهنده نرم افزارهای موبایل با فریم‎ ورک فلاتر و اندروید نیتیو با زبان JAVA `,
 
             // HomePage - Education
             homePageEducationAssociate: 'کاردانی مهندسی تکنولوژی نرم افزار',
@@ -96,7 +94,7 @@ export const myDB = {
 
             // HomePage - About
             homePageAboutMe: 'About Me',
-            homePageAboutMeText: `I'm Yousef Roshandel, born in March 1998 in Arak city, I graduated from Amirkabir University of Arak with a degree in software engineering and I'm currently working as a front-end developer for the Xeniac team. I've been very interested in computers since I was a child and I started programming for the first time in 2014 with C# language and then I started learning HTML/CSS and Java languages. My main specialty is front-end development, but I also love designing User interfaces as well. Before starting the web application development, I was doing mobile programming with the Flutter framework, and before that, I was programming Android native with Java, And then I realized I preferred developing front-end, and I've been doing it to this day.`,
+            homePageAboutMeText: `I'm Yousef Roshandel, born in March 1999 in Arak, and graduated from Amirkabir University of Arak with a degree in software engineering. I'm currently working at the Xeniac team as a Front-end developer. I started programming from 2014 with C# language. Then, I learnt HTML/CSS and JAVA. My main specialty is Front-end development, but I'm also very interested in designing User interfaces as well. Before starting the web application development, I was a mobile application dveloper with the Flutter framework and Android native with JAVA.`,
             homePageAboutMeBirthday: `1999 2 March`,
 
             // HomePage - Education

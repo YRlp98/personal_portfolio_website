@@ -12,17 +12,17 @@
           <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
         </li>
         <li>
-          <item class="item" @click="goto('#homeAboutMe')">
+          <item class="item" @click="goto('/#homeAboutMe')">
             {{ $t("aboutMe") }}
           </item>
         </li>
         <li>
-          <item class="item" @click="goto('#homeSkills')">
+          <item class="item" @click="goto('/#homeSkills')">
             {{ $t("skills") }}
           </item>
         </li>
         <li>
-          <nuxt-link class="item" to="#">{{ $t("projects") }}</nuxt-link>
+          <nuxt-link class="item" to="/projects">{{ $t("projects") }}</nuxt-link>
         </li>
         <li>
           <nuxt-link class="item" to="#">{{ $t("blog") }}</nuxt-link>

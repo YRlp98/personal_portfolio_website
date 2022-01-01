@@ -10,17 +10,17 @@
         <nuxt-link class="menu__item" to="/">{{ $t("home") }}</nuxt-link>
       </li>
       <li>
-        <item class="menu__item" @click="goto('#homeAboutMe')">
+        <item class="menu__item" @click="goto('/#homeAboutMe')">
           {{ $t("aboutMe") }}
         </item>
       </li>
       <li>
-        <item class="menu__item" @click="goto('#homeSkills')">
+        <item class="menu__item" @click="goto('/#homeSkills')">
           {{ $t("skills") }}
         </item>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="#">{{ $t("projects") }}</nuxt-link>
+        <nuxt-link class="menu__item" to="/projects">{{ $t("projects") }}</nuxt-link>
       </li>
       <li>
         <nuxt-link class="menu__item" to="#">‌{{ $t("blog") }}</nuxt-link>
