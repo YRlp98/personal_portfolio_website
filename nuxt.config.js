@@ -112,6 +112,7 @@ export default {
 
   i18n: {
     detectBrowserLanguage: false,
+    strategy: 'prefix',
     locales: [
       {
         code: 'fa',

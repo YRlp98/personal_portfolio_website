@@ -162,6 +162,7 @@ section {
       padding: 0 5px;
       user-select: none;
       cursor: default;
+      
 
       &:hover {
         transition: 0s;
