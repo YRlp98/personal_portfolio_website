@@ -10,7 +10,7 @@
           :style="{ backgroundColor: tag.color }"
           :key="tag"
         >
-          {{ tag.tag }}
+          {{ tag.value }}
         </div>
       </div>
     </div>

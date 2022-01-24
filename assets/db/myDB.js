@@ -21,6 +21,12 @@ export const myDB = {
             projects: 'پروژه‌ها',
             blog: 'بلاگ',
             viewAll: 'مشاهده همه',
+            show: 'نمایش',
+            All: "همه",
+            Designing: "طراحی",
+            Web: "وب",
+            Mobile: "موبایل",
+            Others: "متفرقه",
 
             // HomePage - Hero
             homePageHello: 'سلام!',
@@ -63,7 +69,7 @@ export const myDB = {
             homePageFollowMeSN: "من در شبکه‌های اجتماعی",
 
             // Footer
-            footerCopyright: "طراحی و پیاده سازی شده توسط یوسف روشندل"
+            footerCopyright: "طراحی و پیاده سازی شده توسط یوسف روشندل",
         },
         en: {
             // Other
@@ -86,6 +92,12 @@ export const myDB = {
             projects: 'Projects',
             blog: 'Blog',
             viewAll: 'View all',
+            show: 'Show',
+            All: "All",
+            Designing: "Designing",
+            Web: "Web",
+            Mobile: "Mobile",
+            Others: "Others",
 
             // HomePage - Hero
             homePageHello: 'Hello!',
