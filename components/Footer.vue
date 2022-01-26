@@ -32,7 +32,7 @@
           }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="item" to="#">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
       <p>. {{ $t("footerCopyright") }}</p>
@@ -60,7 +60,7 @@ export default {
 
 <style lang="scss" scoped>
 .footer-container {
-  margin-top: 150px;
+  margin-top: 50px;
   margin-bottom: 50px;
 
   .socialNetwork-container {
@@ -114,7 +114,7 @@ export default {
 // Tablet
 @include mediaQueryMin("md") {
   .footer-container {
-    margin-top: 250px;
+    margin-top: 150px;
 
     .footer {
       display: flex;

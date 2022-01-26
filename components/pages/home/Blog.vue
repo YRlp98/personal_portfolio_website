@@ -12,7 +12,7 @@
       </div>
       <TextOnlyButton
         :text="$t('viewAll')"
-        link="https://virgool.io/@YRlp98"
+        link="/blog"
         class="textOnlyButton"
       />
     </div>
@@ -25,6 +25,7 @@
 import BlogCard from "../../widgets/BlogCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
 import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
+import blogs from "~/data/blogs.json";
 
 export default {
   name: "Blog",
@@ -35,35 +36,7 @@ export default {
   },
   data() {
     return {
-      blogs: [
-        {
-          title: "نحوه ارتقاء از ویندوز 7 به گنو/لینوکس",
-          description:
-            "اگه هنوز دارید از Windows 7 به دلیل اینکه از Windows 10 خوشتون نمیاد و یا سیستمی قدیمی‌‌ و ضعیف دارید استفاده می‌کنید، کاملا قابل قابل درک است. اما یک راه جایگزین برای ارتقاء سیستم‌عامل سیستمون وجود داره و اون استفاده از سیستم‌عامل گنو/لینوکس است. می‌تونید لینوکس رو به صورت رایگان روی کامپیوتر شخصیتون نصب کنید و از یک سیستم‌عاملی که پشتیبانی و آپدیت میشه بهره‌مند بشید!",
-          image:
-            "https://files.virgool.io/upload/users/22898/posts/i1dbn8sqcmur/r9ojcwdoi8tw.png?x-img=v1/resize,w_700/optimize,q_100",
-          alt: "نحوه ارتقاء از ویندوز 7 به گنو/لینوکس",
-          link: "https://vrgl.ir/pcNl1",
-        },
-        {
-          title: "3 خط فرمان مفید برای تست سرعت اینترنت",
-          description:
-            "باخبر بودن از سرعت اتصالمون به اینترنت، کمکمون می‌کنه تا بهتر کامپیوترمونو کنترل کنیم. برای همین امروز، تو این مقاله می‌خوام 3 تا Command-line (خط فرمان) برای تست سرعت اینترنت رو معرفی کنم که هر 3 تاشون رایگان و اپن سورس هستن.",
-          image:
-            "https://files.virgool.io/upload/users/22898/posts/u9ba9ffyesbs/e02w5weyfyjq.png",
-          alt: "3 خط فرمان مفید برای تست سرعت اینترنت",
-          link: "https://vrgl.ir/mJN0y",
-        },
-        {
-          title: "نسخه 2 وب‌سایت زنیاک منتشر شد!",
-          description:
-            "شاید اکثر شماهایی که دارید این متن رو می‌خونید، با زنیاک آشنا نیستید و شاید اسمش رو هم نشنیدید. پس به همین دلیل، بهتره که قبل از هرچی زنیاک رو بهتون به صورت خیلی خلاصه معرفی کنم.",
-          image:
-            "https://files.virgool.io/upload/users/22898/posts/hiuap8xsjmyo/vmfajug0ciqk.png",
-          alt: "نسخه 2 وب‌سایت زنیاک منتشر شد!",
-          link: "https://vrgl.ir/l1IBS",
-        },
-      ],
+      blogs: blogs.slice(0, 3),
     };
   },
 };

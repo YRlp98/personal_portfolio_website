@@ -25,7 +25,7 @@
           <nuxt-link class="item" to="/projects">{{ $t("projects") }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="item" to="#">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
     </div>

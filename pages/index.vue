@@ -80,6 +80,7 @@ export default {
 
 .blog-container {
   margin-top: 150px;
+  padding-bottom: 50px;
 }
 
 // Tablet

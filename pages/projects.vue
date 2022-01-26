@@ -84,6 +84,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  padding-bottom: 50px;
 
   .title {
     margin-top: 250px;

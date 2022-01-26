@@ -9,8 +9,8 @@
         <img src="~/assets/images/icons/location.svg" alt="Location" />
         {{ $t("iran") }}</a
       >
-      <a class="item" href="mailto: yousef.r1999@gmail.com" target="_blank">
-        <img src="~/assets/images/icons/email.svg" alt="Birthday" srcset="" />
+      <a class="item" href="mailto: hello@yrlp.ir" target="_blank">
+        <img src="~/assets/images/icons/email.svg" alt="Email" />
         {{ $t("emailAddress") }}</a
       >
       <a class="item" href="https://t.me/YRlp98" target="_blank">

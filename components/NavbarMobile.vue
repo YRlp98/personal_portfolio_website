@@ -23,7 +23,7 @@
         <nuxt-link class="menu__item" to="/projects">{{ $t("projects") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="#">‌{{ $t("blog") }}</nuxt-link>
+        <nuxt-link class="menu__item" to="/blog">‌{{ $t("blog") }}</nuxt-link>
       </li>
       <div class="settings-menu">
         <SettingsMenu class="settingsMenu" />

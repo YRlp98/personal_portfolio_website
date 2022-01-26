@@ -3,7 +3,7 @@ export const myDB = {
         fa: {
             // Other
             iran: "ایران",
-            emailAddress: "Yousef.r1999@gmail.com",
+            emailAddress: "hello@yrlp.ir",
             telegramId: "YRlp98@",
             education: "تحصیلات",
             experience: "تجربیات",
@@ -74,7 +74,7 @@ export const myDB = {
         en: {
             // Other
             iran: "Iran",
-            emailAddress: "Yousef.r1999@gmail.com",
+            emailAddress: "hello@yrlp.ir",
             telegramId: "@YRlp98",
             education: "Education",
             experience: "Experience",
