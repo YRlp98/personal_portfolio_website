@@ -27,8 +27,6 @@ export default {
   position: relative;
   width: 340px;
   height: 400px;
-  // width: 400px;
-  // min-height: 400px;
   border-radius: 5px;
   background: transparent;
   display: flex;

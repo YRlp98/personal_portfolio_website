@@ -10,11 +10,13 @@
           :project="project"
         />
       </div>
-      <TextOnlyButton
-        :text="$t('viewAll')"
-        link="/projects"
-        class="textOnlyButton"
-      />
+      <div>
+        <TextOnlyButton
+          :text="$t('viewAll')"
+          link="/projects"
+          class="textOnlyButton"
+        />
+      </div>
     </div>
     <TitleBackground title="Projects" class="titleBackground" />
   </div>
@@ -54,6 +56,8 @@ export default {
   .projects {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
 
     .projects-cards {
@@ -61,17 +65,24 @@ export default {
       margin-bottom: 40px;
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       justify-content: center;
 
       .projectCard {
         margin: 10px auto;
+        width: max(260px);
 
         // Tablet
         @include mediaQueryMin("md") {
-          width: 340px;
-          height: 245px;
+          width: min(340px);
+          height: min(245px);
+          margin: 10px min(10px);
         }
       }
+    }
+
+    .textOnlyButton {
+      // display: flex;
     }
   }
 

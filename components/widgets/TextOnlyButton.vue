@@ -1,5 +1,4 @@
 <template>
-  <!-- <a class="textOnlyButton" :href="link">{{ text }}</a> -->
   <nuxt-link class="textOnlyButton" :to="link">{{ text }}</nuxt-link>
 </template>
 
