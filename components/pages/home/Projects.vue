@@ -74,15 +74,11 @@ export default {
 
         // Tablet
         @include mediaQueryMin("md") {
+          margin: 10px min(10px);
           width: min(340px);
           height: min(245px);
-          margin: 10px min(10px);
         }
       }
-    }
-
-    .textOnlyButton {
-      // display: flex;
     }
   }
 

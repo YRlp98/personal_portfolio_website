@@ -10,11 +10,13 @@
           :blog="blog"
         />
       </div>
-      <TextOnlyButton
-        :text="$t('viewAll')"
-        link="/blog"
-        class="textOnlyButton"
-      />
+      <div>
+        <TextOnlyButton
+          :text="$t('viewAll')"
+          link="/blog"
+          class="textOnlyButton"
+        />
+      </div>
     </div>
     <TitleBackground title="Blog" class="titleBackground" />
   </div>
@@ -55,6 +57,8 @@ export default {
   .blog {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
 
     .blog-cards {
@@ -65,11 +69,14 @@ export default {
       justify-content: center;
 
       .blogCard {
-        margin: 10px 10px;
+        // margin: 10px 10px;
+        margin: 10px auto;
+        width: max(310px);
 
         // Tablet
         @include mediaQueryMin("md") {
-          width: 400px;
+          margin: 10px min(10px);
+          width: min(400px);
         }
       }
     }
