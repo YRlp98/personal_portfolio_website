@@ -135,11 +135,13 @@ export default {
 
     .projectCard {
       margin: 10px auto;
+      width: max(260px);
 
       // Tablet
       @include mediaQueryMin("md") {
-        width: 340px;
-        height: 245px;
+        margin: 10px min(10px);
+        width: min(340px);
+        height: min(245px);
       }
     }
   }
