@@ -69,7 +69,6 @@ export default {
       justify-content: center;
 
       .blogCard {
-        // margin: 10px 10px;
         margin: 10px auto;
         width: max(310px);
 

@@ -45,14 +45,16 @@ export default {
     margin-top: 80px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-end;
 
     .blogCard {
       margin: 10px auto;
+      width: max(310px);
 
       // Tablet
       @include mediaQueryMin("md") {
-        width: 400px;
+        margin: 10px min(10px);
+        width: min(400px);
       }
     }
   }
