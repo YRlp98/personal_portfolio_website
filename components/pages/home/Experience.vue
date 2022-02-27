@@ -86,12 +86,14 @@
 </template>
 
 <script>
+import HomeTitle from "./HomeTitle.vue";
 import ImageListCard from "~/components/widgets/ImageListCard.vue";
 import TitleSubCard from "~/components/widgets/TitleSubCard.vue";
 
 export default {
   name: "Experience",
   components: {
+    HomeTitle,
     ImageListCard,
     TitleSubCard,
   },

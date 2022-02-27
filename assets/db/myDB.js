@@ -121,7 +121,7 @@ export const myDB = {
             HomePageExperiencXeniacFrontEnd: "Front-end Developer",
             HomePageExperiencXeniacFrontEndDate: "Aprill 2021 - Present",
             HomePageExperiencXeniacUIUX: "UI/UX Designer",
-            HomePageExperiencXeniacUIUXDate: "آبان ۱۳۹۷ - هم‌اکنون",
+            HomePageExperiencXeniacUIUXDate: "Nov 2018 - Present",
             HomePageExperiencXeniacMobile: "Mobile Application Developer",
             HomePageExperiencXeniacMobileDate: "Nov 2018 - Aprill 2021",
             HomePageExperienceOther: "Other",
