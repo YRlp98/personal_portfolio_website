@@ -61,6 +61,7 @@ export default {
       border-radius: 5px;
       height: 170px;
       width: 170px;
+      box-shadow: rgba(0, 0, 0, 0.9) 0px 25px 20px -20px;
     }
   }
 
