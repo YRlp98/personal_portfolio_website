@@ -1,5 +1,17 @@
 [
     {
+        "title": "Weather app website",
+        "image": "https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/weather_app_website.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL3dlYXRoZXJfYXBwX3dlYnNpdGUucG5nIiwiaWF0IjoxNjQ3NzAyMDIxLCJleHAiOjE5NjMwNjIwMjF9.DFXZVl-jfMFJpXsFCubc-aBusmqBTQShfkPqQeMA0C4",
+        "alt": "Weather app website",
+        "link": "https://github.com/YRlp98/weather_app_website",
+        "tags": [
+            {
+                "value": "Web",
+                "color": "#4D848B"
+            }
+        ]
+    },
+    {
         "title": "YRlp's website",
         "image": "https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/yrlp's website.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL3lybHAncyB3ZWJzaXRlLnBuZyIsImlhdCI6MTY0MzAzMTM1MiwiZXhwIjoxOTU4MzkxMzUyfQ.rkq4Ai_o6-ceELuChGxLVHhQWYKOr58Msqc5L7bExRE",
         "alt": "YRlp's website",
