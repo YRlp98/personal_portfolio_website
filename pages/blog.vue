@@ -1,5 +1,8 @@
 <template>
-  <div class="blog-container defualt-margin">
+  <div
+    class="blog-container defualt-margin"
+    :style="{ direction: `${changeDirection(this.activeLang)}` }"
+  >
     <h1 class="title">{{ $t("blog") }}</h1>
     <div class="blog-cards">
       <BlogCard
@@ -14,6 +17,8 @@
 
 <script>
 import BlogCard from "~/components/widgets/BlogCard.vue";
+
+import changeDirection from "../assets/mixins/changeDirection";
 import blogs from "~/data/blogs.json";
 
 export default {
@@ -21,9 +26,11 @@ export default {
   components: { BlogCard },
   data() {
     return {
+      activeLang: this.$i18n.locale,
       blogs,
     };
   },
+  mixins: [changeDirection],
 };
 </script>
 
@@ -31,7 +38,7 @@ export default {
 .blog-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  direction: rtl;
   padding-bottom: 100px;
 
   .title {
@@ -45,7 +52,7 @@ export default {
     margin-top: 80px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: space-between;
 
     .blogCard {
       margin: 10px auto;
