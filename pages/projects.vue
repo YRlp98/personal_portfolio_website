@@ -1,7 +1,13 @@
 <template>
-  <div class="projects-container defualt-margin">
+  <div
+    class="projects-container defualt-margin"
+    :style="{ direction: `${changeDirection(this.activeLang)}` }"
+  >
     <h1 class="title">{{ $t("projects") }}</h1>
-    <div class="filter">
+    <div
+      class="filter"
+      :style="{ direction: `${changeDirection(this.activeLang)}` }"
+    >
       <p>{{ $t("show") }}:</p>
       <ul>
         <li
@@ -33,6 +39,8 @@
 
 <script>
 import ProjectCard from "~/components/widgets/ProjectCard.vue";
+
+import changeDirection from "../assets/mixins/changeDirection";
 import projects from "~/data/projects.json";
 
 export default {
@@ -40,6 +48,7 @@ export default {
   components: { ProjectCard },
   data() {
     return {
+      activeLang: this.$i18n.locale,
       projects,
       tags: [
         { name: this.$i18n.t("All"), color: "#ffffff" },
@@ -51,6 +60,7 @@ export default {
       activeTag: this.$i18n.t("All"),
     };
   },
+  mixins: [changeDirection],
   methods: {
     onClick(tag) {
       this.activeTag = tag;
@@ -83,7 +93,7 @@ export default {
 .projects-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  direction: rtl;
   padding-bottom: 50px;
 
   .title {
