@@ -69,7 +69,7 @@ export const myDB = {
             homePageFollowMeSN: "من در شبکه‌های اجتماعی",
 
             // Footer
-            footerCopyright: "طراحی و پیاده سازی شده توسط یوسف روشندل",
+            footerCopyright: ". طراحی و پیاده سازی شده توسط یوسف روشندل",
         },
         en: {
             // Other
@@ -140,7 +140,7 @@ export const myDB = {
             homePageFollowMeSN: "Me on Social Network",
 
             // Footer
-            footerCopyright: "Designed and Implemented by Yousef Roshandel"
+            footerCopyright: "Designed and Implemented by Yousef Roshandel ."
         },
     }
 }

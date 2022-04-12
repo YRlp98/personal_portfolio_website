@@ -12,7 +12,7 @@
     </div>
 
     <div class="footer defualt-margin">
-      <ul>
+      <ul :style="{ direction: `${changeDirection(this.activeLang)}` }">
         <li>
           <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
         </li>
@@ -35,7 +35,9 @@
           <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
-      <p>. {{ $t("footerCopyright") }}</p>
+      <p :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+        {{ $t("footerCopyright") }}
+      </p>
     </div>
   </div>
 </template>
@@ -44,12 +46,21 @@
 import SocialNetwork from "~/components/widgets/SocialNetwork.vue";
 import TitleBackground from "~/components/backgrounds/TitleBackground.vue";
 
+import changeDirection from "../assets/mixins/changeDirection";
+import changeAlign from "../assets/mixins/changeAlign";
+
 export default {
   name: "Footer",
   components: {
     SocialNetwork,
     TitleBackground,
   },
+  data() {
+    return {
+      activeLang: this.$i18n.locale,
+    };
+  },
+  mixins: [changeDirection, changeAlign],
   methods: {
     goto(id) {
       this.$router.push(id);

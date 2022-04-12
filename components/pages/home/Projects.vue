@@ -1,6 +1,8 @@
 <template>
   <div class="projects-container" id="homeProjects">
-    <h1>{{ $t("projects") }}</h1>
+    <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      {{ $t("projects") }}
+    </h1>
     <div class="projects">
       <div class="projects-cards">
         <ProjectCard
@@ -26,7 +28,9 @@
 import ProjectCard from "../../widgets/ProjectCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
 import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
+
 import projects from "~/data/projects.json";
+import changeAlign from "../../../assets/mixins/changeAlign";
 
 export default {
   name: "Projects",
@@ -37,9 +41,11 @@ export default {
   },
   data() {
     return {
+      activeLang: this.$i18n.locale,
       projects: projects.slice(0, 6),
     };
   },
+  mixins: [changeAlign],
 };
 </script>
 
@@ -85,7 +91,7 @@ export default {
   .titleBackground {
     z-index: 1;
     left: -200px;
-    top: 180px;
+    top: 240px;
     transform: rotate(-90deg);
   }
 }

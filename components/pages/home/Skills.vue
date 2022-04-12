@@ -1,7 +1,9 @@
 <template>
   <div class="skills-container" id="homeSkills">
     <div class="main-skills-container defualt-margin">
-      <h1>{{ $t("homePageSkillsMain") }}</h1>
+      <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+        {{ $t("homePageSkillsMain") }}
+      </h1>
       <div class="main-skills">
         <!-- Web -->
         <div class="skills">
@@ -40,7 +42,9 @@
       </div>
     </div>
     <div class="other-skills-container defualt-margin">
-      <h1>{{ $t("homePageSkillsOther") }}</h1>
+      <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+        {{ $t("homePageSkillsOther") }}
+      </h1>
       <div class="other-skills">
         <!-- Software engineering -->
         <div class="skills">
@@ -121,6 +125,8 @@ import SkillProgress from "./SkillProgress.vue";
 import SkillSimple from "./SkillSimple.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
 
+import changeAlign from "../../../assets/mixins/changeAlign";
+
 export default {
   name: "Skills",
   components: {
@@ -131,6 +137,7 @@ export default {
   },
   data() {
     return {
+      activeLang: this.$i18n.locale,
       webSkills: [
         {
           title: "HTML",
@@ -229,6 +236,7 @@ export default {
       ],
     };
   },
+  mixins: [changeAlign],
 };
 </script>
 

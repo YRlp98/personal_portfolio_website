@@ -1,6 +1,8 @@
 <template>
   <div class="blog-container" id="homeBlog">
-    <h1>{{ $t("blog") }}</h1>
+    <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      {{ $t("blog") }}
+    </h1>
     <div class="blog">
       <div class="blog-cards">
         <BlogCard
@@ -27,6 +29,8 @@
 import BlogCard from "../../widgets/BlogCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
 import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
+
+import changeAlign from "../../../assets/mixins/changeAlign";
 import blogs from "~/data/blogs.json";
 
 export default {
@@ -38,9 +42,11 @@ export default {
   },
   data() {
     return {
+      activeLang: this.$i18n.locale,
       blogs: blogs.slice(0, 3),
     };
   },
+  mixins: [changeAlign],
 };
 </script>
 

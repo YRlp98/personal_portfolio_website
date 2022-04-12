@@ -1,6 +1,11 @@
 <template>
   <div class="aboutMe-container" id="homeAboutMe">
-    <h1 class="aboutMe-title">{{ $t("homePageAboutMe") }}</h1>
+    <h1
+      class="aboutMe-title"
+      :style="{ textAlign: `${changeAlign(this.activeLang)}` }"
+    >
+      {{ $t("homePageAboutMe") }}
+    </h1>
     <div class="aboutMe-avatar">
       <img
         src="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Yousef_Roshandel.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1lvdXNlZl9Sb3NoYW5kZWwud2VicCIsImlhdCI6MTYzODE5OTg4NSwiZXhwIjoxOTUzNTU5ODg1fQ.VKVFopNxk-Ewlr32JwQdmybEs9oPvsxP5OXNZrxjBNs"
@@ -8,7 +13,12 @@
       />
       <div class="square"></div>
     </div>
-    <p class="aboutMe-text">{{ $t("homePageAboutMeText") }}</p>
+    <p
+      class="aboutMe-text"
+      :style="{ direction: `${changeDirection(this.activeLang)}` }"
+    >
+      {{ $t("homePageAboutMeText") }}
+    </p>
     <AboutMeInfo class="aboutMeInfo" />
     <SocialNetwork class="socialNetwork" />
     <TitleBackground class="titleBackground" title="about me" />
@@ -20,6 +30,9 @@ import AboutMeInfo from "./AboutMeInfo.vue";
 import SocialNetwork from "../../widgets/SocialNetwork.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
 
+import changeDirection from "../../../assets/mixins/changeDirection";
+import changeAlign from "../../../assets/mixins/changeAlign";
+
 export default {
   name: "AboutMe",
   components: {
@@ -27,6 +40,12 @@ export default {
     SocialNetwork,
     TitleBackground,
   },
+  data() {
+    return {
+      activeLang: this.$i18n.locale,
+    };
+  },
+  mixins: [changeDirection, changeAlign],
 };
 </script>
 

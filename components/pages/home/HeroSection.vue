@@ -1,6 +1,9 @@
 <template>
   <div class="heroSection-container" id="#homeHeroSection">
-    <div class="heroSection-content">
+    <div
+      class="heroSection-content"
+      :style="{ direction: `${changeDirection(this.activeLang)}` }"
+    >
       <div class="heroSection-welcome">
         <h1>{{ $t("homePageHello") }}</h1>
         <h1>{{ $t("homePageName") }}</h1>
@@ -18,12 +21,20 @@
 import ScrollIcon from "../../icons/ScrollIcon.vue";
 import IconBackground from "../../backgrounds/IconBackground.vue";
 
+import changeDirection from "../../../assets/mixins/changeDirection";
+
 export default {
   name: "HeroSection",
   components: {
     ScrollIcon,
     IconBackground,
   },
+  data() {
+    return {
+      activeLang: this.$i18n.locale,
+    };
+  },
+  mixins: [changeDirection],
 };
 </script>
 
