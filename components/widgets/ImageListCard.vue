@@ -8,10 +8,12 @@
         class="titleSubCard"
         :title="title"
         :description="description"
+        icon="line"
       />
     </a>
   </div>
 </template>
+
 
 <script>
 import TitleSubCard from "~/components/widgets/TitleSubCard.vue";

@@ -3,7 +3,8 @@
     <div class="titleSubCard">
       <h4>{{ title }}</h4>
       <div class="descriptiont">
-        <img src="~/assets/images/icons/calendar_gray.svg" />
+        <!-- <img src="~/assets/images/icons/calendar_gray.svg" /> -->
+        <img :src="require(`~/assets/images/icons/${icon}.svg`)" />
         <p>{{ description }}</p>
       </div>
     </div>
@@ -20,6 +21,11 @@ export default {
     },
     description: {
       type: String,
+      required: false,
+    },
+    icon: {
+      type: String,
+      default: "calendar_gray",
       required: false,
     },
   },
