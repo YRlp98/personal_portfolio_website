@@ -12,11 +12,17 @@
     padding: 0;
     margin: 0;
     border: 0;
+
+    *::selection {
+        background: green;
+    }
+
     *::after {
         padding: 0;
         margin: 0;
         border: 0;
     }
+
     *::before {
         padding: 0;
         margin: 0;
