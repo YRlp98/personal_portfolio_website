@@ -20,6 +20,7 @@ export default {
 .titleBackground-container {
   position: absolute;
   z-index: -1;
+  pointer-events: none;
 
   h1 {
     text-transform: uppercase;
