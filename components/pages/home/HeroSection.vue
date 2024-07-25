@@ -54,6 +54,7 @@ export default {
     position: relative;
     bottom: 15vh;
     z-index: 101;
+    pointer-events: none;
 
     h1 {
       font-size: 50px;
