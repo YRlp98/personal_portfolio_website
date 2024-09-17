@@ -64,6 +64,12 @@ export default {
     align-items: center;
     text-decoration: none;
 
+    img {
+      height: 50px;
+      width: 50px;
+      border-radius: 4px;
+    }
+
     .titleSubCard {
       margin-right: 15px;
     }

@@ -7,6 +7,8 @@ export const myDB = {
             telegramId: "YRlp98@",
             education: "تحصیلات",
             experience: "تجربیات",
+            fewzed: 'فیوزد',
+            fewzedDesc: 'کارشناسان راه‌حل‌های بزرگراه و ساخت و سازها',
             xeniac: 'زنیاک',
             xeniacDesc: 'تیم طراحی و توسعه نرم‌فزار',
             samArea: 'سام‌آرنا',
@@ -46,6 +48,8 @@ export const myDB = {
 
             // HomePage - Experience
             HomePageExperienceMain: "تخصصی",
+            HomePageExperiencFewzewd: "توسعه‌دهنده فرانت-اند و طراح رابط/تجربه کاربری",
+            HomePageExperiencFewzedFrontEndDate: "شهریور 1402 - هم اکنون",
             HomePageExperiencXeniacFrontEnd: "توسعه‌دهنده فرانت-اند",
             HomePageExperiencXeniacFrontEndDate: "فروردین ۱۴۰۰ - هم‌اکنون",
             HomePageExperiencXeniacUIUX: "طراح رابط/تجربه کاربری",
@@ -77,6 +81,8 @@ export const myDB = {
             telegramId: "@YRlp98",
             education: "Education",
             experience: "Experience",
+            fewzed: 'Fewzed',
+            fewzedDesc: 'Experts in Highway & Construction Solutions',
             xeniac: 'Xeniac',
             xeniacDesc: 'Software Production',
             samArea: 'Sam Arena',
@@ -117,6 +123,8 @@ export const myDB = {
 
             // HomePage - Experience
             HomePageExperienceMain: "Specialist",
+            HomePageExperiencFewzewd: "Front-end Developer and UI/UX Deisgner",
+            HomePageExperiencFewzedFrontEndDate: "September 2023 - Present",
             HomePageExperiencXeniacFrontEnd: "Front-end Developer",
             HomePageExperiencXeniacFrontEndDate: "Aprill 2021 - Present",
             HomePageExperiencXeniacUIUX: "UI/UX Designer",

@@ -1,8 +1,29 @@
 <template>
   <div class="experience-container">
     <HomeTitle class="homeTitle" :title="$t('experience')" />
+    
     <div class="experience main">
       <h3 class="catTitle">{{ $t("HomePageExperienceMain") }}</h3>
+
+      <div class="experience main">
+      <!-- Fewzed -->
+      <ImageListCard
+        class="imageListCard"
+        link="http://fewzed.co.uk/"
+        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1734566400&v=beta&t=pESiEt-rbAm6y21lb_OX1Kda5OjX7Oe9FWJn5xVwxZI"
+        imageAlt="Fewzed"
+        :title="$t('fewzed')"
+        :description="$t('fewzedDesc')"
+      />
+      <div class="subExperiences">
+        <TitleSubCard
+          class="titleSubCard"
+          :title="$t('HomePageExperiencFewzewd')"
+          :description="$t('HomePageExperiencFewzedFrontEndDate')"
+        />
+      </div>
+    </div>
+
       <!-- Xeniac -->
       <ImageListCard
         class="imageListCard"
@@ -30,6 +51,7 @@
         />
       </div>
     </div>
+
 
     <div class="experience other">
       <h3 class="catTitle">{{ $t("HomePageExperienceOther") }}</h3>
