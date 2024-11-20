@@ -10,21 +10,24 @@
       <a href="https://dribbble.com/YRlp98" target="_blank">
         <img src="~/assets/images/icons/dribbble.svg" alt="Dribble"
       /></a>
-      <!-- <a
+      <a href="https://www.behance.net/yrlp98" target="_blank">
+        <img src="~/assets/images/icons/behance.svg" alt="Behance"
+      /></a>
+      <a href="https://x.com/YRlp98" target="_blank">
+        <img src="~/assets/images/icons/x.svg" alt="X"
+      /></a>
+            <!-- <a
         href="https://www.youtube.com/channel/UCZd51HzXf_YThh9wfZy_1YA"
         target="_blank"
       >
         <img src="~/assets/images/icons/youtube.svg" alt="Youtube"
       /></a> -->
-      <a href="https://twitter.com/YRlp98" target="_blank">
-        <img src="~/assets/images/icons/twitter.svg" alt="Twitter"
-      /></a>
       <!-- <a href="https://www.facebook.com/YRlp98/" target="_blank">
         <img src="~/assets/images/icons/facebook.svg" alt="Facebook"
       /></a> -->
-      <a href="https://www.instagram.com/y.rlp/" target="_blank">
+      <!-- <a href="https://www.instagram.com/y.rlp/" target="_blank">
         <img src="~/assets/images/icons/instagram.svg" alt="Instagram"
-      /></a>
+      /></a> -->
     </div>
   </div>
 </template>
