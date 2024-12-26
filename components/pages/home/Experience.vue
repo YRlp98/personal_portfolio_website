@@ -10,7 +10,7 @@
       <ImageListCard
         class="imageListCard"
         link="http://fewzed.co.uk/"
-        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1734566400&v=beta&t=pESiEt-rbAm6y21lb_OX1Kda5OjX7Oe9FWJn5xVwxZI"
+        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1743033600&v=beta&t=tnMbcBofTei20CTohl8eg4KFWhVQbFGDbpYWVQZDNeE"
         imageAlt="Fewzed"
         :title="$t('fewzed')"
         :description="$t('fewzedDesc')"
