@@ -1,54 +1,32 @@
 <template>
   <div class="experience-container">
     <HomeTitle class="homeTitle" :title="$t('experience')" />
-    
+
     <div class="experience main">
       <h3 class="catTitle">{{ $t("HomePageExperienceMain") }}</h3>
 
       <div class="experience main">
-      <!-- Fewzed -->
-      <ImageListCard
-        class="imageListCard"
-        link="http://fewzed.co.uk/"
-        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1743033600&v=beta&t=tnMbcBofTei20CTohl8eg4KFWhVQbFGDbpYWVQZDNeE"
-        imageAlt="Fewzed"
-        :title="$t('fewzed')"
-        :description="$t('fewzedDesc')"
-      />
-      <div class="subExperiences">
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencFewzewd')"
-          :description="$t('HomePageExperiencFewzedFrontEndDate')"
-        />
+        <!-- Fewzed -->
+        <ImageListCard class="imageListCard" link="http://fewzed.co.uk/"
+          imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1757548800&v=beta&t=Mkr39RtGKkIBHuSBTdNBF0M7vnhg8oWtzDmVG3rABjw"
+          imageAlt="Fewzed" :title="$t('fewzed')" :description="$t('fewzedDesc')" />
+        <div class="subExperiences">
+          <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencFewzewd')"
+            :description="$t('HomePageExperiencFewzedFrontEndDate')" />
+        </div>
       </div>
-    </div>
 
       <!-- Xeniac -->
-      <ImageListCard
-        class="imageListCard"
-        link="https://xeniac.ir"
+      <ImageListCard class="imageListCard" link="https://xeniac.ir"
         imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Xeniac.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1hlbmlhYy5wbmciLCJpYXQiOjE2MzgxOTk5NDAsImV4cCI6MTk1MzU1OTk0MH0.qQ9NDn-b5zKjTFDMJZCPCMCMBcZZ2eBParqm7-njpqw"
-        imageAlt="Xeniac"
-        :title="$t('xeniac')"
-        :description="$t('xeniacDesc')"
-      />
+        imageAlt="Xeniac" :title="$t('xeniac')" :description="$t('xeniacDesc')" />
       <div class="subExperiences">
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencXeniacFrontEnd')"
-          :description="$t('HomePageExperiencXeniacFrontEndDate')"
-        />
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencXeniacUIUX')"
-          :description="$t('HomePageExperiencXeniacUIUXDate')"
-        />
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencXeniacMobile')"
-          :description="$t('HomePageExperiencXeniacMobileDate')"
-        />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencXeniacFrontEnd')"
+          :description="$t('HomePageExperiencXeniacFrontEndDate')" />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencXeniacUIUX')"
+          :description="$t('HomePageExperiencXeniacUIUXDate')" />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencXeniacMobile')"
+          :description="$t('HomePageExperiencXeniacMobileDate')" />
       </div>
     </div>
 
@@ -56,52 +34,28 @@
     <div class="experience other">
       <h3 class="catTitle">{{ $t("HomePageExperienceOther") }}</h3>
       <!-- SamArena -->
-      <ImageListCard
-        class="imageListCard"
-        link="https://samarena.ir/"
+      <ImageListCard class="imageListCard" link="https://samarena.ir/"
         imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Samsung.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1NhbXN1bmcucG5nIiwiaWF0IjoxNjM4MTk5OTYxLCJleHAiOjE5NTM1NTk5NjF9.yXjD1MS9mEy8jIPkQOZwWdytYh8BB2b8_N7KaaOKepg"
-        imageAlt="Sam Arena"
-        :title="$t('samArea')"
-        :description="$t('samAreaDesc')"
-      />
+        imageAlt="Sam Arena" :title="$t('samArea')" :description="$t('samAreaDesc')" />
       <div class="subExperiences">
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencSamArena')"
-          :description="$t('HomePageExperiencSamArenaDate')"
-        />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencSamArena')"
+          :description="$t('HomePageExperiencSamArenaDate')" />
       </div>
       <!-- Toranji -->
-      <ImageListCard
-        class="imageListCard"
-        link="https://toranji.ir"
+      <ImageListCard class="imageListCard" link="https://toranji.ir"
         imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Toranji.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1RvcmFuamkucG5nIiwiaWF0IjoxNjM4MTk5OTc5LCJleHAiOjE5NTM1NTk5Nzl9.-ShWOeep1YCyK36OPtv7t_Owv2mrbA0JGbnrZbY6Apg"
-        imageAlt="Toranji"
-        :title="$t('toranji')"
-        :description="$t('toranjiDesc')"
-      />
+        imageAlt="Toranji" :title="$t('toranji')" :description="$t('toranjiDesc')" />
       <div class="subExperiences">
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencToranji')"
-          :description="$t('HomePageExperiencToranjiDate')"
-        />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencToranji')"
+          :description="$t('HomePageExperiencToranjiDate')" />
       </div>
       <!-- CafeDL -->
-      <ImageListCard
-        class="imageListCard"
-        link="https://cafedl.com/"
+      <ImageListCard class="imageListCard" link="https://cafedl.com/"
         imageUrl="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/CafeDL.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL0NhZmVETC5wbmciLCJpYXQiOjE2MzgxOTk4NzgsImV4cCI6MTk1MzU1OTg3OH0.PRTCKt4arzv1Xc6uwXmFw0fPS8SU1BwshwsudyaAkLI"
-        imageAlt="CafeDL"
-        :title="$t('cafeDL')"
-        :description="$t('cafeDLDesc')"
-      />
+        imageAlt="CafeDL" :title="$t('cafeDL')" :description="$t('cafeDLDesc')" />
       <div class="subExperiences">
-        <TitleSubCard
-          class="titleSubCard"
-          :title="$t('HomePageExperiencCafeDL')"
-          :description="$t('HomePageExperiencCafeDLDate')"
-        />
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencCafeDL')"
+          :description="$t('HomePageExperiencCafeDLDate')" />
       </div>
     </div>
   </div>
@@ -195,6 +149,7 @@ export default {
       top: 40px;
       right: 50%;
     }
+
     .catTitle {
       font-size: 1.375rem;
       text-align: right;
