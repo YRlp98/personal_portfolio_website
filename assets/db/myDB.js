@@ -7,6 +7,8 @@ export const myDB = {
             telegramId: "YRlp98@",
             education: "تحصیلات",
             experience: "تجربیات",
+            dotSwan: "دات سوان",
+            dotSwanDesc: "راهکارهای فناوری، نیروی انسانی و تحول دیجیتال",
             fewzed: 'فیوزد',
             fewzedDesc: 'توسعه نرم‌افزارهای ایمنی و خدمات بزرگراه',
             xeniac: 'زنیاک',
@@ -49,8 +51,10 @@ export const myDB = {
 
             // HomePage - Experience
             HomePageExperienceMain: "تخصصی",
+            HomePageExperiencDotSwan: "توسعه‌دهنده فرانت-اند",
+            HomePageExperiencDotSwanFrontEndDate: "فروردین 1404 - هم اکنون",
             HomePageExperiencFewzewd: "توسعه‌دهنده فرانت-اند و طراح رابط/تجربه کاربری",
-            HomePageExperiencFewzedFrontEndDate: "شهریور 1402 - هم اکنون",
+            HomePageExperiencFewzedFrontEndDate: "شهریور 1402 - اسفند 1403",
             HomePageExperiencXeniacFrontEnd: "توسعه‌دهنده فرانت-اند",
             HomePageExperiencXeniacFrontEndDate: "فروردین ۱۴۰۰ - هم‌اکنون",
             HomePageExperiencXeniacUIUX: "طراح رابط/تجربه کاربری",
@@ -82,6 +86,8 @@ export const myDB = {
             telegramId: "@YRlp98",
             education: "Education",
             experience: "Experience",
+            dotSwan: 'dowSwan',
+            dotSwanDesc: 'IT solutions, staffing, and digital transformation',
             fewzed: 'Fewzed',
             fewzedDesc: 'Developing software solutions for highway safety and services',
             xeniac: 'Xeniac',
@@ -124,8 +130,10 @@ export const myDB = {
 
             // HomePage - Experience
             HomePageExperienceMain: "Specialist",
+            HomePageExperiencDotSwan: "Front-end Developer",
+            HomePageExperiencDotSwanFrontEndDate: "April 2025 - Present",
             HomePageExperiencFewzewd: "Front-end Developer and UI/UX Deisgner",
-            HomePageExperiencFewzedFrontEndDate: "September 2023 - Present",
+            HomePageExperiencFewzedFrontEndDate: "September 2023 - March 2025",
             HomePageExperiencXeniacFrontEnd: "Front-end Developer",
             HomePageExperiencXeniacFrontEndDate: "Aprill 2021 - Present",
             HomePageExperiencXeniacUIUX: "UI/UX Designer",

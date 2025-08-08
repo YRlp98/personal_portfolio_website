@@ -2,18 +2,26 @@
   <div class="experience-container">
     <HomeTitle class="homeTitle" :title="$t('experience')" />
 
+    <!-- Main experience -->
     <div class="experience main">
       <h3 class="catTitle">{{ $t("HomePageExperienceMain") }}</h3>
 
-      <div class="experience main">
-        <!-- Fewzed -->
-        <ImageListCard class="imageListCard" link="http://fewzed.co.uk/"
-          imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1757548800&v=beta&t=Mkr39RtGKkIBHuSBTdNBF0M7vnhg8oWtzDmVG3rABjw"
-          imageAlt="Fewzed" :title="$t('fewzed')" :description="$t('fewzedDesc')" />
-        <div class="subExperiences">
-          <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencFewzewd')"
-            :description="$t('HomePageExperiencFewzedFrontEndDate')" />
-        </div>
+      <!-- dowSwan -->
+      <ImageListCard class="imageListCard" link="https://dotswan.com/"
+        imageUrl="https://media.licdn.com/dms/image/v2/D4E0BAQGe5XcQ0JubbA/company-logo_200_200/B4EZWEjLPfGYAM-/0/1741685568974/dotswan_logo?e=1757548800&v=beta&t=He-2nS-bgbNf_7ppztHIRX-LFH0X55wzuDHqFsw4Hek"
+        imageAlt="dotSwan" :title="$t('dotSwan')" :description="$t('dotSwanDesc')" />
+      <div class="subExperiences">
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencDotSwan')"
+          :description="$t('HomePageExperiencDotSwanFrontEndDate')" />
+      </div>
+
+      <!-- Fewzed -->
+      <ImageListCard class="imageListCard" link="http://fewzed.co.uk/"
+        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1757548800&v=beta&t=Mkr39RtGKkIBHuSBTdNBF0M7vnhg8oWtzDmVG3rABjw"
+        imageAlt="Fewzed" :title="$t('fewzed')" :description="$t('fewzedDesc')" />
+      <div class="subExperiences">
+        <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencFewzewd')"
+          :description="$t('HomePageExperiencFewzedFrontEndDate')" />
       </div>
 
       <!-- Xeniac -->
@@ -30,7 +38,7 @@
       </div>
     </div>
 
-
+    <!-- Other experience -->
     <div class="experience other">
       <h3 class="catTitle">{{ $t("HomePageExperienceOther") }}</h3>
       <!-- SamArena -->
