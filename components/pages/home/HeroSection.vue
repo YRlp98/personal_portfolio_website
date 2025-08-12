@@ -34,13 +34,15 @@ export default {
 	},
 	mixins: [changeDirection],
 	mounted() {
-		this.$gsap.from(this.$refs.heroWelcome.children, {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "back.out(1.7)",
-			stagger: 0.2,
-		});
+		if (process.client) {
+			this.$gsap.from(this.$refs.heroWelcome.children, {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "back.out(1.7)",
+				stagger: 0.2,
+			});
+		}
 	},
 };
 </script>
