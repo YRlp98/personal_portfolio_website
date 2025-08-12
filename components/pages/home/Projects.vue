@@ -1,8 +1,8 @@
 <template>
   <div class="projects-container" id="homeProjects">
-    <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+    <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
       {{ $t("projects") }}
-    </h1>
+    </h2>
     <div class="projects">
       <div class="projects-cards">
         <ProjectCard

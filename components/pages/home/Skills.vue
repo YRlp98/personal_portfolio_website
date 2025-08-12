@@ -1,9 +1,9 @@
 <template>
   <div class="skills-container" id="homeSkills">
     <div class="main-skills-container defualt-margin">
-      <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
         {{ $t("homePageSkillsMain") }}
-      </h1>
+      </h2>
       <div class="main-skills">
         <!-- Web -->
         <div class="skills">
@@ -42,9 +42,9 @@
       </div>
     </div>
     <div class="other-skills-container defualt-margin">
-      <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
         {{ $t("homePageSkillsOther") }}
-      </h1>
+      </h2>
       <div class="other-skills">
         <!-- Software engineering -->
         <div class="skills">
@@ -284,7 +284,7 @@ export default {
     }
   }
 
-  h1 {
+  h2 {
     font-size: 28px;
     color: var(--gray-1);
     text-align: right;

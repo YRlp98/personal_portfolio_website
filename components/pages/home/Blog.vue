@@ -1,8 +1,8 @@
 <template>
   <div class="blog-container" id="homeBlog">
-    <h1 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+    <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
       {{ $t("blog") }}
-    </h1>
+    </h2>
     <div class="blog">
       <div class="blog-cards">
         <BlogCard

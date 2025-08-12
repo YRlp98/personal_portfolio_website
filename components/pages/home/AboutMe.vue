@@ -1,8 +1,8 @@
 <template>
 	<div class="aboutMe-container" id="homeAboutMe">
-		<h1 class="aboutMe-title" :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+		<h2 class="aboutMe-title" :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
 			{{ $t("homePageAboutMe") }}
-		</h1>
+		</h2>
 		<div class="aboutMe-avatar">
 			<img
 				src="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Yousef_Roshandel.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1lvdXNlZl9Sb3NoYW5kZWwud2VicCIsImlhdCI6MTYzODE5OTg4NSwiZXhwIjoxOTUzNTU5ODg1fQ.VKVFopNxk-Ewlr32JwQdmybEs9oPvsxP5OXNZrxjBNs"

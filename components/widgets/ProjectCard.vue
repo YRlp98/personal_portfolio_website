@@ -2,7 +2,7 @@
   <a :href="project.link" target="_blank" class="projectCard-container">
     <img :src="project.image" :alt="project.alt" loading="lazy" />
     <div class="projectCard-info">
-      <h1>{{ project.title }}</h1>
+      <h2>{{ project.title }}</h2>
       <div class="projectCard-tags">
         <div
           class="tags"
@@ -94,7 +94,7 @@ export default {
     transform: translateY(30px);
     transition: 0.5s;
 
-    h1 {
+    h2 {
       font-size: 1.5rem;
       color: white;
     }
