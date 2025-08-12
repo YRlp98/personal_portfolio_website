@@ -2,7 +2,10 @@
 	<div class="heroSection-container" id="#homeHeroSection">
 		<div class="heroSection-content" :style="{ direction: `${changeDirection(this.activeLang)}` }">
 			<div class="heroSection-welcome" ref="heroWelcome">
-				<h1>{{ $t("homePageHello") }} {{ $t("homePageName") }}</h1>
+				<p class="heroTitle">
+					{{ $t("homePageHello") }}<br />
+					<span>{{ $t("homePageMy") }} <h1>{{ $t("homePageName") }}</h1></span>
+				</p>
 				<span></span>
 				<h2>{{ $t("homePageJobTitleP1") }} {{ $t("homePageJobTitleP2") }}</h2>
 				<h2></h2>
@@ -60,10 +63,23 @@ export default {
 		z-index: 101;
 		pointer-events: none;
 
-		h1 {
-			font-size: 50px;
-			font-weight: normal;
+		.heroTitle {
 			color: white;
+			font-weight: normal;
+			font-size: 25px;
+
+			span {
+				font-size: 50px;
+				font-weight: normal;
+				margin-right: 8px;
+				display: inline;
+			}
+
+			h1 {
+				font-size: 50px;
+				font-weight: bold;
+				margin: 0;
+			}
 		}
 
 		h2 {

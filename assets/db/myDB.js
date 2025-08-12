@@ -34,7 +34,8 @@ export const myDB = {
 
             // HomePage - Hero
             homePageHello: 'سلام!',
-            homePageName: 'من یوسف روشندل',
+            homePageMy: 'من',
+            homePageName: 'یوسف روشندل',
             homePageJobTitleP1: 'توسعه‌دهنده',
             homePageJobTitleP2: 'فرانت-اند هستم',
 
@@ -113,7 +114,8 @@ export const myDB = {
 
             // HomePage - Hero
             homePageHello: 'Hello!',
-            homePageName: 'My name is Yousef Roshandel',
+            homePageMy: 'My name is',
+            homePageName: 'Yousef Roshandel',
             homePageJobTitleP1: "I'm a Front-end",
             homePageJobTitleP2: 'developer',
 
