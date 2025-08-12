@@ -69,9 +69,9 @@ export default {
     availableLocales() {
       return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale);
     },
-    isDark() {
-      return this.$store.state.isDark;
-    },
+    // isDark() {
+    //   return this.$store.state.isDark;
+    // },
   },
 };
 </script>
