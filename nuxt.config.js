@@ -4,18 +4,18 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "Yousef Roshandel | Front-End Developer & UI/UX Designer",
-    description: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.",
+    description: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند.",
     htmlAttrs: {
       lang: 'fa'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences." },
+      { hid: 'description', name: 'description', content: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند." },
       { name: 'format-detection', content: 'telephone=no' },
       // OG Tags
       { property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer' },
-      { property: 'og:description', content: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences." },
+      { property: 'og:description', content: "Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند." },
       { property: 'og:url', content: 'https://yrlp.ir' },
       { name: 'twitter:card', content: 'summary_large_image' }
     ],
