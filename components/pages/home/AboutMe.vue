@@ -4,10 +4,8 @@
 			{{ $t("homePageAboutMe") }}
 		</h2>
 		<div class="aboutMe-avatar">
-			<img
-				src="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Yousef_Roshandel.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1lvdXNlZl9Sb3NoYW5kZWwud2VicCIsImlhdCI6MTYzODE5OTg4NSwiZXhwIjoxOTUzNTU5ODg1fQ.VKVFopNxk-Ewlr32JwQdmybEs9oPvsxP5OXNZrxjBNs"
-				alt="Yousef Roshandel"
-			/>
+			<img src="https://lixbjgupmbwyplqhzkde.supabase.in/storage/v1/object/sign/yrlp-storage/Images/Yousef_Roshandel.webp?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL1lvdXNlZl9Sb3NoYW5kZWwud2VicCIsImlhdCI6MTYzODE5OTg4NSwiZXhwIjoxOTUzNTU5ODg1fQ.VKVFopNxk-Ewlr32JwQdmybEs9oPvsxP5OXNZrxjBNs"
+				alt="Yousef Roshandel" />
 			<div class="square"></div>
 		</div>
 		<p class="aboutMe-text" :style="{ direction: `${changeDirection(this.activeLang)}` }">
@@ -41,78 +39,80 @@ export default {
 	mixins: [changeDirection, changeAlign],
 
 	mounted() {
-		this.$gsap.from(".aboutMe-avatar", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				start: "top bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+		if (process.client) {
+			this.$gsap.from(".aboutMe-avatar", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					start: "top bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".square", {
-			opacity: 0,
-			scale: 0.5,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				start: "top bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".square", {
+				opacity: 0,
+				scale: 0.5,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					start: "top bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".aboutMe-title", {
-			duration: 2.5,
-			ease: "slow(0.7,0.7,false)",
-			y: -10,
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".aboutMe-title", {
+				duration: 2.5,
+				ease: "slow(0.7,0.7,false)",
+				y: -10,
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".aboutMeInfo", {
-			duration: 2.5,
-			ease: "slow(0.7,0.7,false)",
-			x: -50,
-			start: "top center",
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".aboutMeInfo", {
+				duration: 2.5,
+				ease: "slow(0.7,0.7,false)",
+				x: -50,
+				start: "top center",
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-    this.$gsap.from(".socialNetwork", {
-			duration: 2.5,
-			ease: "slow(0.7,0.7,false)",
-			x: 50,
-			start: "top top",
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".socialNetwork", {
+				duration: 2.5,
+				ease: "slow(0.7,0.7,false)",
+				x: 50,
+				start: "top top",
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".titleBackground", {
-			duration: 2.5,
-			ease: "slow(0.7,0.7,false)",
-			scale: 1.5,
-			start: "center center",
-			scrollTrigger: {
-				trigger: ".aboutMe-container",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".titleBackground", {
+				duration: 2.5,
+				ease: "slow(0.7,0.7,false)",
+				scale: 1.5,
+				start: "center center",
+				scrollTrigger: {
+					trigger: ".aboutMe-container",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
+		}
 	},
 };
 </script>

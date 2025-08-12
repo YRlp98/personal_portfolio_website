@@ -46,70 +46,72 @@ export default {
 	},
 
 	mounted() {
-		this.$gsap.from(".education-container", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".education-container",
-				start: "-40% bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+		if (process.client) {
+			this.$gsap.from(".education-container", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".education-container",
+					start: "-40% bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".experience-container", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".experience-container",
-				start: "-40% bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".experience-container", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".experience-container",
+					start: "-40% bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".skills-container", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".skills-container",
-				start: "-40% bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".skills-container", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".skills-container",
+					start: "-40% bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".projects-container", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".projects-container",
-				start: "-40% bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".projects-container", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".projects-container",
+					start: "-40% bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
 
-		this.$gsap.from(".blog-container", {
-			opacity: 0,
-			y: 100,
-			duration: 1,
-			ease: "power3.out",
-			scrollTrigger: {
-				trigger: ".blog-container",
-				start: "-40% bottom",
-				scrub: 1,
-				toggleActions: "play none none pause",
-			},
-		});
+			this.$gsap.from(".blog-container", {
+				opacity: 0,
+				y: 100,
+				duration: 1,
+				ease: "power3.out",
+				scrollTrigger: {
+					trigger: ".blog-container",
+					start: "-40% bottom",
+					scrub: 1,
+					toggleActions: "play none none pause",
+				},
+			});
+		}
 	},
 };
 </script>
@@ -159,6 +161,7 @@ export default {
 			top: -310px;
 		}
 	}
+
 	.education-container {
 		position: relative;
 		margin-top: 250px;
