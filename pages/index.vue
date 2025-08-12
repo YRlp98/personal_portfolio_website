@@ -47,6 +47,7 @@ export default {
 
 	mounted() {
 		if (process.client) {
+			this.$nextTick(() => {
 			this.$gsap.from(".education-container", {
 				opacity: 0,
 				y: 100,
@@ -110,6 +111,7 @@ export default {
 					scrub: 1,
 					toggleActions: "play none none pause",
 				},
+			});
 			});
 		}
 	},
