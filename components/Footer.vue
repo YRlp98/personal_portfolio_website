@@ -2,7 +2,7 @@
   <div class="footer-container">
     <div class="socialNetwork-container">
       <div class="socialNetwork defualt-margin">
-        <h1>{{ $t("homePageFollowMeSN") }}</h1>
+        <h2>{{ $t("homePageFollowMeSN") }}</h2>
         <SocialNetwork class="socialNetwork" />
       </div>
       <TitleBackground
@@ -85,7 +85,7 @@ export default {
       align-items: center;
       justify-content: center;
 
-      h1 {
+      h2 {
         z-index: 1;
         color: white;
         font-size: 1.375;
