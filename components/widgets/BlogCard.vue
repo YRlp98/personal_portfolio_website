@@ -3,7 +3,7 @@
     <div class="blogCard">
       <img :src="blog.image" :alt="blog.alt" loading="lazy" />
       <div class="blogCard-info">
-        <h1>{{ blog.title }}</h1>
+        <h2>{{ blog.title }}</h2>
         <p>{{ blog.description }}</p>
       </div>
     </div>
@@ -56,7 +56,7 @@ export default {
       text-align: right;
       z-index: 9;
 
-      h1 {
+      h2 {
         color: white;
         font-size: 1.375rem;
         display: -webkit-box;
