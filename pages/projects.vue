@@ -1,49 +1,51 @@
 <template>
-  <div
-    class="projects-container defualt-margin"
-    :style="{ direction: `${changeDirection(this.activeLang)}` }"
-  >
+  <div class="projects-container defualt-margin" :style="{ direction: `${changeDirection(this.activeLang)}` }">
     <h1 class="title">{{ $t("projects") }}</h1>
-    <div
-      class="filter"
-      :style="{ direction: `${changeDirection(this.activeLang)}` }"
-    >
+    <div class="filter" :style="{ direction: `${changeDirection(this.activeLang)}` }">
       <p>{{ $t("show") }}:</p>
       <ul>
-        <li
-          v-for="(tag, index) in tags"
-          :key="index"
-          :style="{
-            color:
-              activeTag === $i18n.t(tag.name)
-                ? getActiveTagProperties(tag.name).color
-                : null,
-            fontWeight: activeTag === tag.name ? 'bold' : 'regular',
-          }"
-          @click="onClick(tag.name)"
-        >
+        <li v-for="(tag, index) in tags" :key="index" :style="{
+          color:
+            activeTag === $i18n.t(tag.name)
+              ? getActiveTagProperties(tag.name).color
+              : null,
+          fontWeight: activeTag === tag.name ? 'bold' : 'regular',
+        }" @click="onClick(tag.name)">
           {{ tag.name }}
         </li>
       </ul>
     </div>
     <div class="projects-cards">
-      <ProjectCard
-        class="projectCard"
-        v-for="project in filterdProjects"
-        :key="project.id"
-        :project="project"
-      />
+      <ProjectCard class="projectCard" v-for="project in filterdProjects" :key="project.id" :project="project" />
     </div>
   </div>
 </template>
 
 <script>
 import ProjectCard from "~/components/widgets/ProjectCard.vue";
-
 import changeDirection from "../assets/mixins/changeDirection";
 import projects from "~/data/projects.json";
 
 export default {
+  head() {
+    const baseUrl = 'https://yrlp.ir';
+    const path = this.$route.path;
+    const canonicalUrl = baseUrl + path;
+
+    return {
+      title: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Projects',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Blog' },
+        { hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { hid: 'og:url', property: 'og:url', content: canonicalUrl },
+      ],
+      link: [
+        { rel: 'canonical', href: canonicalUrl }
+      ],
+    }
+  },
+
   name: "projects",
   components: { ProjectCard },
   data() {
