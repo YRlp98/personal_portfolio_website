@@ -40,77 +40,79 @@ export default {
 
 	mounted() {
 		if (process.client) {
-			this.$gsap.from(".aboutMe-avatar", {
-				opacity: 0,
-				y: 100,
-				duration: 1,
-				ease: "power3.out",
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					start: "top bottom",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
-			});
+			this.$nextTick(() => {
+				this.$gsap.from(".aboutMe-avatar", {
+					opacity: 0,
+					y: 100,
+					duration: 1,
+					ease: "power3.out",
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						start: "top bottom",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 
-			this.$gsap.from(".square", {
-				opacity: 0,
-				scale: 0.5,
-				duration: 1,
-				ease: "power3.out",
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					start: "top bottom",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
-			});
+				this.$gsap.from(".square", {
+					opacity: 0,
+					scale: 0.5,
+					duration: 1,
+					ease: "power3.out",
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						start: "top bottom",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 
-			this.$gsap.from(".aboutMe-title", {
-				duration: 2.5,
-				ease: "slow(0.7,0.7,false)",
-				y: -10,
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
-			});
+				this.$gsap.from(".aboutMe-title", {
+					duration: 2.5,
+					ease: "slow(0.7,0.7,false)",
+					y: -10,
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 
-			this.$gsap.from(".aboutMeInfo", {
-				duration: 2.5,
-				ease: "slow(0.7,0.7,false)",
-				x: -50,
-				start: "top center",
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
-			});
+				this.$gsap.from(".aboutMeInfo", {
+					duration: 2.5,
+					ease: "slow(0.7,0.7,false)",
+					x: -50,
+					start: "top center",
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 
-			this.$gsap.from(".socialNetwork", {
-				duration: 2.5,
-				ease: "slow(0.7,0.7,false)",
-				x: 50,
-				start: "top top",
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
-			});
+				this.$gsap.from(".socialNetwork", {
+					duration: 2.5,
+					ease: "slow(0.7,0.7,false)",
+					x: 50,
+					start: "top top",
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 
-			this.$gsap.from(".titleBackground", {
-				duration: 2.5,
-				ease: "slow(0.7,0.7,false)",
-				scale: 1.5,
-				start: "center center",
-				scrollTrigger: {
-					trigger: ".aboutMe-container",
-					scrub: 1,
-					toggleActions: "play none none pause",
-				},
+				this.$gsap.from(".titleBackground", {
+					duration: 2.5,
+					ease: "slow(0.7,0.7,false)",
+					scale: 1.5,
+					start: "center center",
+					scrollTrigger: {
+						trigger: ".aboutMe-container",
+						scrub: 1,
+						toggleActions: "play none none pause",
+					},
+				});
 			});
 		}
 	},
