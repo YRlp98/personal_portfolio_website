@@ -1,27 +1,38 @@
 <template>
-  <div
-    class="blog-container defualt-margin"
-    :style="{ direction: `${changeDirection(this.activeLang)}` }"
-  >
+  <div class="blog-container defualt-margin" :style="{ direction: `${changeDirection(this.activeLang)}` }">
     <h1 class="title">{{ $t("blog") }}</h1>
     <div class="blog-cards">
-      <BlogCard
-        class="blogCard"
-        v-for="blog in blogs"
-        :key="blog.id"
-        :blog="blog"
-      />
+      <BlogCard class="blogCard" v-for="blog in blogs" :key="blog.id" :blog="blog" />
     </div>
   </div>
 </template>
 
 <script>
 import BlogCard from "~/components/widgets/BlogCard.vue";
-
 import changeDirection from "../assets/mixins/changeDirection";
 import blogs from "~/data/blogs.json";
 
 export default {
+  head() {
+    const baseUrl = 'https://yrlp.ir';
+    const path = this.$route.path;
+    const canonicalUrl = baseUrl + path;
+
+    return {
+      title: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Blog',
+      meta: [
+        { hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Blog' },
+        { hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { hid: 'og:url', property: 'og:url', content: canonicalUrl },
+      ],
+      link: [
+        { rel: 'canonical', href: canonicalUrl }
+      ],
+    }
+  },
+
+
   name: "Blog",
   components: { BlogCard },
   data() {
