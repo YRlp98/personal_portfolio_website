@@ -2,7 +2,7 @@
   <nav class="navbar-container">
     <div class="navbar defualt-margin">
       <span class="navbar-more" @click="isOpen = !isOpen">
-        <img src="~assets/images/icons/more.svg" alt="" />
+        <img src="~assets/images/icons/more.svg" alt="More icon" />
       </span>
       <transition name="fade" appear>
         <SettingsMenu class="settingsMenu" v-if="isOpen" />

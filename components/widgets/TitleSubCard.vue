@@ -4,7 +4,7 @@
       <h4>{{ title }}</h4>
       <div class="descriptiont">
         <!-- <img src="~/assets/images/icons/calendar_gray.svg" /> -->
-        <img :src="require(`~/assets/images/icons/${icon}.svg`)" />
+        <img :src="require(`~/assets/images/icons/${icon}.svg`)" :alt="icon"/>
         <p>{{ description }}</p>
       </div>
     </div>
