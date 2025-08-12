@@ -11,11 +11,17 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { hid: 'description', name: 'description', content: "Yousef Roshandel's personal website" },
+      { name: 'format-detection', content: 'telephone=no' },
+      // OG Tags
+      { property: 'og:title', content: 'Yousef Roshandel' },
+      { property: 'og:description', content: "Yousef Roshandel's personal website" },
+      { property: 'og:url', content: 'https://yrlp.ir' },
+      { name: 'twitter:card', content: 'summary_large_image' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'canonical', href: 'https://yrlp.ir' },
       {
         rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css',
         integrity: "sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==",
@@ -51,7 +57,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
     ['nuxt-font-loader-strategy', {
       ignoreLighthouse: true,
       ignoredEffectiveTypes: ['2g', 'slow-2g'],
@@ -82,7 +89,7 @@ export default {
               preload: true,
               localSrc: ['PeydaWeb-Medium'],
               src: '@/assets/fonts/PeydaWeb-Medium',
-              fontWeight: 'Medium',
+              fontWeight: '500',
               fontStyle: 'normal'
             },
             // PeydaWeb-Regular
@@ -90,7 +97,7 @@ export default {
               preload: true,
               localSrc: ['PeydaWeb-Regular'],
               src: '@/assets/fonts/PeydaWeb-Regular',
-              fontWeight: 'Regular',
+              fontWeight: '400',
               fontStyle: 'normal'
             },
             // PeydaWeb-SemiBold
@@ -98,7 +105,7 @@ export default {
               preload: true,
               localSrc: ['PeydaWeb-SemiBold'],
               src: '@/assets/fonts/PeydaWeb-SemiBold',
-              fontWeight: 'SemiBold',
+              fontWeight: '600',
               fontStyle: 'normal'
             },
 
@@ -106,9 +113,7 @@ export default {
         },
       ]
     }],
-
     '@nuxtjs/i18n',
-
   ],
 
   i18n: {
@@ -141,5 +146,21 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+
+  // Sitemap
+  sitemap: {
+    hostname: 'https://yrlp.ir',
+    gzip: true,
+    routes: async () => {
+      return ['/en', '/fa']
+    }
+  },
+
+  // Robots:
+  robots: {
+    userAgent: '*',
+    allow: '/',
+    sitemap: 'https://yrlp.ir/sitemap.xml'
   }
 }
