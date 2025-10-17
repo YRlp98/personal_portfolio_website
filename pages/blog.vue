@@ -32,7 +32,6 @@ export default {
     }
   },
 
-
   name: "Blog",
   components: { BlogCard },
   data() {
@@ -61,19 +60,14 @@ export default {
 
   .blog-cards {
     margin-top: 80px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    gap: 30px;
+
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
 
     .blogCard {
-      margin: 10px auto;
-      width: max(310px);
-
-      // Tablet
-      @include mediaQueryMin("md") {
-        margin: 10px min(10px);
-        width: min(400px);
-      }
+      width: 100%;
+      margin: 0 auto;
     }
   }
 }
