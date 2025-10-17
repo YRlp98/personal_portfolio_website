@@ -8,7 +8,7 @@
 
       <!-- dowSwan -->
       <ImageListCard class="imageListCard" link="https://dotswan.com/"
-        imageUrl="https://media.licdn.com/dms/image/v2/D4E0BAQGe5XcQ0JubbA/company-logo_200_200/B4EZWEjLPfGYAM-/0/1741685568974/dotswan_logo?e=1757548800&v=beta&t=He-2nS-bgbNf_7ppztHIRX-LFH0X55wzuDHqFsw4Hek"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.co/storage/v1/object/sign/yrlp-storage/Images/dotswan_logo.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84M2MwNWYxNS04NzViLTRlYmItYjVmYS1kYzI5YjBlNWMwNmUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL2RvdHN3YW5fbG9nby53ZWJwIiwiaWF0IjoxNzYwNzEzNjQ2LCJleHAiOjQ5MTQzMTM2NDZ9.EjzW4KHhRycwiAUsDfYXQRRa8xW7zYke7nJHyVHgJTQ"
         imageAlt="dotSwan" :title="$t('dotSwan')" :description="$t('dotSwanDesc')" />
       <div class="subExperiences">
         <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencDotSwan')"
@@ -17,7 +17,7 @@
 
       <!-- Fewzed -->
       <ImageListCard class="imageListCard" link="http://fewzed.co.uk/"
-        imageUrl="https://media.licdn.com/dms/image/v2/C4E0BAQE40p4qe9z3zA/company-logo_200_200/company-logo_200_200/0/1662882352622/fewzed_ltd_logo?e=1757548800&v=beta&t=Mkr39RtGKkIBHuSBTdNBF0M7vnhg8oWtzDmVG3rABjw"
+        imageUrl="https://lixbjgupmbwyplqhzkde.supabase.co/storage/v1/object/sign/yrlp-storage/Images/fewzed_ltd_logo.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV84M2MwNWYxNS04NzViLTRlYmItYjVmYS1kYzI5YjBlNWMwNmUiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ5cmxwLXN0b3JhZ2UvSW1hZ2VzL2Zld3plZF9sdGRfbG9nby53ZWJwIiwiaWF0IjoxNzYwNzEzNjEyLCJleHAiOjQ5MTQzMTM2MTJ9.jIR7DBiJbHS-RrTrPHE3mNIc1bvGcGTJULpNg5GWg_M"
         imageAlt="Fewzed" :title="$t('fewzed')" :description="$t('fewzedDesc')" />
       <div class="subExperiences">
         <TitleSubCard class="titleSubCard" :title="$t('HomePageExperiencFewzewd')"

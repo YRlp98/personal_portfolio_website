@@ -19,10 +19,10 @@ export default {
     const canonicalUrl = baseUrl + path;
 
     return {
-      title: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Blog',
+      title: 'Yousef Roshandel - Blog',
       meta: [
         { hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer - Blog' },
+        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel - Blog' },
         { hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
         { hid: 'og:url', property: 'og:url', content: canonicalUrl },
       ],
