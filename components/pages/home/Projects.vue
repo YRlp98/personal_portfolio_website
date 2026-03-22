@@ -1,6 +1,6 @@
 <template>
   <div class="projects-container" id="homeProjects">
-    <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+    <h2 :style="{ textAlign: `${changeAlign(activeLang)}` }">
       {{ $t("projects") }}
     </h2>
     <div class="projects">
@@ -41,9 +41,11 @@ export default {
   },
   data() {
     return {
-      activeLang: this.$i18n.locale,
       projects: projects.slice(0, 6),
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeAlign],
 };

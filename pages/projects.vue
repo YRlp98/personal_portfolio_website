@@ -1,16 +1,16 @@
 <template>
-  <div class="projects-container defualt-margin" :style="{ direction: `${changeDirection(this.activeLang)}` }">
+  <div class="projects-container defualt-margin" :style="{ direction: `${changeDirection(activeLang)}` }">
     <h1 class="title">{{ $t("projects") }}</h1>
-    <div class="filter" :style="{ direction: `${changeDirection(this.activeLang)}` }">
+    <div class="filter" :style="{ direction: `${changeDirection(activeLang)}` }">
       <p>{{ $t("show") }}:</p>
       <ul>
         <li v-for="(tag, index) in tags" :key="index" :style="{
           color:
-            activeTag === $i18n.t(tag.name)
-              ? getActiveTagProperties(tag.name).color
+            activeTag === tag.key
+              ? tag.color
               : null,
-          fontWeight: activeTag === tag.name ? 'bold' : 'regular',
-        }" @click="onClick(tag.name)">
+          fontWeight: activeTag === tag.key ? 'bold' : 'regular',
+        }" @click="onClick(tag.key)">
           {{ tag.name }}
         </li>
       </ul>
@@ -27,39 +27,30 @@ import changeDirection from "../assets/mixins/changeDirection";
 import projects from "~/data/projects.json";
 
 export default {
-  head() {
-    const baseUrl = 'https://yrlp.ir';
-    const path = this.$route.path;
-    const canonicalUrl = baseUrl + path;
+  setup() {
+    const route = useRoute()
+    const canonicalUrl = computed(() => 'https://yrlp.ir' + route.path)
 
-    return {
+    useHead({
       title: 'Yousef Roshandel - Projects',
       meta: [
-        { hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel - Blog' },
-        { hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-        { hid: 'og:url', property: 'og:url', content: canonicalUrl },
+        { name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { property: 'og:title', content: 'Yousef Roshandel - Projects' },
+        { property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { property: 'og:url', content: () => canonicalUrl.value },
       ],
       link: [
-        { rel: 'canonical', href: canonicalUrl }
+        { rel: 'canonical', href: () => canonicalUrl.value },
       ],
-    }
+    })
   },
 
   name: "projects",
   components: { ProjectCard },
   data() {
     return {
-      activeLang: this.$i18n.locale,
       projects,
-      tags: [
-        { name: this.$i18n.t("All"), color: "#ffffff" },
-        { name: this.$i18n.t("Designing"), color: "#FB4B8A" },
-        { name: this.$i18n.t("Web"), color: "#4D848B" },
-        { name: this.$i18n.t("Mobile"), color: "#38AF76" },
-        { name: this.$i18n.t("Others"), color: "#FB4B4B" },
-      ],
-      activeTag: this.$i18n.t("All"),
+      activeTag: "All",
     };
   },
   mixins: [changeDirection],
@@ -74,15 +65,26 @@ export default {
     },
   },
   computed: {
+    activeLang() {
+      return this.$i18n.locale;
+    },
+    tags() {
+      return [
+        { key: "All", name: this.$i18n.t("All"), color: "#ffffff" },
+        { key: "Designing", name: this.$i18n.t("Designing"), color: "#FB4B8A" },
+        { key: "Web", name: this.$i18n.t("Web"), color: "#4D848B" },
+        { key: "Mobile", name: this.$i18n.t("Mobile"), color: "#38AF76" },
+        { key: "Others", name: this.$i18n.t("Others"), color: "#FB4B4B" },
+      ];
+    },
     filterdProjects: function () {
-      if (this.activeTag === this.$i18n.t("All")) {
+      if (this.activeTag === "All") {
         return this.projects;
       }
       return this.projects.filter((project) => {
         let found = false;
-
         project.tags.filter((indexTag) => {
-          found = this.$i18n.t(indexTag.value) === this.$i18n.t(this.activeTag);
+          found = indexTag.value === this.activeTag;
         });
         return found;
       });

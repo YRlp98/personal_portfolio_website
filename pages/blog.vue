@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-container defualt-margin" :style="{ direction: `${changeDirection(this.activeLang)}` }">
+  <div class="blog-container defualt-margin" :style="{ direction: `${changeDirection(activeLang)}` }">
     <h1 class="title">{{ $t("blog") }}</h1>
     <div class="blog-cards">
       <BlogCard class="blogCard" v-for="blog in blogs" :key="blog.id" :blog="blog" />
@@ -13,32 +13,33 @@ import changeDirection from "../assets/mixins/changeDirection";
 import blogs from "~/data/blogs.json";
 
 export default {
-  head() {
-    const baseUrl = 'https://yrlp.ir';
-    const path = this.$route.path;
-    const canonicalUrl = baseUrl + path;
+  setup() {
+    const route = useRoute()
+    const canonicalUrl = computed(() => 'https://yrlp.ir' + route.path)
 
-    return {
+    useHead({
       title: 'Yousef Roshandel - Blog',
       meta: [
-        { hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-        { hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel - Blog' },
-        { hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-        { hid: 'og:url', property: 'og:url', content: canonicalUrl },
+        { name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { property: 'og:title', content: 'Yousef Roshandel - Blog' },
+        { property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+        { property: 'og:url', content: () => canonicalUrl.value },
       ],
       link: [
-        { rel: 'canonical', href: canonicalUrl }
+        { rel: 'canonical', href: () => canonicalUrl.value },
       ],
-    }
+    })
   },
 
   name: "Blog",
   components: { BlogCard },
   data() {
     return {
-      activeLang: this.$i18n.locale,
       blogs,
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeDirection],
 };

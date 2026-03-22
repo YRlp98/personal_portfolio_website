@@ -1,7 +1,7 @@
 <template>
   <div class="iconTitle-container">
     <div :style="style" class="icon-background">
-      <img :src="require(`~/assets/images/icons/${icon}.svg`)" :alt="alt" />
+      <img :src="`/images/icons/${icon}.svg`" :alt="alt" />
     </div>
     <h2>{{ title }}</h2>
   </div>

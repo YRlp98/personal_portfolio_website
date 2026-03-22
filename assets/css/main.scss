@@ -1,3 +1,54 @@
+// PeydaWeb font faces
+@font-face {
+    font-family: 'PeydaWeb';
+    src: local('PeydaWeb-Black'),
+         url('../fonts/PeydaWeb-Black.woff2') format('woff2'),
+         url('../fonts/PeydaWeb-Black.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PeydaWeb';
+    src: local('PeydaWeb-ExtraBold'),
+         url('../fonts/PeydaWeb-ExtraBold.woff2') format('woff2'),
+         url('../fonts/PeydaWeb-ExtraBold.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PeydaWeb';
+    src: local('PeydaWeb-Medium'),
+         url('../fonts/PeydaWeb-Medium.woff2') format('woff2'),
+         url('../fonts/PeydaWeb-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PeydaWeb';
+    src: local('PeydaWeb-Regular'),
+         url('../fonts/PeydaWeb-Regular.woff2') format('woff2'),
+         url('../fonts/PeydaWeb-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'PeydaWeb';
+    src: local('PeydaWeb-SemiBold'),
+         url('../fonts/PeydaWeb-SemiBold.woff2') format('woff2'),
+         url('../fonts/PeydaWeb-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     // Colors
     --white-1: #f5f5f5;

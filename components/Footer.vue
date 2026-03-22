@@ -12,7 +12,7 @@
     </div>
 
     <div class="footer defualt-margin">
-      <ul :style="{ direction: `${changeDirection(this.activeLang)}` }">
+      <ul :style="{ direction: `${changeDirection(activeLang)}` }">
         <li>
           <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
         </li>
@@ -35,7 +35,7 @@
           <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
-      <p :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <p :style="{ textAlign: `${changeAlign(activeLang)}` }">
         {{ $t("footerCopyright") }}
       </p>
     </div>
@@ -57,8 +57,10 @@ export default {
   },
   data() {
     return {
-      activeLang: this.$i18n.locale,
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeDirection, changeAlign],
   methods: {

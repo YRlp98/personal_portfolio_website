@@ -1,6 +1,6 @@
 <template>
 	<div class="aboutMe-container" id="homeAboutMe">
-		<h2 class="aboutMe-title" :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+		<h2 class="aboutMe-title" :style="{ textAlign: `${changeAlign(activeLang)}` }">
 			{{ $t("homePageAboutMe") }}
 		</h2>
 		<div class="aboutMe-avatar">
@@ -8,7 +8,7 @@
 				alt="Yousef Roshandel" />
 			<div class="square"></div>
 		</div>
-		<p class="aboutMe-text" :style="{ direction: `${changeDirection(this.activeLang)}` }">
+		<p class="aboutMe-text" :style="{ direction: `${changeDirection(activeLang)}` }">
 			{{ $t("homePageAboutMeText") }}
 		</p>
 		<AboutMeInfo class="aboutMeInfo" />
@@ -33,8 +33,10 @@ export default {
 	},
 	data() {
 		return {
-			activeLang: this.$i18n.locale,
 		};
+	},
+	computed: {
+	  activeLang() { return this.$i18n.locale; },
 	},
 	mixins: [changeDirection, changeAlign],
 

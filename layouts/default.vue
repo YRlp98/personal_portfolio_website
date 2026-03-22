@@ -2,7 +2,7 @@
   <div class="defualt-container">
     <NavbarMobile />
     <Navbar />
-    <Nuxt />
+    <NuxtPage />
     <Footer />
   </div>
 </template>
