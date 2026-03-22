@@ -166,16 +166,18 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   const _component_SettingsMenu = resolveComponent("SettingsMenu");
   const _component_nuxt_link = __nuxt_component_0$1;
   const _directive_click_outside = resolveDirective("click-outside");
-  _push(`<nav${ssrRenderAttrs(mergeProps({ class: "navbar-container" }, _attrs))} data-v-a840206c><div class="navbar defualt-margin" data-v-a840206c><span class="navbar-more" data-v-a840206c><img${ssrRenderAttr("src", _imports_0)} alt="More icon" data-v-a840206c></span><template>`);
+  _push(`<nav${ssrRenderAttrs(mergeProps({ class: "navbar-container" }, _attrs))} data-v-3fbf9c60><div class="navbar defualt-margin" data-v-3fbf9c60><span class="navbar-more" data-v-3fbf9c60><img${ssrRenderAttr("src", _imports_0)} alt="More icon" data-v-3fbf9c60></span><template>`);
   if ($data.isOpen) {
     _push(ssrRenderComponent(_component_SettingsMenu, mergeProps({
       class: "settingsMenu",
-      onClose: ($event) => $data.isOpen = false
+      onClose: ($event) => $data.isOpen = false,
+      onClick: () => {
+      }
     }, ssrGetDirectiveProps(_ctx, _directive_click_outside, () => $data.isOpen = false)), null, _parent));
   } else {
     _push(`<!---->`);
   }
-  _push(`</template><ul class="navbar-items" data-v-a840206c><li data-v-a840206c>`);
+  _push(`</template><ul class="navbar-items" data-v-3fbf9c60><li data-v-3fbf9c60>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/")
@@ -191,7 +193,7 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-a840206c><span class="item" data-v-a840206c>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-a840206c><span class="item" data-v-a840206c>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-a840206c>`);
+  _push(`</li><li data-v-3fbf9c60><span class="item" data-v-3fbf9c60>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-3fbf9c60><span class="item" data-v-3fbf9c60>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-3fbf9c60>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/projects")
@@ -207,7 +209,7 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-a840206c>`);
+  _push(`</li><li data-v-3fbf9c60>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/blog")
@@ -231,7 +233,7 @@ _sfc_main$2.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Navbar.vue");
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender$2], ["__scopeId", "data-v-a840206c"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender$2], ["__scopeId", "data-v-3fbf9c60"]]);
 const _sfc_main$1 = {
   name: "Footer",
   components: {
@@ -257,17 +259,17 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   const _component_SocialNetwork = resolveComponent("SocialNetwork");
   const _component_TitleBackground = resolveComponent("TitleBackground");
   const _component_nuxt_link = __nuxt_component_0$1;
-  _push(`<div${ssrRenderAttrs(mergeProps({ class: "footer-container" }, _attrs))} data-v-492c484f><div class="socialNetwork-container" data-v-492c484f><div class="socialNetwork defualt-margin" data-v-492c484f><h2 data-v-492c484f>${ssrInterpolate(_ctx.$t("homePageFollowMeSN"))}</h2>`);
+  _push(`<div${ssrRenderAttrs(mergeProps({ class: "footer-container" }, _attrs))} data-v-444de754><div class="socialNetwork-container" data-v-444de754><div class="socialNetwork defualt-margin" data-v-444de754><h2 data-v-444de754>${ssrInterpolate(_ctx.$t("homePageFollowMeSN"))}</h2>`);
   _push(ssrRenderComponent(_component_SocialNetwork, { class: "socialNetwork" }, null, _parent));
   _push(`</div>`);
   _push(ssrRenderComponent(_component_TitleBackground, {
     title: "social network",
     class: "titleBackground defualt-margin"
   }, null, _parent));
-  _push(`</div><div class="footer defualt-margin" data-v-492c484f><ul style="${ssrRenderStyle({ direction: `${_ctx.changeDirection($options.activeLang)}` })}" data-v-492c484f><li data-v-492c484f>`);
+  _push(`</div><div class="footer defualt-margin" data-v-444de754><ul style="${ssrRenderStyle({ direction: `${_ctx.changeDirection($options.activeLang)}` })}" data-v-444de754><li data-v-444de754>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
-    to: "/"
+    to: _ctx.$localePath("/")
   }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
@@ -280,10 +282,10 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-492c484f><span class="item" data-v-492c484f>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-492c484f><span class="item" data-v-492c484f>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-492c484f>`);
+  _push(`</li><li data-v-444de754><span class="item" data-v-444de754>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-444de754><span class="item" data-v-444de754>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-444de754>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
-    to: "/projects"
+    to: _ctx.$localePath("/projects")
   }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
@@ -296,10 +298,10 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-492c484f>`);
+  _push(`</li><li data-v-444de754>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
-    to: "/blog"
+    to: _ctx.$localePath("/blog")
   }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
@@ -312,7 +314,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li></ul><p style="${ssrRenderStyle({ textAlign: `${_ctx.changeAlign($options.activeLang)}` })}" data-v-492c484f>${ssrInterpolate(_ctx.$t("footerCopyright"))}</p></div></div>`);
+  _push(`</li></ul><p style="${ssrRenderStyle({ textAlign: `${_ctx.changeAlign($options.activeLang)}` })}" data-v-444de754>${ssrInterpolate(_ctx.$t("footerCopyright"))}</p></div></div>`);
 }
 const _sfc_setup$1 = _sfc_main$1.setup;
 _sfc_main$1.setup = (props, ctx) => {
@@ -320,7 +322,7 @@ _sfc_main$1.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$1 ? _sfc_setup$1(props, ctx) : void 0;
 };
-const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-492c484f"]]);
+const __nuxt_component_3 = /* @__PURE__ */ _export_sfc(_sfc_main$1, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-444de754"]]);
 const _sfc_main = {
   components: {
     NavbarMobile: __nuxt_component_0,
@@ -354,4 +356,4 @@ _sfc_main.setup = (props, ctx) => {
 const _default = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender]]);
 
 export { _default as default };
-//# sourceMappingURL=default-CBpCtSLM.mjs.map
+//# sourceMappingURL=default-CfTCaPnp.mjs.map

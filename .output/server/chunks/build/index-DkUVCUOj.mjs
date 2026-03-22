@@ -812,7 +812,7 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   const _component_nuxt_link = __nuxt_component_0;
   _push(ssrRenderComponent(_component_nuxt_link, mergeProps({
     class: "textOnlyButton",
-    to: $props.link
+    to: _ctx.$localePath($props.link)
   }, _attrs), {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
@@ -832,7 +832,7 @@ _sfc_main$3.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/widgets/TextOnlyButton.vue");
   return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const TextOnlyButton = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$3], ["__scopeId", "data-v-5325d82a"]]);
+const TextOnlyButton = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$3], ["__scopeId", "data-v-790ef5c7"]]);
 const _sfc_main$2 = {
   name: "Projects",
   components: {
@@ -1006,4 +1006,4 @@ _sfc_main.setup = (props, ctx) => {
 const index = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-75faa564"]]);
 
 export { index as default };
-//# sourceMappingURL=index-Bcw5DINS.mjs.map
+//# sourceMappingURL=index-DkUVCUOj.mjs.map

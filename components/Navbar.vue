@@ -4,7 +4,7 @@
       <span class="navbar-more" @click.stop="isOpen = !isOpen">
         <img src="/images/icons/more.svg" alt="More icon" />
       </span>
-      <transition name="fade" appear>
+      <transition name="dropdown" appear>
         <SettingsMenu class="settingsMenu" v-if="isOpen" @close="isOpen = false" v-click-outside="() => isOpen = false" @click.stop />
       </transition>
       <ul class="navbar-items">
@@ -118,14 +118,22 @@ export default {
         cursor: pointer;
       }
 
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: all 0.5s ease-out;
+      .dropdown-enter-active,
+      .dropdown-leave-active {
+        transition: opacity 0.24s ease, transform 0.24s ease;
+        transform-origin: top center;
       }
 
-      .fade-enter,
-      .fade-leave-active {
+      .dropdown-enter-from,
+      .dropdown-leave-to {
         opacity: 0;
+        transform: translateY(-10px) scaleY(0.92);
+      }
+
+      .dropdown-enter-to,
+      .dropdown-leave-from {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
       }
 
       .settingsMenu {

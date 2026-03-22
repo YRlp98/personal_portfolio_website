@@ -748,12 +748,12 @@ const _routes = [
   {
     name: "index___fa",
     path: "/",
-    component: () => import('./index-Bcw5DINS.mjs')
+    component: () => import('./index-DkUVCUOj.mjs')
   },
   {
     name: "index___en",
     path: "/en",
-    component: () => import('./index-Bcw5DINS.mjs')
+    component: () => import('./index-DkUVCUOj.mjs')
   },
   {
     name: "projects___fa",
@@ -6552,7 +6552,7 @@ const plugins = [
   ssg_detect_IpHCGcQQ_IR5Rl99qyukWoMA9fJGfuTYyoksTzy81cs
 ];
 const layouts = {
-  default: defineAsyncComponent(() => import('./default-CBpCtSLM.mjs').then((m) => m.default || m))
+  default: defineAsyncComponent(() => import('./default-CfTCaPnp.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({
