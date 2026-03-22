@@ -1,33 +1,33 @@
 <template>
   <nav class="navbar-container">
     <div class="navbar defualt-margin">
-      <span class="navbar-more" @click="isOpen = !isOpen">
-        <img src="~assets/images/icons/more.svg" alt="More icon" />
+      <span class="navbar-more" @click.stop="isOpen = !isOpen">
+        <img src="/images/icons/more.svg" alt="More icon" />
       </span>
-      <transition name="fade" appear>
-        <SettingsMenu class="settingsMenu" v-if="isOpen" />
+      <transition name="dropdown" appear>
+        <SettingsMenu class="settingsMenu" v-if="isOpen" @close="isOpen = false" v-click-outside="() => isOpen = false" @click.stop />
       </transition>
       <ul class="navbar-items">
         <li>
-          <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/')">{{ $t("home") }}</nuxt-link>
         </li>
         <li>
-          <item class="item" @click="goto('/#homeAboutMe')">
+          <span class="item" @click="goto($localePath('/#homeAboutMe'))">
             {{ $t("aboutMe") }}
-          </item>
+          </span>
         </li>
         <li>
-          <item class="item" @click="goto('/#homeSkills')">
+          <span class="item" @click="goto($localePath('/#homeSkills'))">
             {{ $t("skills") }}
-          </item>
+          </span>
         </li>
         <li>
-          <nuxt-link class="item" to="/projects">{{
+          <nuxt-link class="item" :to="$localePath('/projects')">{{
             $t("projects")
           }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/blog')">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
     </div>
@@ -118,14 +118,22 @@ export default {
         cursor: pointer;
       }
 
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: all 0.5s ease-out;
+      .dropdown-enter-active,
+      .dropdown-leave-active {
+        transition: opacity 0.24s ease, transform 0.24s ease;
+        transform-origin: top center;
       }
 
-      .fade-enter,
-      .fade-leave-active {
+      .dropdown-enter-from,
+      .dropdown-leave-to {
         opacity: 0;
+        transform: translateY(-10px) scaleY(0.92);
+      }
+
+      .dropdown-enter-to,
+      .dropdown-leave-from {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
       }
 
       .settingsMenu {

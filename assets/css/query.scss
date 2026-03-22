@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Tablet: (min-width: 601px) and (max-width: 768px)
 // Desktop: (min-width: 768px),
 
@@ -13,19 +15,19 @@ $breakPoints: (
 
 // Use Media Queries
 @mixin mediaQueryMinMax($min, $max) {
-    @media (min-width: map-get($breakPoints, $min)) and (max-width: map-get($breakPoints, $max)) {
+    @media (min-width: map.get($breakPoints, $min)) and (max-width: map.get($breakPoints, $max)) {
         @content;
     }
 }
 
 @mixin mediaQueryMin($min) {
-    @media (min-width: map-get($breakPoints, $min)) {
+    @media (min-width: map.get($breakPoints, $min)) {
         @content;
     }
 }
 
 @mixin mediaQueryMax($max) {
-    @media (max-width: map-get($breakPoints, $max)) {
+    @media (max-width: map.get($breakPoints, $max)) {
         @content;
     }
 }

@@ -1,17 +1,17 @@
 <template>
-  <div class="settings-menu-container">
+  <div class="settings-menu-container" ref="menuRef">
     <div class="menu-theme">
       <p>Theme</p>
       <ul class="menu-bar">
         <li>
           <a @click="onChangeTheme()" :class="{ active: isDark }" href="#">
-            <img src="~assets/images/icons/dark.svg" alt="dark mode" />
+            <img src="/images/icons/dark.svg" alt="dark mode" />
             Dark Mode
           </a>
         </li>
         <li>
           <a @click="onChangeTheme()" :class="{ active: !isDark }" href="#">
-            <img src="~assets/images/icons/light.svg" alt="light mode" />
+            <img src="/images/icons/light.svg" alt="light mode" />
             Light Mode
           </a>
         </li>
@@ -25,10 +25,11 @@
             v-for="locale in availableLocales"
             :key="locale.code"
             :to="switchLocalePath(locale.code)"
+            @click="$emit('close')"
           >
             <img
-              :src="require(`~/assets/images/icons/${locale.code}.svg`)"
-              :alt="$i18n.locale"
+              :src="`/images/icons/${locale.code}.svg`"
+              :alt="locale"
             />
             {{ locale.name }}
           </nuxt-link>
@@ -38,42 +39,18 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "SettingsMenu",
-  data() {
-    return {
-      // themes: [
-      //   {
-      //     title: "Dark Mode",
-      //     isDark: true,
-      //   },
-      //   {
-      //     title: "Light Mode",
-      //     isDark: false,
-      //   },
-      // ],
+<script setup>
+const emit = defineEmits(['close'])
 
-      isDark: true,
-    };
-  },
-  methods: {
-    onChangeTheme() {
-      this.isDark = !this.isDark;
-    },
-    onChangeLanguage() {
-      this.isFarsi = !this.isFarsi;
-    },
-  },
-  computed: {
-    availableLocales() {
-      return this.$i18n.locales.filter((i) => i.code !== this.$i18n.locale);
-    },
-    // isDark() {
-    //   return this.$store.state.isDark;
-    // },
-  },
-};
+const { locale, locales } = useI18n()
+const switchLocalePath = useSwitchLocalePath()
+
+const isDark = ref(true)
+const availableLocales = computed(() => locales.value.filter((l) => l.code !== locale.value))
+
+function onChangeTheme() {
+  isDark.value = !isDark.value
+}
 </script>
 
 <style lang="scss" scoped>

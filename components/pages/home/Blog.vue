@@ -1,6 +1,6 @@
 <template>
   <div class="blog-container" id="homeBlog">
-    <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+    <h2 :style="{ textAlign: `${changeAlign(activeLang)}` }">
       {{ $t("blog") }}
     </h2>
     <div class="blog">
@@ -42,9 +42,11 @@ export default {
   },
   data() {
     return {
-      activeLang: this.$i18n.locale,
       blogs: blogs.slice(0, 3),
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeAlign],
 };

@@ -1,6 +1,6 @@
 <template>
 	<div class="heroSection-container" id="#homeHeroSection">
-		<div class="heroSection-content" :style="{ direction: `${changeDirection(this.activeLang)}` }">
+		<div class="heroSection-content" :style="{ direction: `${changeDirection(activeLang)}` }">
 			<div class="heroSection-welcome" ref="heroWelcome">
 				<div class="heroTitle">
 					{{ $t("homePageHello") }} <br />
@@ -30,8 +30,10 @@ export default {
 	},
 	data() {
 		return {
-			activeLang: this.$i18n.locale,
 		};
+	},
+	computed: {
+	  activeLang() { return this.$i18n.locale; },
 	},
 	mixins: [changeDirection],
 	mounted() {

@@ -1,7 +1,7 @@
 <template>
   <div class="skills-container" id="homeSkills">
     <div class="main-skills-container defualt-margin">
-      <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <h2 :style="{ textAlign: `${changeAlign(activeLang)}` }">
         {{ $t("homePageSkillsMain") }}
       </h2>
       <div class="main-skills">
@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="other-skills-container defualt-margin">
-      <h2 :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <h2 :style="{ textAlign: `${changeAlign(activeLang)}` }">
         {{ $t("homePageSkillsOther") }}
       </h2>
       <div class="other-skills">
@@ -137,7 +137,6 @@ export default {
   },
   data() {
     return {
-      activeLang: this.$i18n.locale,
       webSkills: [
         {
           title: "HTML",
@@ -235,6 +234,9 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeAlign],
 };

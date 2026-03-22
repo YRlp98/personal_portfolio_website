@@ -34,23 +34,22 @@ import Projects from "../components/pages/home/Projects";
 import Blog from "../components/pages/home/Blog.vue";
 
 export default {
-	head() {
-		const baseUrl = 'https://yrlp.ir';
-		const path = this.$route.path;
-		const canonicalUrl = baseUrl + path;
+	setup() {
+		const route = useRoute()
+		const canonicalUrl = computed(() => 'https://yrlp.ir' + route.path)
 
-		return {
+		useHead({
 			title: 'Yousef Roshandel | Front-End Developer & UI/UX Designer',
 			meta: [
-				{ hid: 'description', name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-				{ hid: 'og:title', property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer' },
-				{ hid: 'og:description', property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
-				{ hid: 'og:url', property: 'og:url', content: canonicalUrl },
+				{ name: 'description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+				{ property: 'og:title', content: 'Yousef Roshandel | Front-End Developer & UI/UX Designer' },
+				{ property: 'og:description', content: 'Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites and digital experiences.' },
+				{ property: 'og:url', content: () => canonicalUrl.value },
 			],
 			link: [
-				{ rel: 'canonical', href: canonicalUrl }
+				{ rel: 'canonical', href: () => canonicalUrl.value },
 			],
-		}
+		})
 	},
 
 	components: {
@@ -65,7 +64,7 @@ export default {
 	},
 
 	mounted() {
-		if (process.client) {
+		if (import.meta.client) {
 			this.$nextTick(() => {
 				this.$gsap.from(".education-container", {
 					opacity: 0,

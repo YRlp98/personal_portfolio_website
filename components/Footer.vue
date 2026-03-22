@@ -12,30 +12,30 @@
     </div>
 
     <div class="footer defualt-margin">
-      <ul :style="{ direction: `${changeDirection(this.activeLang)}` }">
+      <ul :style="{ direction: `${changeDirection(activeLang)}` }">
         <li>
-          <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/')">{{ $t("home") }}</nuxt-link>
         </li>
         <li>
-          <item class="item" @click="goto('/#homeAboutMe')">
+          <span class="item" @click="goto($localePath('/#homeAboutMe'))">
             {{ $t("aboutMe") }}
-          </item>
+          </span>
         </li>
         <li>
-          <item class="item" @click="goto('/#homeSkills')">
+          <span class="item" @click="goto($localePath('/#homeSkills'))">
             {{ $t("skills") }}
-          </item>
+          </span>
         </li>
         <li>
-          <nuxt-link class="item" to="/projects">{{
+          <nuxt-link class="item" :to="$localePath('/projects')">{{
             $t("projects")
           }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/blog')">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
-      <p :style="{ textAlign: `${changeAlign(this.activeLang)}` }">
+      <p :style="{ textAlign: `${changeAlign(activeLang)}` }">
         {{ $t("footerCopyright") }}
       </p>
     </div>
@@ -57,8 +57,10 @@ export default {
   },
   data() {
     return {
-      activeLang: this.$i18n.locale,
     };
+  },
+  computed: {
+    activeLang() { return this.$i18n.locale; },
   },
   mixins: [changeDirection, changeAlign],
   methods: {
