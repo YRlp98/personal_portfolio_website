@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link class="textOnlyButton" :to="link">{{ text }}</nuxt-link>
+  <nuxt-link class="textOnlyButton" :to="$localePath(link)">{{ text }}</nuxt-link>
 </template>
 
 
@@ -19,7 +19,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss" scoped>
 .textOnlyButton {
