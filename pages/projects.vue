@@ -60,7 +60,7 @@ export default {
     },
     getActiveTagProperties(tag) {
       return this.tags.find((_tag) => {
-        return _tag.name === this.$i18n.t(this.activeTag);
+        return _tag.name === this.$t(this.activeTag);
       });
     },
   },
@@ -70,11 +70,11 @@ export default {
     },
     tags() {
       return [
-        { key: "All", name: this.$i18n.t("All"), color: "#ffffff" },
-        { key: "Designing", name: this.$i18n.t("Designing"), color: "#FB4B8A" },
-        { key: "Web", name: this.$i18n.t("Web"), color: "#4D848B" },
-        { key: "Mobile", name: this.$i18n.t("Mobile"), color: "#38AF76" },
-        { key: "Others", name: this.$i18n.t("Others"), color: "#FB4B4B" },
+        { key: "All", name: this.$t("All"), color: "#ffffff" },
+        { key: "Designing", name: this.$t("Designing"), color: "#FB4B8A" },
+        { key: "Web", name: this.$t("Web"), color: "#4D848B" },
+        { key: "Mobile", name: this.$t("Mobile"), color: "#38AF76" },
+        { key: "Others", name: this.$t("Others"), color: "#FB4B4B" },
       ];
     },
     filterdProjects: function () {
