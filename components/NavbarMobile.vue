@@ -7,23 +7,23 @@
 
     <ul class="menu__box">
       <li>
-        <nuxt-link class="menu__item" to="/">{{ $t("home") }}</nuxt-link>
+        <nuxt-link class="menu__item" :to="$localePath('/')">{{ $t("home") }}</nuxt-link>
       </li>
       <li>
-        <span class="menu__item" @click="goto('/#homeAboutMe')">
+        <span class="menu__item" @click="goto($localePath('/#homeAboutMe'))">
           {{ $t("aboutMe") }}
         </span>
       </li>
       <li>
-        <span class="menu__item" @click="goto('/#homeSkills')">
+        <span class="menu__item" @click="goto($localePath('/#homeSkills'))">
           {{ $t("skills") }}
         </span>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/projects">{{ $t("projects") }}</nuxt-link>
+        <nuxt-link class="menu__item" :to="$localePath('/projects')">{{ $t("projects") }}</nuxt-link>
       </li>
       <li>
-        <nuxt-link class="menu__item" to="/blog">‌{{ $t("blog") }}</nuxt-link>
+        <nuxt-link class="menu__item" :to="$localePath('/blog')">‌{{ $t("blog") }}</nuxt-link>
       </li>
       <div class="settings-menu">
         <SettingsMenu class="settingsMenu" />

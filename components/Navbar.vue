@@ -1,33 +1,33 @@
 <template>
   <nav class="navbar-container">
     <div class="navbar defualt-margin">
-      <span class="navbar-more" @click="isOpen = !isOpen">
+      <span class="navbar-more" @click.stop="isOpen = !isOpen">
         <img src="/images/icons/more.svg" alt="More icon" />
       </span>
       <transition name="fade" appear>
-        <SettingsMenu class="settingsMenu" v-if="isOpen" />
+        <SettingsMenu class="settingsMenu" v-if="isOpen" @close="isOpen = false" v-click-outside="() => isOpen = false" @click.stop />
       </transition>
       <ul class="navbar-items">
         <li>
-          <nuxt-link class="item" to="/">{{ $t("home") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/')">{{ $t("home") }}</nuxt-link>
         </li>
         <li>
-          <span class="item" @click="goto('/#homeAboutMe')">
+          <span class="item" @click="goto($localePath('/#homeAboutMe'))">
             {{ $t("aboutMe") }}
           </span>
         </li>
         <li>
-          <span class="item" @click="goto('/#homeSkills')">
+          <span class="item" @click="goto($localePath('/#homeSkills'))">
             {{ $t("skills") }}
           </span>
         </li>
         <li>
-          <nuxt-link class="item" to="/projects">{{
+          <nuxt-link class="item" :to="$localePath('/projects')">{{
             $t("projects")
           }}</nuxt-link>
         </li>
         <li>
-          <nuxt-link class="item" to="/blog">{{ $t("blog") }}</nuxt-link>
+          <nuxt-link class="item" :to="$localePath('/blog')">{{ $t("blog") }}</nuxt-link>
         </li>
       </ul>
     </div>

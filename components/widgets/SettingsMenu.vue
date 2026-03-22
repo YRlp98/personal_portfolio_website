@@ -1,5 +1,5 @@
 <template>
-  <div class="settings-menu-container">
+  <div class="settings-menu-container" ref="menuRef">
     <div class="menu-theme">
       <p>Theme</p>
       <ul class="menu-bar">
@@ -25,6 +25,7 @@
             v-for="locale in availableLocales"
             :key="locale.code"
             :to="switchLocalePath(locale.code)"
+            @click="$emit('close')"
           >
             <img
               :src="`/images/icons/${locale.code}.svg`"
@@ -39,6 +40,8 @@
 </template>
 
 <script setup>
+const emit = defineEmits(['close'])
+
 const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
