@@ -96,12 +96,19 @@ export default {
     padding: 18px 0;
     transition: background-color 0.25s ease, backdrop-filter 0.25s ease,
       -webkit-backdrop-filter 0.25s ease, box-shadow 0.25s ease;
+    isolation: isolate;
 
     &.is-scrolled {
-      background-color: rgba(19, 19, 19, 0.55);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: rgba(19, 19, 19, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
     }
 
     .navbar {
