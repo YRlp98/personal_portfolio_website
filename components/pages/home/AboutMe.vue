@@ -84,9 +84,9 @@ export default {
 					duration: 2.5,
 					ease: "slow(0.7,0.7,false)",
 					x: -50,
-					start: "top center",
 					scrollTrigger: {
 						trigger: ".aboutMe-container",
+						start: "top center",
 						scrub: 1,
 						toggleActions: "play none none pause",
 					},
@@ -96,9 +96,9 @@ export default {
 					duration: 2.5,
 					ease: "slow(0.7,0.7,false)",
 					x: 50,
-					start: "top top",
 					scrollTrigger: {
 						trigger: ".aboutMe-container",
+						start: "top top",
 						scrub: 1,
 						toggleActions: "play none none pause",
 					},
@@ -108,9 +108,9 @@ export default {
 					duration: 2.5,
 					ease: "slow(0.7,0.7,false)",
 					scale: 1.5,
-					start: "center center",
 					scrollTrigger: {
 						trigger: ".aboutMe-container",
+						start: "center center",
 						scrub: 1,
 						toggleActions: "play none none pause",
 					},
