@@ -83,6 +83,9 @@ export default defineNuxtConfig({
     compilation: {
       strictMessage: false,
     },
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   // Sitemap (v6+)
