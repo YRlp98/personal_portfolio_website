@@ -1,8 +1,0 @@
-const AboutMe_vue_vue_type_style_index_0_scoped_66832ce1_lang = ".aboutMe-container[data-v-66832ce1]{direction:rtl;display:flex;flex-direction:column;z-index:1}.aboutMe-container .aboutMe-title[data-v-66832ce1]{font-size:2.125rem;font-weight:700}.aboutMe-container .aboutMe-avatar[data-v-66832ce1]{margin-top:40px;position:relative}.aboutMe-container .aboutMe-avatar .square[data-v-66832ce1]{border:2px solid var(--green-1);border-radius:5px;height:170px;position:absolute;right:15px;top:15px;width:170px;z-index:-1}.aboutMe-container .aboutMe-avatar img[data-v-66832ce1]{border-radius:5px;box-shadow:0 25px 20px -20px #000000e6;height:170px;width:170px}.aboutMe-container .aboutMe-text[data-v-66832ce1]{font-size:1.063;line-height:28px;margin-top:40px}.aboutMe-container .aboutMeInfo[data-v-66832ce1],.aboutMe-container .socialNetwork[data-v-66832ce1]{margin-top:40px}.aboutMe-container .titleBackground[data-v-66832ce1]{left:-200px;top:230px;transform:rotate(-90deg)}@media(min-width:768px){.aboutMe-container[data-v-66832ce1]{position:relative}.aboutMe-container .aboutMe-title[data-v-66832ce1]{margin-right:90px;position:absolute;right:220px;top:40px;z-index:1}.aboutMe-container .aboutMe-text[data-v-66832ce1]{margin-right:90px;position:absolute;right:220px;top:80px;z-index:1}.aboutMe-container .socialNetwork[data-v-66832ce1]{margin-top:80px;z-index:99}.aboutMe-container .titleBackground[data-v-66832ce1]{left:0;top:40px;transform:rotate(0)}}";
-
-const AboutMeStyles_BTK4uMS3 = [
-  AboutMe_vue_vue_type_style_index_0_scoped_66832ce1_lang
-];
-
-export { AboutMeStyles_BTK4uMS3 as default };
-//# sourceMappingURL=AboutMe-styles.BTK4uMS3.mjs.map
