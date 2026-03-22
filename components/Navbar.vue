@@ -144,6 +144,28 @@ export default {
       .navbar-more {
         display: flex;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, filter 0.2s ease;
+
+        img {
+          transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        &:hover {
+          transform: translateY(-1px);
+          filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+
+          img {
+            transform: scale(1.04);
+            opacity: 0.95;
+            filter: brightness(1.08);
+          }
+        }
+
+        &:active {
+          transform: translateY(0) scale(0.98);
+        }
       }
 
       .navbar-more-wrap {
