@@ -107,7 +107,6 @@ export default {
         background-color: rgba(19, 19, 19, 0.55);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
       }
     }
 
@@ -201,9 +200,18 @@ export default {
 
       .settingsMenu {
         position: absolute;
-        top: calc(100% + 12px);
+        top: calc(100% + 18px);
         inset-inline-start: 0;
       }
+    }
+
+    &.is-scrolled .settingsMenu {
+      border-radius: 0 0 8px 8px;
+    }
+
+    &:not(.is-scrolled) .settingsMenu {
+      border-top: none;
+      border-radius: 8px;
     }
   }
 }

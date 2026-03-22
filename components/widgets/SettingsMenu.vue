@@ -64,7 +64,7 @@ function onChangeTheme() {
   background-color: rgba(19, 19, 19, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: 8px;
+  // border-radius: 8px;
   overflow: hidden;
   padding: 20px;
   z-index: 999;
