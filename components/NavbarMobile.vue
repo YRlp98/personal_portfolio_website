@@ -52,10 +52,6 @@ export default {
 .hamburger-menu {
   position: absolute;
   z-index: 999;
-
-  .settingsMenu {
-    top: 65px;
-  }
 }
 
 #menu__toggle {
@@ -81,13 +77,27 @@ export default {
 .menu__btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 18px;
-  height: 18px;
+  top: 14px;
+  left: 14px;
+  width: 44px;
+  height: 44px;
   cursor: pointer;
-  z-index: 1;
+  z-index: 1000;
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 22, 22, 0.58) 0%,
+    rgba(22, 22, 22, 0.42) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px) saturate(170%);
+  -webkit-backdrop-filter: blur(10px) saturate(170%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease, border-color 0.2s ease;
 }
 
 .menu__btn > span,
@@ -95,7 +105,7 @@ export default {
 .menu__btn > span::after {
   display: block;
   position: absolute;
-  width: 100%;
+  width: 16px;
   height: 2px;
   background-color: white;
   transition-duration: 0.25s;
@@ -107,6 +117,28 @@ export default {
 .menu__btn > span::after {
   content: "";
   top: 8px;
+}
+
+.menu__btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.menu__btn:hover > span,
+.menu__btn:hover > span::before,
+.menu__btn:hover > span::after {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.menu__btn:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .menu__box {
@@ -125,8 +157,14 @@ export default {
   transition-duration: 0.25s;
 
   .settings-menu {
-    position: absolute;
-    margin-top: -50px;
+    position: relative;
+    margin-top: 8px;
+    margin-inline-start: 24px;
+
+    .settingsMenu {
+      position: relative;
+      top: 0;
+    }
   }
 }
 

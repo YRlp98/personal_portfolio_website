@@ -86,7 +86,7 @@ const _sfc_main$3 = {
 function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_nuxt_link = __nuxt_component_0$1;
   const _component_SettingsMenu = resolveComponent("SettingsMenu");
-  _push(`<div${ssrRenderAttrs(mergeProps({ class: "hamburger-menu" }, _attrs))} data-v-a3577a0d><input id="menu__toggle" type="checkbox" data-v-a3577a0d><label class="menu__btn" for="menu__toggle" data-v-a3577a0d><span data-v-a3577a0d></span></label><ul class="menu__box" data-v-a3577a0d><li data-v-a3577a0d>`);
+  _push(`<div${ssrRenderAttrs(mergeProps({ class: "hamburger-menu" }, _attrs))} data-v-c7586248><input id="menu__toggle" type="checkbox" data-v-c7586248><label class="menu__btn" for="menu__toggle" data-v-c7586248><span data-v-c7586248></span></label><ul class="menu__box" data-v-c7586248><li data-v-c7586248>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "menu__item",
     to: _ctx.$localePath("/")
@@ -102,7 +102,7 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-a3577a0d><span class="menu__item" data-v-a3577a0d>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-a3577a0d><span class="menu__item" data-v-a3577a0d>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-a3577a0d>`);
+  _push(`</li><li data-v-c7586248><span class="menu__item" data-v-c7586248>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-c7586248><span class="menu__item" data-v-c7586248>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-c7586248>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "menu__item",
     to: _ctx.$localePath("/projects")
@@ -118,7 +118,7 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-a3577a0d>`);
+  _push(`</li><li data-v-c7586248>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "menu__item",
     to: _ctx.$localePath("/blog")
@@ -134,7 +134,7 @@ function _sfc_ssrRender$3(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><div class="settings-menu" data-v-a3577a0d>`);
+  _push(`</li><div class="settings-menu" data-v-c7586248>`);
   _push(ssrRenderComponent(_component_SettingsMenu, { class: "settingsMenu" }, null, _parent));
   _push(`</div></ul></div>`);
 }
@@ -144,7 +144,7 @@ _sfc_main$3.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/NavbarMobile.vue");
   return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const __nuxt_component_0 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$3], ["__scopeId", "data-v-a3577a0d"]]);
+const __nuxt_component_0 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$3], ["__scopeId", "data-v-c7586248"]]);
 const _imports_0 = publicAssetsURL("/images/icons/more.svg");
 const _sfc_main$2 = {
   name: "Navbar",
@@ -153,20 +153,30 @@ const _sfc_main$2 = {
   },
   data() {
     return {
-      isOpen: false
+      isOpen: false,
+      isScrolled: false
     };
   },
   methods: {
     goto(id) {
       this.$router.push(id);
+    },
+    handleScroll() {
+      this.isScrolled = (void 0).scrollY > 10;
     }
+  },
+  mounted() {
+  },
+  beforeUnmount() {
   }
 };
 function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_SettingsMenu = resolveComponent("SettingsMenu");
   const _component_nuxt_link = __nuxt_component_0$1;
   const _directive_click_outside = resolveDirective("click-outside");
-  _push(`<nav${ssrRenderAttrs(mergeProps({ class: "navbar-container" }, _attrs))} data-v-3fbf9c60><div class="navbar defualt-margin" data-v-3fbf9c60><span class="navbar-more" data-v-3fbf9c60><img${ssrRenderAttr("src", _imports_0)} alt="More icon" data-v-3fbf9c60></span><template>`);
+  _push(`<nav${ssrRenderAttrs(mergeProps({
+    class: ["navbar-container", { "is-scrolled": $data.isScrolled }]
+  }, _attrs))} data-v-206b7705><div class="navbar defualt-margin" data-v-206b7705><span class="navbar-more" data-v-206b7705><img${ssrRenderAttr("src", _imports_0)} alt="More icon" data-v-206b7705></span><template>`);
   if ($data.isOpen) {
     _push(ssrRenderComponent(_component_SettingsMenu, mergeProps({
       class: "settingsMenu",
@@ -177,7 +187,7 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   } else {
     _push(`<!---->`);
   }
-  _push(`</template><ul class="navbar-items" data-v-3fbf9c60><li data-v-3fbf9c60>`);
+  _push(`</template><ul class="navbar-items" data-v-206b7705><li data-v-206b7705>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/")
@@ -193,7 +203,7 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-3fbf9c60><span class="item" data-v-3fbf9c60>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-3fbf9c60><span class="item" data-v-3fbf9c60>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-3fbf9c60>`);
+  _push(`</li><li data-v-206b7705><span class="item" data-v-206b7705>${ssrInterpolate(_ctx.$t("aboutMe"))}</span></li><li data-v-206b7705><span class="item" data-v-206b7705>${ssrInterpolate(_ctx.$t("skills"))}</span></li><li data-v-206b7705>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/projects")
@@ -209,7 +219,7 @@ function _sfc_ssrRender$2(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-3fbf9c60>`);
+  _push(`</li><li data-v-206b7705>`);
   _push(ssrRenderComponent(_component_nuxt_link, {
     class: "item",
     to: _ctx.$localePath("/blog")
@@ -233,7 +243,7 @@ _sfc_main$2.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Navbar.vue");
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender$2], ["__scopeId", "data-v-3fbf9c60"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender$2], ["__scopeId", "data-v-206b7705"]]);
 const _sfc_main$1 = {
   name: "Footer",
   components: {
@@ -356,4 +366,4 @@ _sfc_main.setup = (props, ctx) => {
 const _default = /* @__PURE__ */ _export_sfc(_sfc_main, [["ssrRender", _sfc_ssrRender]]);
 
 export { _default as default };
-//# sourceMappingURL=default-CfTCaPnp.mjs.map
+//# sourceMappingURL=default-DAxWYcz2.mjs.map

@@ -17,19 +17,18 @@
         </li>
       </ul>
     </div>
+
     <div class="menu-language">
       <p>Language</p>
       <ul class="menu-bar">
-        <li>
+        <li v-for="locale in availableLocales" :key="locale.code">
           <nuxt-link
-            v-for="locale in availableLocales"
-            :key="locale.code"
             :to="switchLocalePath(locale.code)"
             @click="$emit('close')"
           >
             <img
               :src="`/images/icons/${locale.code}.svg`"
-              :alt="locale"
+              :alt="locale.name"
             />
             {{ locale.name }}
           </nuxt-link>
@@ -46,7 +45,10 @@ const { locale, locales } = useI18n()
 const switchLocalePath = useSwitchLocalePath()
 
 const isDark = ref(true)
-const availableLocales = computed(() => locales.value.filter((l) => l.code !== locale.value))
+
+const availableLocales = computed(() =>
+  locales.value.filter((l) => l.code !== locale.value)
+)
 
 function onChangeTheme() {
   isDark.value = !isDark.value
@@ -59,58 +61,51 @@ function onChangeTheme() {
   display: flex;
   flex-direction: column;
   width: 215px;
-  background: var(--gray-3);
-  border-radius: 5px;
-  padding: 20px 20px;
+  background-color: rgba(19, 19, 19, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  // border-radius: 8px;
+  overflow: hidden;
+  padding: 20px;
   z-index: 999;
 
   ul {
     list-style: none;
-    width: 215px;
+    width: 100%;
     padding: 10px 0;
+  }
 
-    li {
-      line-height: 2.188rem;
+  li {
+    line-height: 2.188rem;
 
-      a {
-        text-decoration: none;
-        color: white;
-        display: flex;
-        justify-content: flex-start;
-        font-size: 0.813rem;
-        padding: 1px 10px;
-        align-items: center;
-        border-radius: 5px;
+    a {
+      text-decoration: none;
+      color: white;
+      display: flex;
+      align-items: center;
+      font-size: 0.813rem;
+      padding: 4px 10px;
+      border-radius: 5px;
+      transition: all 0.2s ease;
 
-        img {
-          margin-top: -2.5px;
-          margin-right: 10px;
-          width: 17px;
-          height: 17px;
-        }
+      img {
+        margin-right: 10px;
+        width: 17px;
+        height: 17px;
       }
+    }
 
-      :hover {
-        transform: scale(1.1);
-      }
+    a:hover {
+      transform: scale(1.05);
+    }
 
-      .active {
-        background-color: var(--gray-2);
-      }
+    .active {
+      background-color: rgba(255, 255, 255, 0.1);
     }
   }
 
   .menu-language {
     margin-top: 10px;
-  }
-
-  // Tablet
-  @include mediaQueryMin("md") {
-    box-shadow: 0px 4px 90px 1px rgba(255, 255, 255, 0.1);
-    -ms-box-shadow: 0px 4px 90px 1px rgba(255, 255, 255, 0.1);
-    -o-box-shadow: 0px 4px 90px 1px rgba(255, 255, 255, 0.1);
-    -webkit-box-shadow: 0px 4px 90px 1px rgba(255, 255, 255, 0.1);
-    -moz-box-shadow: 0px 4px 90px 1px rgba(255, 255, 255, 0.1);
   }
 }
 </style>

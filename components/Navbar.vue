@@ -1,12 +1,15 @@
 <template>
-  <nav class="navbar-container">
+  <nav class="navbar-container" :class="{ 'is-scrolled': isScrolled }">
     <div class="navbar defualt-margin">
-      <span class="navbar-more" @click.stop="isOpen = !isOpen">
-        <img src="/images/icons/more.svg" alt="More icon" />
-      </span>
-      <transition name="dropdown" appear>
-        <SettingsMenu class="settingsMenu" v-if="isOpen" @close="isOpen = false" v-click-outside="() => isOpen = false" @click.stop />
-      </transition>
+      <div class="navbar-more-wrap">
+        <span class="navbar-more" @click.stop="isOpen = !isOpen">
+          <img src="/images/icons/more.svg" alt="More icon" />
+        </span>
+        <transition name="dropdown" appear>
+          <SettingsMenu class="settingsMenu" v-if="isOpen" @close="isOpen = false"
+            v-click-outside="() => isOpen = false" @click.stop />
+        </transition>
+      </div>
       <ul class="navbar-items">
         <li>
           <nuxt-link class="item" :to="$localePath('/')">{{ $t("home") }}</nuxt-link>
@@ -24,7 +27,7 @@
         <li>
           <nuxt-link class="item" :to="$localePath('/projects')">{{
             $t("projects")
-          }}</nuxt-link>
+            }}</nuxt-link>
         </li>
         <li>
           <nuxt-link class="item" :to="$localePath('/blog')">{{ $t("blog") }}</nuxt-link>
@@ -45,12 +48,27 @@ export default {
   data() {
     return {
       isOpen: false,
+      isScrolled: false,
     };
   },
   methods: {
     goto(id) {
       this.$router.push(id);
     },
+    handleScroll() {
+      this.isScrolled = window.scrollY > 10;
+    },
+  },
+  mounted() {
+    if (process.client) {
+      this.handleScroll();
+      window.addEventListener("scroll", this.handleScroll, { passive: true });
+    }
+  },
+  beforeUnmount() {
+    if (process.client) {
+      window.removeEventListener("scroll", this.handleScroll);
+    }
   },
 };
 </script>
@@ -70,11 +88,27 @@ export default {
 // Tablet
 @include mediaQueryMin("md") {
   .navbar-container {
-    position: absolute;
-    inset: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
     z-index: 999;
-    top: 20px;
-    height: 25px;
+    padding: 18px 0;
+    transition: background-color 0.25s ease, backdrop-filter 0.25s ease,
+      -webkit-backdrop-filter 0.25s ease, box-shadow 0.25s ease;
+    isolation: isolate;
+
+    &.is-scrolled {
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-color: rgba(19, 19, 19, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+    }
 
     .navbar {
       display: flex;
@@ -116,6 +150,34 @@ export default {
       .navbar-more {
         display: flex;
         cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease, filter 0.2s ease;
+
+        img {
+          transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        &:hover {
+          transform: translateY(-1px);
+          filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+
+          img {
+            transform: scale(1.04);
+            opacity: 0.95;
+            filter: brightness(1.08);
+          }
+        }
+
+        &:active {
+          transform: translateY(0) scale(0.98);
+        }
+      }
+
+      .navbar-more-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
       }
 
       .dropdown-enter-active,
@@ -137,8 +199,19 @@ export default {
       }
 
       .settingsMenu {
-        top: 30px;
+        position: absolute;
+        top: calc(100% + 18px);
+        inset-inline-start: 0;
       }
+    }
+
+    &.is-scrolled .settingsMenu {
+      border-radius: 0 0 8px 8px;
+    }
+
+    &:not(.is-scrolled) .settingsMenu {
+      border-top: none;
+      border-radius: 8px;
     }
   }
 }
