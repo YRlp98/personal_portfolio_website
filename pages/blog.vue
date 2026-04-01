@@ -9,12 +9,15 @@
 
 <script>
 import BlogCard from "~/components/widgets/BlogCard.vue";
-import changeDirection from "../assets/mixins/changeDirection";
 import blogs from "~/data/blogs.json";
 
 export default {
+  name: "Blog",
+  components: { BlogCard },
   setup() {
     const route = useRoute()
+    const { changeDirection } = useDirection()
+    const i18n = useI18n()
     const canonicalUrl = computed(() => 'https://yrlp.ir' + route.path)
 
     useHead({
@@ -29,19 +32,18 @@ export default {
         { rel: 'canonical', href: () => canonicalUrl.value },
       ],
     })
+
+    return {
+      changeDirection,
+      activeLang: computed(() => i18n.locale.value),
+    }
   },
 
-  name: "Blog",
-  components: { BlogCard },
   data() {
     return {
       blogs,
     };
   },
-  computed: {
-    activeLang() { return this.$i18n.locale; },
-  },
-  mixins: [changeDirection],
 };
 </script>
 

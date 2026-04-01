@@ -7,7 +7,10 @@ import { resolve as resolve$2, dirname as dirname$1, join } from 'node:path';
 import { createHash } from 'node:crypto';
 import { toValue } from 'vue';
 import { createConsola } from 'consola';
+import { createRouterMatcher } from 'vue-router';
 import { fileURLToPath } from 'node:url';
+import { createFilter } from 'nuxtseo-shared/utils';
+import { XMLParser } from 'fast-xml-parser';
 
 const suspectProtoRx = /"(?:_|\\u0{2}5[Ff]){2}(?:p|\\u0{2}70)(?:r|\\u0{2}72)(?:o|\\u0{2}6[Ff])(?:t|\\u0{2}74)(?:o|\\u0{2}6[Ff])(?:_|\\u0{2}5[Ff]){2}"\s*:/;
 const suspectConstructorRx = /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
@@ -164,6 +167,8 @@ function stringifyQuery(query) {
 const PROTOCOL_STRICT_REGEX = /^[\s\w\0+.-]{2,}:([/\\]{1,2})/;
 const PROTOCOL_REGEX = /^[\s\w\0+.-]{2,}:([/\\]{2})?/;
 const PROTOCOL_RELATIVE_REGEX = /^([/\\]\s*){2,}[^/\\]/;
+const PROTOCOL_SCRIPT_RE = /^[\s\0]*(blob|data|javascript|vbscript):$/i;
+const TRAILING_SLASH_RE$1 = /\/$|\/\?|\/#/;
 const JOIN_LEADING_SLASH_RE = /^\.?\//;
 function hasProtocol(inputString, opts = {}) {
   if (typeof opts === "boolean") {
@@ -174,20 +179,52 @@ function hasProtocol(inputString, opts = {}) {
   }
   return PROTOCOL_REGEX.test(inputString) || (opts.acceptRelative ? PROTOCOL_RELATIVE_REGEX.test(inputString) : false);
 }
+function isScriptProtocol(protocol) {
+  return !!protocol && PROTOCOL_SCRIPT_RE.test(protocol);
+}
 function hasTrailingSlash(input = "", respectQueryAndFragment) {
-  {
+  if (!respectQueryAndFragment) {
     return input.endsWith("/");
   }
+  return TRAILING_SLASH_RE$1.test(input);
 }
 function withoutTrailingSlash(input = "", respectQueryAndFragment) {
-  {
+  if (!respectQueryAndFragment) {
     return (hasTrailingSlash(input) ? input.slice(0, -1) : input) || "/";
   }
+  if (!hasTrailingSlash(input, true)) {
+    return input || "/";
+  }
+  let path = input;
+  let fragment = "";
+  const fragmentIndex = input.indexOf("#");
+  if (fragmentIndex !== -1) {
+    path = input.slice(0, fragmentIndex);
+    fragment = input.slice(fragmentIndex);
+  }
+  const [s0, ...s] = path.split("?");
+  const cleanPath = s0.endsWith("/") ? s0.slice(0, -1) : s0;
+  return (cleanPath || "/") + (s.length > 0 ? `?${s.join("?")}` : "") + fragment;
 }
 function withTrailingSlash(input = "", respectQueryAndFragment) {
-  {
+  if (!respectQueryAndFragment) {
     return input.endsWith("/") ? input : input + "/";
   }
+  if (hasTrailingSlash(input, true)) {
+    return input || "/";
+  }
+  let path = input;
+  let fragment = "";
+  const fragmentIndex = input.indexOf("#");
+  if (fragmentIndex !== -1) {
+    path = input.slice(0, fragmentIndex);
+    fragment = input.slice(fragmentIndex);
+    if (!path) {
+      return fragment;
+    }
+  }
+  const [s0, ...s] = path.split("?");
+  return s0 + "/" + (s.length > 0 ? `?${s.join("?")}` : "") + fragment;
 }
 function hasLeadingSlash(input = "") {
   return input.startsWith("/");
@@ -309,6 +346,21 @@ function withProtocol(input, protocol) {
     return protocol + input;
   }
   return protocol + input.slice(match[0].length);
+}
+function isEqual$1(a, b, options = {}) {
+  if (!options.trailingSlash) {
+    a = withTrailingSlash(a);
+    b = withTrailingSlash(b);
+  }
+  if (!options.leadingSlash) {
+    a = withLeadingSlash(a);
+    b = withLeadingSlash(b);
+  }
+  if (!options.encoding) {
+    a = decode$1(a);
+    b = decode$1(b);
+  }
+  return a === b;
 }
 
 const protocolRelative = Symbol.for("ufo:protocolRelative");
@@ -861,7 +913,7 @@ const defuFn = createDefu((object, key, currentValue) => {
   }
 });
 
-function o$1(n){throw new Error(`${n} is not implemented yet!`)}let i$2 = class i extends EventEmitter{__unenv__={};readableEncoding=null;readableEnded=true;readableFlowing=false;readableHighWaterMark=0;readableLength=0;readableObjectMode=false;readableAborted=false;readableDidRead=false;closed=false;errored=null;readable=false;destroyed=false;static from(e,t){return new i(t)}constructor(e){super();}_read(e){}read(e){}setEncoding(e){return this}pause(){return this}resume(){return this}isPaused(){return  true}unpipe(e){return this}unshift(e,t){}wrap(e){return this}push(e,t){return  false}_destroy(e,t){this.removeAllListeners();}destroy(e){return this.destroyed=true,this._destroy(e),this}pipe(e,t){return {}}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return this.destroy(),Promise.resolve()}async*[Symbol.asyncIterator](){throw o$1("Readable.asyncIterator")}iterator(e){throw o$1("Readable.iterator")}map(e,t){throw o$1("Readable.map")}filter(e,t){throw o$1("Readable.filter")}forEach(e,t){throw o$1("Readable.forEach")}reduce(e,t,r){throw o$1("Readable.reduce")}find(e,t){throw o$1("Readable.find")}findIndex(e,t){throw o$1("Readable.findIndex")}some(e,t){throw o$1("Readable.some")}toArray(e){throw o$1("Readable.toArray")}every(e,t){throw o$1("Readable.every")}flatMap(e,t){throw o$1("Readable.flatMap")}drop(e,t){throw o$1("Readable.drop")}take(e,t){throw o$1("Readable.take")}asIndexedPairs(e){throw o$1("Readable.asIndexedPairs")}};let l$2 = class l extends EventEmitter{__unenv__={};writable=true;writableEnded=false;writableFinished=false;writableHighWaterMark=0;writableLength=0;writableObjectMode=false;writableCorked=0;closed=false;errored=null;writableNeedDrain=false;writableAborted=false;destroyed=false;_data;_encoding="utf8";constructor(e){super();}pipe(e,t){return {}}_write(e,t,r){if(this.writableEnded){r&&r();return}if(this._data===void 0)this._data=e;else {const s=typeof this._data=="string"?Buffer$1.from(this._data,this._encoding||t||"utf8"):this._data,a=typeof e=="string"?Buffer$1.from(e,t||this._encoding||"utf8"):e;this._data=Buffer$1.concat([s,a]);}this._encoding=t,r&&r();}_writev(e,t){}_destroy(e,t){}_final(e){}write(e,t,r){const s=typeof t=="string"?this._encoding:"utf8",a=typeof t=="function"?t:typeof r=="function"?r:void 0;return this._write(e,s,a),true}setDefaultEncoding(e){return this}end(e,t,r){const s=typeof e=="function"?e:typeof t=="function"?t:typeof r=="function"?r:void 0;if(this.writableEnded)return s&&s(),this;const a=e===s?void 0:e;if(a){const u=t===s?void 0:t;this.write(a,u,s);}return this.writableEnded=true,this.writableFinished=true,this.emit("close"),this.emit("finish"),this}cork(){}uncork(){}destroy(e){return this.destroyed=true,delete this._data,this.removeAllListeners(),this}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return Promise.resolve()}};const c$2=class c{allowHalfOpen=true;_destroy;constructor(e=new i$2,t=new l$2){Object.assign(this,e),Object.assign(this,t),this._destroy=m(e._destroy,t._destroy);}};function _$1(){return Object.assign(c$2.prototype,i$2.prototype),Object.assign(c$2.prototype,l$2.prototype),c$2}function m(...n){return function(...e){for(const t of n)t(...e);}}const g=_$1();let A$1 = class A extends g{__unenv__={};bufferSize=0;bytesRead=0;bytesWritten=0;connecting=false;destroyed=false;pending=false;localAddress="";localPort=0;remoteAddress="";remoteFamily="";remotePort=0;autoSelectFamilyAttemptedAddresses=[];readyState="readOnly";constructor(e){super();}write(e,t,r){return  false}connect(e,t,r){return this}end(e,t,r){return this}setEncoding(e){return this}pause(){return this}resume(){return this}setTimeout(e,t){return this}setNoDelay(e){return this}setKeepAlive(e,t){return this}address(){return {}}unref(){return this}ref(){return this}destroySoon(){this.destroy();}resetAndDestroy(){const e=new Error("ERR_SOCKET_CLOSED");return e.code="ERR_SOCKET_CLOSED",this.destroy(e),this}};class y extends i$2{aborted=false;httpVersion="1.1";httpVersionMajor=1;httpVersionMinor=1;complete=true;connection;socket;headers={};trailers={};method="GET";url="/";statusCode=200;statusMessage="";closed=false;errored=null;readable=false;constructor(e){super(),this.socket=this.connection=e||new A$1;}get rawHeaders(){const e=this.headers,t=[];for(const r in e)if(Array.isArray(e[r]))for(const s of e[r])t.push(r,s);else t.push(r,e[r]);return t}get rawTrailers(){return []}setTimeout(e,t){return this}get headersDistinct(){return p(this.headers)}get trailersDistinct(){return p(this.trailers)}}function p(n){const e={};for(const[t,r]of Object.entries(n))t&&(e[t]=(Array.isArray(r)?r:[r]).filter(Boolean));return e}class w extends l$2{statusCode=200;statusMessage="";upgrading=false;chunkedEncoding=false;shouldKeepAlive=false;useChunkedEncodingByDefault=false;sendDate=false;finished=false;headersSent=false;strictContentLength=false;connection=null;socket=null;req;_headers={};constructor(e){super(),this.req=e;}assignSocket(e){e._httpMessage=this,this.socket=e,this.connection=e,this.emit("socket",e),this._flush();}_flush(){this.flushHeaders();}detachSocket(e){}writeContinue(e){}writeHead(e,t,r){e&&(this.statusCode=e),typeof t=="string"&&(this.statusMessage=t,t=void 0);const s=r||t;if(s&&!Array.isArray(s))for(const a in s)this.setHeader(a,s[a]);return this.headersSent=true,this}writeProcessing(){}setTimeout(e,t){return this}appendHeader(e,t){e=e.toLowerCase();const r=this._headers[e],s=[...Array.isArray(r)?r:[r],...Array.isArray(t)?t:[t]].filter(Boolean);return this._headers[e]=s.length>1?s:s[0],this}setHeader(e,t){return this._headers[e.toLowerCase()]=t,this}setHeaders(e){for(const[t,r]of Object.entries(e))this.setHeader(t,r);return this}getHeader(e){return this._headers[e.toLowerCase()]}getHeaders(){return this._headers}getHeaderNames(){return Object.keys(this._headers)}hasHeader(e){return e.toLowerCase()in this._headers}removeHeader(e){delete this._headers[e.toLowerCase()];}addTrailers(e){}flushHeaders(){}writeEarlyHints(e,t){typeof t=="function"&&t();}}const E=(()=>{const n=function(){};return n.prototype=Object.create(null),n})();function R$1(n={}){const e=new E,t=Array.isArray(n)||H(n)?n:Object.entries(n);for(const[r,s]of t)if(s){if(e[r]===void 0){e[r]=s;continue}e[r]=[...Array.isArray(e[r])?e[r]:[e[r]],...Array.isArray(s)?s:[s]];}return e}function H(n){return typeof n?.entries=="function"}function v(n={}){if(n instanceof Headers)return n;const e=new Headers;for(const[t,r]of Object.entries(n))if(r!==void 0){if(Array.isArray(r)){for(const s of r)e.append(t,String(s));continue}e.set(t,String(r));}return e}const S$1=new Set([101,204,205,304]);async function b$1(n,e){const t=new y,r=new w(t);t.url=e.url?.toString()||"/";let s;if(!t.url.startsWith("/")){const d=new URL(t.url);s=d.host,t.url=d.pathname+d.search+d.hash;}t.method=e.method||"GET",t.headers=R$1(e.headers||{}),t.headers.host||(t.headers.host=e.host||s||"localhost"),t.connection.encrypted=t.connection.encrypted||e.protocol==="https",t.body=e.body||null,t.__unenv__=e.context,await n(t,r);let a=r._data;(S$1.has(r.statusCode)||t.method.toUpperCase()==="HEAD")&&(a=null,delete r._headers["content-length"]);const u={status:r.statusCode,statusText:r.statusMessage,headers:r._headers,body:a};return t.destroy(),r.destroy(),u}async function C$1(n,e,t={}){try{const r=await b$1(n,{url:e,...t});return new Response(r.body,{status:r.status,statusText:r.statusText,headers:v(r.headers)})}catch(r){return new Response(r.toString(),{status:Number.parseInt(r.statusCode||r.code)||500,statusText:r.statusText})}}
+function o$1(n){throw new Error(`${n} is not implemented yet!`)}let i$2 = class i extends EventEmitter{__unenv__={};readableEncoding=null;readableEnded=true;readableFlowing=false;readableHighWaterMark=0;readableLength=0;readableObjectMode=false;readableAborted=false;readableDidRead=false;closed=false;errored=null;readable=false;destroyed=false;static from(e,t){return new i(t)}constructor(e){super();}_read(e){}read(e){}setEncoding(e){return this}pause(){return this}resume(){return this}isPaused(){return  true}unpipe(e){return this}unshift(e,t){}wrap(e){return this}push(e,t){return  false}_destroy(e,t){this.removeAllListeners();}destroy(e){return this.destroyed=true,this._destroy(e),this}pipe(e,t){return {}}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return this.destroy(),Promise.resolve()}async*[Symbol.asyncIterator](){throw o$1("Readable.asyncIterator")}iterator(e){throw o$1("Readable.iterator")}map(e,t){throw o$1("Readable.map")}filter(e,t){throw o$1("Readable.filter")}forEach(e,t){throw o$1("Readable.forEach")}reduce(e,t,r){throw o$1("Readable.reduce")}find(e,t){throw o$1("Readable.find")}findIndex(e,t){throw o$1("Readable.findIndex")}some(e,t){throw o$1("Readable.some")}toArray(e){throw o$1("Readable.toArray")}every(e,t){throw o$1("Readable.every")}flatMap(e,t){throw o$1("Readable.flatMap")}drop(e,t){throw o$1("Readable.drop")}take(e,t){throw o$1("Readable.take")}asIndexedPairs(e){throw o$1("Readable.asIndexedPairs")}};let l$2 = class l extends EventEmitter{__unenv__={};writable=true;writableEnded=false;writableFinished=false;writableHighWaterMark=0;writableLength=0;writableObjectMode=false;writableCorked=0;closed=false;errored=null;writableNeedDrain=false;writableAborted=false;destroyed=false;_data;_encoding="utf8";constructor(e){super();}pipe(e,t){return {}}_write(e,t,r){if(this.writableEnded){r&&r();return}if(this._data===void 0)this._data=e;else {const s=typeof this._data=="string"?Buffer$1.from(this._data,this._encoding||t||"utf8"):this._data,a=typeof e=="string"?Buffer$1.from(e,t||this._encoding||"utf8"):e;this._data=Buffer$1.concat([s,a]);}this._encoding=t,r&&r();}_writev(e,t){}_destroy(e,t){}_final(e){}write(e,t,r){const s=typeof t=="string"?this._encoding:"utf8",a=typeof t=="function"?t:typeof r=="function"?r:void 0;return this._write(e,s,a),true}setDefaultEncoding(e){return this}end(e,t,r){const s=typeof e=="function"?e:typeof t=="function"?t:typeof r=="function"?r:void 0;if(this.writableEnded)return s&&s(),this;const a=e===s?void 0:e;if(a){const u=t===s?void 0:t;this.write(a,u,s);}return this.writableEnded=true,this.writableFinished=true,this.emit("close"),this.emit("finish"),this}cork(){}uncork(){}destroy(e){return this.destroyed=true,delete this._data,this.removeAllListeners(),this}compose(e,t){throw new Error("Method not implemented.")}[Symbol.asyncDispose](){return Promise.resolve()}};const c$1=class c{allowHalfOpen=true;_destroy;constructor(e=new i$2,t=new l$2){Object.assign(this,e),Object.assign(this,t),this._destroy=m$1(e._destroy,t._destroy);}};function _(){return Object.assign(c$1.prototype,i$2.prototype),Object.assign(c$1.prototype,l$2.prototype),c$1}function m$1(...n){return function(...e){for(const t of n)t(...e);}}const g=_();let A$1 = class A extends g{__unenv__={};bufferSize=0;bytesRead=0;bytesWritten=0;connecting=false;destroyed=false;pending=false;localAddress="";localPort=0;remoteAddress="";remoteFamily="";remotePort=0;autoSelectFamilyAttemptedAddresses=[];readyState="readOnly";constructor(e){super();}write(e,t,r){return  false}connect(e,t,r){return this}end(e,t,r){return this}setEncoding(e){return this}pause(){return this}resume(){return this}setTimeout(e,t){return this}setNoDelay(e){return this}setKeepAlive(e,t){return this}address(){return {}}unref(){return this}ref(){return this}destroySoon(){this.destroy();}resetAndDestroy(){const e=new Error("ERR_SOCKET_CLOSED");return e.code="ERR_SOCKET_CLOSED",this.destroy(e),this}};class y extends i$2{aborted=false;httpVersion="1.1";httpVersionMajor=1;httpVersionMinor=1;complete=true;connection;socket;headers={};trailers={};method="GET";url="/";statusCode=200;statusMessage="";closed=false;errored=null;readable=false;constructor(e){super(),this.socket=this.connection=e||new A$1;}get rawHeaders(){const e=this.headers,t=[];for(const r in e)if(Array.isArray(e[r]))for(const s of e[r])t.push(r,s);else t.push(r,e[r]);return t}get rawTrailers(){return []}setTimeout(e,t){return this}get headersDistinct(){return p$1(this.headers)}get trailersDistinct(){return p$1(this.trailers)}}function p$1(n){const e={};for(const[t,r]of Object.entries(n))t&&(e[t]=(Array.isArray(r)?r:[r]).filter(Boolean));return e}class w extends l$2{statusCode=200;statusMessage="";upgrading=false;chunkedEncoding=false;shouldKeepAlive=false;useChunkedEncodingByDefault=false;sendDate=false;finished=false;headersSent=false;strictContentLength=false;connection=null;socket=null;req;_headers={};constructor(e){super(),this.req=e;}assignSocket(e){e._httpMessage=this,this.socket=e,this.connection=e,this.emit("socket",e),this._flush();}_flush(){this.flushHeaders();}detachSocket(e){}writeContinue(e){}writeHead(e,t,r){e&&(this.statusCode=e),typeof t=="string"&&(this.statusMessage=t,t=void 0);const s=r||t;if(s&&!Array.isArray(s))for(const a in s)this.setHeader(a,s[a]);return this.headersSent=true,this}writeProcessing(){}setTimeout(e,t){return this}appendHeader(e,t){e=e.toLowerCase();const r=this._headers[e],s=[...Array.isArray(r)?r:[r],...Array.isArray(t)?t:[t]].filter(Boolean);return this._headers[e]=s.length>1?s:s[0],this}setHeader(e,t){return this._headers[e.toLowerCase()]=t,this}setHeaders(e){for(const[t,r]of Object.entries(e))this.setHeader(t,r);return this}getHeader(e){return this._headers[e.toLowerCase()]}getHeaders(){return this._headers}getHeaderNames(){return Object.keys(this._headers)}hasHeader(e){return e.toLowerCase()in this._headers}removeHeader(e){delete this._headers[e.toLowerCase()];}addTrailers(e){}flushHeaders(){}writeEarlyHints(e,t){typeof t=="function"&&t();}}const E$1=(()=>{const n=function(){};return n.prototype=Object.create(null),n})();function R(n={}){const e=new E$1,t=Array.isArray(n)||H(n)?n:Object.entries(n);for(const[r,s]of t)if(s){if(e[r]===void 0){e[r]=s;continue}e[r]=[...Array.isArray(e[r])?e[r]:[e[r]],...Array.isArray(s)?s:[s]];}return e}function H(n){return typeof n?.entries=="function"}function v$1(n={}){if(n instanceof Headers)return n;const e=new Headers;for(const[t,r]of Object.entries(n))if(r!==void 0){if(Array.isArray(r)){for(const s of r)e.append(t,String(s));continue}e.set(t,String(r));}return e}const S$1=new Set([101,204,205,304]);async function b$1(n,e){const t=new y,r=new w(t);t.url=e.url?.toString()||"/";let s;if(!t.url.startsWith("/")){const d=new URL(t.url);s=d.host,t.url=d.pathname+d.search+d.hash;}t.method=e.method||"GET",t.headers=R(e.headers||{}),t.headers.host||(t.headers.host=e.host||s||"localhost"),t.connection.encrypted=t.connection.encrypted||e.protocol==="https",t.body=e.body||null,t.__unenv__=e.context,await n(t,r);let a=r._data;(S$1.has(r.statusCode)||t.method.toUpperCase()==="HEAD")&&(a=null,delete r._headers["content-length"]);const u={status:r.statusCode,statusText:r.statusMessage,headers:r._headers,body:a};return t.destroy(),r.destroy(),u}async function C(n,e,t={}){try{const r=await b$1(n,{url:e,...t});return new Response(r.body,{status:r.status,statusText:r.statusText,headers:v$1(r.headers)})}catch(r){return new Response(r.toString(),{status:Number.parseInt(r.statusCode||r.code)||500,statusText:r.statusText})}}
 
 function hasProp(obj, prop) {
   try {
@@ -2776,7 +2828,7 @@ const fetch = globalThis.fetch ? (...args) => globalThis.fetch(...args) : create
 const Headers$1 = globalThis.Headers || s$1;
 const AbortController$1 = globalThis.AbortController || i$1;
 const ofetch = createFetch({ fetch, Headers: Headers$1, AbortController: AbortController$1 });
-const $fetch = ofetch;
+const $fetch$1 = ofetch;
 
 function wrapToPromise(value) {
   if (!value || typeof value.then !== "function") {
@@ -3552,17 +3604,17 @@ const unstorage_47drivers_47fs_45lite = defineDriver((opts = {}) => {
   };
 });
 
-const storage = createStorage({});
+const storage$1 = createStorage({});
 
-storage.mount('/assets', assets$1);
+storage$1.mount('/assets', assets$1);
 
-storage.mount('data', unstorage_47drivers_47fs_45lite({"driver":"fsLite","base":"./.data/kv"}));
+storage$1.mount('data', unstorage_47drivers_47fs_45lite({"driver":"fsLite","base":"./.data/kv"}));
 
 function useStorage(base = "") {
-  return base ? prefixStorage(storage, base) : storage;
+  return base ? prefixStorage(storage$1, base) : storage$1;
 }
 
-function serialize$1(o){return typeof o=="string"?`'${o}'`:new c$1().serialize(o)}const c$1=/*@__PURE__*/function(){class o{#t=new Map;compare(t,r){const e=typeof t,n=typeof r;return e==="string"&&n==="string"?t.localeCompare(r):e==="number"&&n==="number"?t-r:String.prototype.localeCompare.call(this.serialize(t,true),this.serialize(r,true))}serialize(t,r){if(t===null)return "null";switch(typeof t){case "string":return r?t:`'${t}'`;case "bigint":return `${t}n`;case "object":return this.$object(t);case "function":return this.$function(t)}return String(t)}serializeObject(t){const r=Object.prototype.toString.call(t);if(r!=="[object Object]")return this.serializeBuiltInType(r.length<10?`unknown:${r}`:r.slice(8,-1),t);const e=t.constructor,n=e===Object||e===void 0?"":e.name;if(n!==""&&globalThis[n]===e)return this.serializeBuiltInType(n,t);if(typeof t.toJSON=="function"){const i=t.toJSON();return n+(i!==null&&typeof i=="object"?this.$object(i):`(${this.serialize(i)})`)}return this.serializeObjectEntries(n,Object.entries(t))}serializeBuiltInType(t,r){const e=this["$"+t];if(e)return e.call(this,r);if(typeof r?.entries=="function")return this.serializeObjectEntries(t,r.entries());throw new Error(`Cannot serialize ${t}`)}serializeObjectEntries(t,r){const e=Array.from(r).sort((i,a)=>this.compare(i[0],a[0]));let n=`${t}{`;for(let i=0;i<e.length;i++){const[a,l]=e[i];n+=`${this.serialize(a,true)}:${this.serialize(l)}`,i<e.length-1&&(n+=",");}return n+"}"}$object(t){let r=this.#t.get(t);return r===void 0&&(this.#t.set(t,`#${this.#t.size}`),r=this.serializeObject(t),this.#t.set(t,r)),r}$function(t){const r=Function.prototype.toString.call(t);return r.slice(-15)==="[native code] }"?`${t.name||""}()[native]`:`${t.name}(${t.length})${r.replace(/\s*\n\s*/g,"")}`}$Array(t){let r="[";for(let e=0;e<t.length;e++)r+=this.serialize(t[e]),e<t.length-1&&(r+=",");return r+"]"}$Date(t){try{return `Date(${t.toISOString()})`}catch{return "Date(null)"}}$ArrayBuffer(t){return `ArrayBuffer[${new Uint8Array(t).join(",")}]`}$Set(t){return `Set${this.$Array(Array.from(t).sort((r,e)=>this.compare(r,e)))}`}$Map(t){return this.serializeObjectEntries("Map",t.entries())}}for(const s of ["Error","RegExp","URL"])o.prototype["$"+s]=function(t){return `${s}(${t})`};for(const s of ["Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Uint16Array","Int32Array","Uint32Array","Float32Array","Float64Array"])o.prototype["$"+s]=function(t){return `${s}[${t.join(",")}]`};for(const s of ["BigInt64Array","BigUint64Array"])o.prototype["$"+s]=function(t){return `${s}[${t.join("n,")}${t.length>0?"n":""}]`};return o}();
+function serialize$1(o){return typeof o=="string"?`'${o}'`:new c().serialize(o)}const c=/*@__PURE__*/function(){class o{#t=new Map;compare(t,r){const e=typeof t,n=typeof r;return e==="string"&&n==="string"?t.localeCompare(r):e==="number"&&n==="number"?t-r:String.prototype.localeCompare.call(this.serialize(t,true),this.serialize(r,true))}serialize(t,r){if(t===null)return "null";switch(typeof t){case "string":return r?t:`'${t}'`;case "bigint":return `${t}n`;case "object":return this.$object(t);case "function":return this.$function(t)}return String(t)}serializeObject(t){const r=Object.prototype.toString.call(t);if(r!=="[object Object]")return this.serializeBuiltInType(r.length<10?`unknown:${r}`:r.slice(8,-1),t);const e=t.constructor,n=e===Object||e===void 0?"":e.name;if(n!==""&&globalThis[n]===e)return this.serializeBuiltInType(n,t);if(typeof t.toJSON=="function"){const i=t.toJSON();return n+(i!==null&&typeof i=="object"?this.$object(i):`(${this.serialize(i)})`)}return this.serializeObjectEntries(n,Object.entries(t))}serializeBuiltInType(t,r){const e=this["$"+t];if(e)return e.call(this,r);if(typeof r?.entries=="function")return this.serializeObjectEntries(t,r.entries());throw new Error(`Cannot serialize ${t}`)}serializeObjectEntries(t,r){const e=Array.from(r).sort((i,a)=>this.compare(i[0],a[0]));let n=`${t}{`;for(let i=0;i<e.length;i++){const[a,l]=e[i];n+=`${this.serialize(a,true)}:${this.serialize(l)}`,i<e.length-1&&(n+=",");}return n+"}"}$object(t){let r=this.#t.get(t);return r===void 0&&(this.#t.set(t,`#${this.#t.size}`),r=this.serializeObject(t),this.#t.set(t,r)),r}$function(t){const r=Function.prototype.toString.call(t);return r.slice(-15)==="[native code] }"?`${t.name||""}()[native]`:`${t.name}(${t.length})${r.replace(/\s*\n\s*/g,"")}`}$Array(t){let r="[";for(let e=0;e<t.length;e++)r+=this.serialize(t[e]),e<t.length-1&&(r+=",");return r+"]"}$Date(t){try{return `Date(${t.toISOString()})`}catch{return "Date(null)"}}$ArrayBuffer(t){return `ArrayBuffer[${new Uint8Array(t).join(",")}]`}$Set(t){return `Set${this.$Array(Array.from(t).sort((r,e)=>this.compare(r,e)))}`}$Map(t){return this.serializeObjectEntries("Map",t.entries())}}for(const s of ["Error","RegExp","URL"])o.prototype["$"+s]=function(t){return `${s}(${t})`};for(const s of ["Int8Array","Uint8Array","Uint8ClampedArray","Int16Array","Uint16Array","Int32Array","Uint32Array","Float32Array","Float64Array"])o.prototype["$"+s]=function(t){return `${s}[${t.join(",")}]`};for(const s of ["BigInt64Array","BigUint64Array"])o.prototype["$"+s]=function(t){return `${s}[${t.join("n,")}${t.length>0?"n":""}]`};return o}();
 
 function isEqual(object1, object2) {
   if (object1 === object2) {
@@ -3574,7 +3626,11 @@ function isEqual(object1, object2) {
   return false;
 }
 
-const e=globalThis.process?.getBuiltinModule?.("crypto")?.hash,r$1="sha256",s="base64url";function digest(t){if(e)return e(r$1,t,s);const o=createHash(r$1).update(t);return globalThis.process?.versions?.webcontainer?o.digest().toString(s):o.digest(s)}
+const e$1=globalThis.process?.getBuiltinModule?.("crypto")?.hash,r$1="sha256",s="base64url";function digest(t){if(e$1)return e$1(r$1,t,s);const o=createHash(r$1).update(t);return globalThis.process?.versions?.webcontainer?o.digest().toString(s):o.digest(s)}
+
+function hash$1(input) {
+  return digest(serialize$1(input));
+}
 
 const Hasher = /* @__PURE__ */ (() => {
   class Hasher2 {
@@ -4280,7 +4336,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "359ad6fe-f1e8-4c9d-864a-c91058e46932",
+    "buildId": "80164e29-b8a0-4c45-931d-e3a6983510e8",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -4290,7 +4346,7 @@ const _inlineRuntimeConfig = {
       "/__nuxt_error": {
         "cache": false
       },
-      "/sitemap.xsl": {
+      "/__sitemap__/style.xsl": {
         "headers": {
           "Content-Type": "application/xslt+xml"
         }
@@ -4301,72 +4357,9 @@ const _inlineRuntimeConfig = {
           "statusCode": 307
         }
       },
-      "/sitemap_index.xml": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/__sitemap__/index.xml": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/index-sitemap.xml": {
-        "redirect": {
-          "to": "/__sitemap__/index.xml",
-          "statusCode": 307
-        }
-      },
-      "/__sitemap__/fa-FA.xml": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/fa-FA-sitemap.xml": {
-        "redirect": {
-          "to": "/__sitemap__/fa-FA.xml",
-          "statusCode": 307
-        }
-      },
-      "/__sitemap__/en-US.xml": {
-        "swr": 600,
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/en-US-sitemap.xml": {
-        "redirect": {
-          "to": "/__sitemap__/en-US.xml",
-          "statusCode": 307
-        }
-      },
+      "/sitemap_index.xml": {},
+      "/__sitemap__/fa-FA.xml": {},
+      "/__sitemap__/en-US.xml": {},
       "/_nuxt": {
         "robots": "noindex",
         "headers": {
@@ -4389,56 +4382,12 @@ const _inlineRuntimeConfig = {
         "headers": {
           "cache-control": "public, max-age=1, immutable"
         }
-      },
-      "/sitemap_index.xml/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/__sitemap__/index.xml/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/__sitemap__/fa-FA.xml/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
-      },
-      "/__sitemap__/en-US.xml/_payload.json": {
-        "cache": {
-          "swr": true,
-          "maxAge": 600,
-          "varies": [
-            "X-Forwarded-Host",
-            "X-Forwarded-Proto",
-            "Host"
-          ]
-        }
       }
     }
   },
   "public": {
     "nuxt-robots": {
-      "version": "5.7.1",
+      "version": "6.0.6",
       "isNuxtContentV2": false,
       "debug": false,
       "credits": true,
@@ -4482,51 +4431,35 @@ const _inlineRuntimeConfig = {
     "i18n": {
       "baseUrl": "https://yrlp.ir",
       "defaultLocale": "fa",
-      "defaultDirection": "ltr",
-      "strategy": "prefix_except_default",
-      "lazy": false,
       "rootRedirect": "",
-      "routesNameSeparator": "___",
-      "defaultLocaleRouteNameSuffix": "default",
+      "redirectStatusCode": 302,
       "skipSettingLocaleOnNavigate": false,
-      "differentDomains": false,
-      "trailingSlash": false,
       "locales": [
         {
           "code": "fa",
           "language": "fa-FA",
-          "name": "Farsi",
-          "files": [
-            {
-              "path": "/Users/yousef/Documents/Projects/Web/personal_portfolio_website/i18n/fa.json",
-              "cache": ""
-            }
-          ]
+          "name": "Farsi"
         },
         {
           "code": "en",
           "language": "en-US",
-          "name": "English",
-          "files": [
-            {
-              "path": "/Users/yousef/Documents/Projects/Web/personal_portfolio_website/i18n/en.json",
-              "cache": ""
-            }
-          ]
+          "name": "English"
         }
       ],
       "detectBrowserLanguage": false,
       "experimental": {
         "localeDetector": "",
-        "switchLocalePathLinkSSR": false,
-        "autoImportTranslationFunctions": false,
         "typedPages": true,
         "typedOptionsAndMessages": false,
-        "generatedLocaleFilePathFormat": "absolute",
-        "alternateLinkCanonicalQueries": false,
-        "hmr": true
+        "alternateLinkCanonicalQueries": true,
+        "devCache": false,
+        "cacheLifetime": "",
+        "stripMessagesPayload": false,
+        "preload": false,
+        "strictSeo": false,
+        "nitroContextDetection": true,
+        "httpCacheDuration": 10
       },
-      "multiDomainLocales": false,
       "domainLocales": {
         "fa": {
           "domain": ""
@@ -4571,7 +4504,7 @@ const _inlineRuntimeConfig = {
       }
     ],
     "credits": true,
-    "version": "6.1.5",
+    "version": "8.0.11",
     "sitemaps": {
       "index": {
         "sitemapName": "index",
@@ -4583,24 +4516,22 @@ const _inlineRuntimeConfig = {
       "fa-FA": {
         "include": [],
         "exclude": [
-          "/_nuxt/**",
-          "/_**"
+          "/_**",
+          "/_nuxt/**"
         ],
         "includeAppSources": true,
         "sitemapName": "fa-FA",
-        "_route": "/__sitemap__/fa-FA.xml",
-        "_hasSourceChunk": false
+        "_route": "/__sitemap__/fa-FA.xml"
       },
       "en-US": {
         "include": [],
         "exclude": [
-          "/_nuxt/**",
-          "/_**"
+          "/_**",
+          "/_nuxt/**"
         ],
         "includeAppSources": true,
         "sitemapName": "en-US",
-        "_route": "/__sitemap__/en-US.xml",
-        "_hasSourceChunk": false
+        "_route": "/__sitemap__/en-US.xml"
       }
     },
     "autoI18n": {
@@ -4624,7 +4555,8 @@ const _inlineRuntimeConfig = {
           "_sitemap": "en-US"
         }
       ],
-      "strategy": "prefix_except_default"
+      "strategy": "prefix_except_default",
+      "pages": {}
     }
   },
   "nuxt-site-config": {
@@ -4632,13 +4564,7 @@ const _inlineRuntimeConfig = {
       {
         "_context": "system",
         "_priority": -15,
-        "name": "personal_portfolio_website",
         "env": "production"
-      },
-      {
-        "_context": "package.json",
-        "_priority": -10,
-        "name": "personal_portfolio_website"
       },
       {
         "_context": "@nuxtjs/i18n",
@@ -4646,12 +4572,12 @@ const _inlineRuntimeConfig = {
         "defaultLocale": "fa-FA"
       }
     ],
-    "version": "3.2.21",
+    "version": "4.0.7",
     "debug": false,
     "multiTenancy": []
   },
   "nuxt-robots": {
-    "version": "5.7.1",
+    "version": "6.0.6",
     "isNuxtContentV2": false,
     "debug": false,
     "credits": true,
@@ -5351,6 +5277,11 @@ function stringifyString(str) {
   return result;
 }
 
+const SiteConfigPriority = {
+  nitro: -4,
+  runtime: 0
+};
+
 function normalizeSiteConfig(config) {
   if (typeof config.indexable !== "undefined")
     config.indexable = String(config.indexable) !== "false";
@@ -5423,9 +5354,10 @@ function createSiteConfigStack(options) {
   };
 }
 
+const NUXT_SITE_ENV_RE = /^NUXT_(PUBLIC_)?SITE_/;
 function envSiteConfig(env = {}) {
   return Object.fromEntries(Object.entries(env).filter(([k]) => k.startsWith("NUXT_SITE_") || k.startsWith("NUXT_PUBLIC_SITE_")).map(([k, v]) => [
-    k.replace(/^NUXT_(PUBLIC_)?SITE_/, "").split("_").map((s, i) => i === 0 ? s.toLowerCase() : s[0]?.toUpperCase() + s.slice(1).toLowerCase()).join(""),
+    k.replace(NUXT_SITE_ENV_RE, "").split("_").map((s, i) => i === 0 ? s.toLowerCase() : s[0]?.toUpperCase() + s.slice(1).toLowerCase()).join(""),
     v
   ]));
 }
@@ -5441,7 +5373,7 @@ const __ciizBdXsXw7o8MWQToVyRXzXNBcBNpLKgwmqMCQlo = defineNitroPlugin(async (nit
     const routeOptions = getRouteRules(event);
     const isIsland = process.env.NUXT_COMPONENT_ISLANDS && event.path.startsWith("/__nuxt_island");
     event.path;
-    const noSSR = event.context.nuxt?.noSSR || routeOptions.ssr === false && !isIsland || (false);
+    const noSSR = !!process.env.NUXT_NO_SSR || event.context.nuxt?.noSSR || routeOptions.ssr === false && !isIsland || (false);
     if (noSSR) {
       const siteConfig = Object.fromEntries(
         Object.entries(getSiteConfig(event)).map(([k, v]) => [k, toValue(v)])
@@ -5889,6 +5821,8 @@ function createPatternMap() {
   return patternMap;
 }
 function normaliseRobotsRouteRule(config) {
+  if (!config)
+    return void 0;
   let allow;
   if (typeof config.robots === "boolean")
     allow = config.robots;
@@ -5938,7 +5872,7 @@ function useRuntimeConfigNuxtRobots(event) {
   return useRuntimeConfig(event)["nuxt-robots"];
 }
 
-const logger = createConsola({
+const logger$1 = createConsola({
   defaults: { tag: "@nuxtjs/robots" }
 });
 
@@ -5947,6 +5881,8 @@ async function resolveRobotsTxtContext(e, nitro = useNitroApp()) {
   const generateRobotsTxtCtx = {
     event: e,
     context: e ? "robots.txt" : "init",
+    errors: [],
+    warnings: [],
     ...JSON.parse(JSON.stringify({ groups, sitemaps }))
   };
   await nitro.hooks.callHook("robots:config", generateRobotsTxtCtx);
@@ -5968,7 +5904,7 @@ const _YlEt9U6B2jqyaclijrJucUg__weIm11cS_N1y07Kq9M = defineNitroPlugin(async (ni
     try {
       urls = await (await nitroApp.localFetch("/__robots__/nuxt-content.json", {})).json();
     } catch (e) {
-      logger.error("Failed to read robot rules from content files.", e);
+      logger$1.error("Failed to read robot rules from content files.", e);
     }
     if (urls && Array.isArray(urls) && urls.length) {
       urls.forEach((url) => nuxtContentUrls.add(withoutTrailingSlash(url)));
@@ -5979,452 +5915,1789 @@ const _YlEt9U6B2jqyaclijrJucUg__weIm11cS_N1y07Kq9M = defineNitroPlugin(async (ni
   }
 });
 
+/*!
+  * shared v11.3.0
+  * (c) 2026 kazuya kawaguchi
+  * Released under the MIT License.
+  */
+const _create = Object.create;
+const create = (obj = null) => _create(obj);
+/* eslint-enable */
+/**
+ * Useful Utilities By Evan you
+ * Modified by kazuya kawaguchi
+ * MIT License
+ * https://github.com/vuejs/vue-next/blob/master/packages/shared/src/index.ts
+ * https://github.com/vuejs/vue-next/blob/master/packages/shared/src/codeframe.ts
+ */
+const isArray = Array.isArray;
+const isFunction = (val) => typeof val === 'function';
+const isString = (val) => typeof val === 'string';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isObject = (val) => val !== null && typeof val === 'object';
+const objectToString = Object.prototype.toString;
+const toTypeString = (value) => objectToString.call(value);
+
+const isNotObjectOrIsArray = (val) => !isObject(val) || isArray(val);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function deepCopy(src, des) {
+    // src and des should both be objects, and none of them can be a array
+    if (isNotObjectOrIsArray(src) || isNotObjectOrIsArray(des)) {
+        throw new Error('Invalid value');
+    }
+    const stack = [{ src, des }];
+    while (stack.length) {
+        const { src, des } = stack.pop();
+        // using `Object.keys` which skips prototype properties
+        Object.keys(src).forEach(key => {
+            if (key === '__proto__') {
+                return;
+            }
+            // if src[key] is an object/array, set des[key]
+            // to empty object/array to prevent setting by reference
+            if (isObject(src[key]) && !isObject(des[key])) {
+                des[key] = Array.isArray(src[key]) ? [] : create();
+            }
+            if (isNotObjectOrIsArray(des[key]) || isNotObjectOrIsArray(src[key])) {
+                // replace with src[key] when:
+                // src[key] or des[key] is not an object, or
+                // src[key] or des[key] is an array
+                des[key] = src[key];
+            }
+            else {
+                // src[key] and des[key] are both objects, merge them
+                stack.push({ src: src[key], des: des[key] });
+            }
+        });
+    }
+}
+
+const __nuxtMock = { runWithContext: async (fn) => await fn() };
+const merger$1 = createDefu((obj, key, value) => {
+  if (key === "messages" || key === "datetimeFormats" || key === "numberFormats") {
+    obj[key] ??= create(null);
+    deepCopy(value, obj[key]);
+    return true;
+  }
+});
+async function loadVueI18nOptions(vueI18nConfigs) {
+  const nuxtApp = __nuxtMock;
+  let vueI18nOptions = { messages: create(null) };
+  for (const configFile of vueI18nConfigs) {
+    const resolver = await configFile().then((x) => isModule(x) ? x.default : x);
+    const resolved = isFunction(resolver) ? await nuxtApp.runWithContext(() => resolver()) : resolver;
+    vueI18nOptions = merger$1(create(null), resolved, vueI18nOptions);
+  }
+  vueI18nOptions.fallbackLocale ??= false;
+  return vueI18nOptions;
+}
+const isModule = (val) => toTypeString(val) === "[object Module]";
+async function getLocaleMessages(locale, loader) {
+  const nuxtApp = __nuxtMock;
+  try {
+    const getter = await nuxtApp.runWithContext(loader.load).then((x) => isModule(x) ? x.default : x);
+    return isFunction(getter) ? await nuxtApp.runWithContext(() => getter(locale)) : getter;
+  } catch (e) {
+    throw new Error(`Failed loading locale (${locale}): ` + e.message);
+  }
+}
+async function getLocaleMessagesMerged(locale, loaders = []) {
+  const nuxtApp = __nuxtMock;
+  const messages = await Promise.all(
+    loaders.map((loader) => nuxtApp.runWithContext(() => getLocaleMessages(locale, loader)))
+  );
+  const merged = {};
+  for (const message of messages) {
+    deepCopy(message, merged);
+  }
+  return merged;
+}
+
+var iran$1 = "ایران";
+var emailAddress$1 = "hello{'@'}yrlp.ir";
+var telegramId$1 = "YRlp98{'@'}";
+var education$1 = "تحصیلات";
+var experience$1 = "تجربیات";
+var dotSwan$1 = "دات سوان";
+var dotSwanDesc$1 = "راهکارهای فناوری، نیروی انسانی و تحول دیجیتال";
+var fewzed$1 = "فیوزد";
+var fewzedDesc$1 = "توسعه نرم‌افزارهای ایمنی و خدمات بزرگراه";
+var xeniac$1 = "زنیاک";
+var xeniacDesc$1 = "تیم طراحی و توسعه نرم‌فزار";
+var samArea$1 = "سام‌آرنا";
+var samAreaDesc$1 = "وب‌سایت خبری و رام‌سنتر سامسونگ";
+var toranji$1 = "ترنجی";
+var toranjiDesc$1 = "وب‌سایت خبری ترنجی";
+var cafeDL$1 = "کافه دانلود";
+var cafeDLDesc$1 = "مرکز دانلود و آموزش";
+var home$1 = "صفحه اصلی";
+var aboutMe$1 = "درباره من";
+var skills$1 = "مهارت‌ها";
+var projects$1 = "پروژه‌ها";
+var blog$1 = "بلاگ";
+var viewAll$1 = "مشاهده همه";
+var show$1 = "نمایش";
+var All$1 = "همه";
+var Designing$1 = "طراحی";
+var Web$1 = "وب";
+var Mobile$1 = "موبایل";
+var Others$1 = "متفرقه";
+var homePageHello$1 = "سلام!";
+var homePageMy$1 = "من";
+var homePageName$1 = "یوسف روشندل";
+var homePageJobTitleP1$1 = "توسعه‌دهنده";
+var homePageJobTitleP2$1 = "فرانت-اند هستم";
+var homePageAboutMe$1 = "درباره من";
+var homePageAboutMeText$1 = "من یوسف روشندل، متولد اسفند 1377 از شهر اراک و فارغ‌التحصیل رشته مهندسی نرم‌افزار از دانشگاه امیرکبیر اراک هستم. من یک توسعه‌دهنده فرانت‌اند و طراح رابط و تجربه کاربری هستم. مسیر برنامه‌نویسی من از سال 2014 با زبان C# آغاز شد و سپس به توسعه برنامه‌های اندروید با Java پرداختم و با انتشار Flutter تصمیم گرفتم تا به آن مهاجرت کنم. پس از حدود سه سال توسعه اپلیکیشن‌های موبایل، به شدت به توسعه نرم‌افزارهای وب علاقه‌مند شدم و شروع به یادگیری JavaScript، HTML/CSS و فریم‌ورک‌های وب مانند Vue.js کردم. همچنین دارای کمی تجربه‌ با Node.js از جمله Express.js و WebSockets نیز هستم. در حال حاضر در حال گسترش مهارت‌های خود در توسعه بک‌اند هستم تا به یک توسعه‌دهنده فول‌استک تبدیل شوم. به یادگیری تکنولوژی‌های جدید و به‌روز ماندن علاقه‌مندم و در محیط‌های تیمی به خوبی عمل می‌کنم. در حال حاضر، در شرکت dotSwan به عنوان توسعه‌دهنده فرانت‌اند مشغول به کار هستم.";
+var homePageAboutMeBirthday$1 = "11 اسفند 1377";
+var homePageEducationAssociate$1 = "کاردانی مهندسی تکنولوژی نرم افزار";
+var homePageEducationAssociateDate$1 = "مهر ۱۳۹۵ - بهمن ۱۳۹۷";
+var homePageEducationBachelor$1 = "کارشناسی مهندسی نرم افزار";
+var homePageEducationBachelorDate$1 = "مهر ۱۳۹۷ - بهمن ۱۴۰۰";
+var HomePageExperienceMain$1 = "تخصصی";
+var HomePageExperiencDotSwan$1 = "توسعه‌دهنده فرانت-اند";
+var HomePageExperiencDotSwanFrontEndDate$1 = "فروردین 1404 - هم اکنون";
+var HomePageExperiencFewzewd$1 = "توسعه‌دهنده فرانت-اند و طراح رابط/تجربه کاربری";
+var HomePageExperiencFewzedFrontEndDate$1 = "شهریور 1402 - اسفند 1403";
+var HomePageExperiencXeniacFrontEnd$1 = "توسعه‌دهنده فرانت-اند";
+var HomePageExperiencXeniacFrontEndDate$1 = "فروردین ۱۴۰۰ - هم‌اکنون";
+var HomePageExperiencXeniacUIUX$1 = "طراح رابط/تجربه کاربری";
+var HomePageExperiencXeniacUIUXDate$1 = "آبان ۱۳۹۷ - هم‌اکنون";
+var HomePageExperiencXeniacMobile$1 = "توسعه‌دهنده نرم‌افزار موبایل";
+var HomePageExperiencXeniacMobileDate$1 = "آبان ۱۳۹۷ تا فروردین ۱۴۰۰";
+var HomePageExperienceOther$1 = "متفرقه";
+var HomePageExperiencSamArena$1 = "مدیریت بخش رام‌سنتر";
+var HomePageExperiencSamArenaDate$1 = "آبان ۱۳۹۷ - اردیبهشت ۱۳۹۸";
+var HomePageExperiencToranji$1 = "نویسنده خبر";
+var HomePageExperiencToranjiDate$1 = "شهریور ۱۳۹۶ - آذر ۱۳۹۶";
+var HomePageExperiencCafeDL$1 = "بنیانگذار و سردبیر";
+var HomePageExperiencCafeDLDate$1 = "بهمن ۱۳۹۵ - دی ۱۳۹۸";
+var homePageSkillsMain$1 = ":مهارت‌های تخصصی من";
+var homePageSkillsOther$1 = ":سایر مهارت‌ها";
+var homePageFollowMeSN$1 = "من در شبکه‌های اجتماعی";
+var footerCopyright$1 = ". طراحی و پیاده سازی شده توسط یوسف روشندل";
+const locale_fa_46json_ad67a3f5 = {
+	iran: iran$1,
+	emailAddress: emailAddress$1,
+	telegramId: telegramId$1,
+	education: education$1,
+	experience: experience$1,
+	dotSwan: dotSwan$1,
+	dotSwanDesc: dotSwanDesc$1,
+	fewzed: fewzed$1,
+	fewzedDesc: fewzedDesc$1,
+	xeniac: xeniac$1,
+	xeniacDesc: xeniacDesc$1,
+	samArea: samArea$1,
+	samAreaDesc: samAreaDesc$1,
+	toranji: toranji$1,
+	toranjiDesc: toranjiDesc$1,
+	cafeDL: cafeDL$1,
+	cafeDLDesc: cafeDLDesc$1,
+	home: home$1,
+	aboutMe: aboutMe$1,
+	skills: skills$1,
+	projects: projects$1,
+	blog: blog$1,
+	viewAll: viewAll$1,
+	show: show$1,
+	All: All$1,
+	Designing: Designing$1,
+	Web: Web$1,
+	Mobile: Mobile$1,
+	Others: Others$1,
+	homePageHello: homePageHello$1,
+	homePageMy: homePageMy$1,
+	homePageName: homePageName$1,
+	homePageJobTitleP1: homePageJobTitleP1$1,
+	homePageJobTitleP2: homePageJobTitleP2$1,
+	homePageAboutMe: homePageAboutMe$1,
+	homePageAboutMeText: homePageAboutMeText$1,
+	homePageAboutMeBirthday: homePageAboutMeBirthday$1,
+	homePageEducationAssociate: homePageEducationAssociate$1,
+	homePageEducationAssociateDate: homePageEducationAssociateDate$1,
+	homePageEducationBachelor: homePageEducationBachelor$1,
+	homePageEducationBachelorDate: homePageEducationBachelorDate$1,
+	HomePageExperienceMain: HomePageExperienceMain$1,
+	HomePageExperiencDotSwan: HomePageExperiencDotSwan$1,
+	HomePageExperiencDotSwanFrontEndDate: HomePageExperiencDotSwanFrontEndDate$1,
+	HomePageExperiencFewzewd: HomePageExperiencFewzewd$1,
+	HomePageExperiencFewzedFrontEndDate: HomePageExperiencFewzedFrontEndDate$1,
+	HomePageExperiencXeniacFrontEnd: HomePageExperiencXeniacFrontEnd$1,
+	HomePageExperiencXeniacFrontEndDate: HomePageExperiencXeniacFrontEndDate$1,
+	HomePageExperiencXeniacUIUX: HomePageExperiencXeniacUIUX$1,
+	HomePageExperiencXeniacUIUXDate: HomePageExperiencXeniacUIUXDate$1,
+	HomePageExperiencXeniacMobile: HomePageExperiencXeniacMobile$1,
+	HomePageExperiencXeniacMobileDate: HomePageExperiencXeniacMobileDate$1,
+	HomePageExperienceOther: HomePageExperienceOther$1,
+	HomePageExperiencSamArena: HomePageExperiencSamArena$1,
+	HomePageExperiencSamArenaDate: HomePageExperiencSamArenaDate$1,
+	HomePageExperiencToranji: HomePageExperiencToranji$1,
+	HomePageExperiencToranjiDate: HomePageExperiencToranjiDate$1,
+	HomePageExperiencCafeDL: HomePageExperiencCafeDL$1,
+	HomePageExperiencCafeDLDate: HomePageExperiencCafeDLDate$1,
+	homePageSkillsMain: homePageSkillsMain$1,
+	homePageSkillsOther: homePageSkillsOther$1,
+	homePageFollowMeSN: homePageFollowMeSN$1,
+	footerCopyright: footerCopyright$1
+};
+
+var iran = "Iran";
+var emailAddress = "hello{'@'}yrlp.ir";
+var telegramId = "{'@'}YRlp98";
+var education = "Education";
+var experience = "Experience";
+var dotSwan = "dowSwan";
+var dotSwanDesc = "IT solutions, staffing, and digital transformation";
+var fewzed = "Fewzed";
+var fewzedDesc = "Developing software solutions for highway safety and services";
+var xeniac = "Xeniac";
+var xeniacDesc = "Software Production";
+var samArea = "Sam Arena";
+var samAreaDesc = "Samsung News and ROM Center";
+var toranji = "Torani";
+var toranjiDesc = "Technology News Website";
+var cafeDL = "CafeDL";
+var cafeDLDesc = "Download and Instruction Center";
+var home = "Home";
+var aboutMe = "About Me";
+var skills = "Skills";
+var projects = "Projects";
+var blog = "Blog";
+var viewAll = "View all";
+var show = "Show";
+var All = "All";
+var Designing = "Designing";
+var Web = "Web";
+var Mobile = "Mobile";
+var Others = "Others";
+var homePageHello = "Hello!";
+var homePageMy = "My name is";
+var homePageName = "Yousef Roshandel";
+var homePageJobTitleP1 = "I'm a Front-end";
+var homePageJobTitleP2 = "developer";
+var homePageAboutMe = "About Me";
+var homePageAboutMeText = "I'm Yousef Roshandel, born in March 1999 in Arak, and graduated from Amirkabir University of Arak with a degree in software engineering. I'm a Front-end developer and UI/UX designer. My programming journey began in 2014 with C#. Later, I delved into Java for Android development, but when Flutter was released, I made the switch. After about three years of mobile app development, I discovered a passion for web development. I started learning Javascript, HTML/CSS, and web frameworks like Vue.js. I also have experience in Node.js, including Express.js and WebSockets. Currently, I'm expanding my skills in backend development to become a full-stack developer. I'm enthusiastic about learning new technologies and staying updated, and I thrive in collaborative environments. Currently, I'm working at dotSwan Company as a Front-end developer.";
+var homePageAboutMeBirthday = "1999 2 March";
+var homePageEducationAssociate = "Associate's degree Computer Software Engineering";
+var homePageEducationAssociateDate = "September 2016 - January 2018";
+var homePageEducationBachelor = "Bachelor's degree Computer Software Engineering";
+var homePageEducationBachelorDate = "January 2018 - January 2021";
+var HomePageExperienceMain = "Specialist";
+var HomePageExperiencDotSwan = "Front-end Developer";
+var HomePageExperiencDotSwanFrontEndDate = "April 2025 - Present";
+var HomePageExperiencFewzewd = "Front-end Developer and UI/UX Deisgner";
+var HomePageExperiencFewzedFrontEndDate = "September 2023 - March 2025";
+var HomePageExperiencXeniacFrontEnd = "Front-end Developer";
+var HomePageExperiencXeniacFrontEndDate = "Aprill 2021 - Present";
+var HomePageExperiencXeniacUIUX = "UI/UX Designer";
+var HomePageExperiencXeniacUIUXDate = "Nov 2018 - Present";
+var HomePageExperiencXeniacMobile = "Mobile Application Developer";
+var HomePageExperiencXeniacMobileDate = "Nov 2018 - Aprill 2021";
+var HomePageExperienceOther = "Other";
+var HomePageExperiencSamArena = "ROM Center Manager";
+var HomePageExperiencSamArenaDate = "November 2018 - May 2019";
+var HomePageExperiencToranji = "News Author";
+var HomePageExperiencToranjiDate = "Sep 2017 - December 2017";
+var HomePageExperiencCafeDL = "Founder and Chief Editor";
+var HomePageExperiencCafeDLDate = "February 2017 - January 2020";
+var homePageSkillsMain = "My Main Skills:";
+var homePageSkillsOther = "Other Skills:";
+var homePageFollowMeSN = "Me on Social Network";
+var footerCopyright = "Designed and Implemented by Yousef Roshandel .";
+const locale_en_46json_0a9724e4 = {
+	iran: iran,
+	emailAddress: emailAddress,
+	telegramId: telegramId,
+	education: education,
+	experience: experience,
+	dotSwan: dotSwan,
+	dotSwanDesc: dotSwanDesc,
+	fewzed: fewzed,
+	fewzedDesc: fewzedDesc,
+	xeniac: xeniac,
+	xeniacDesc: xeniacDesc,
+	samArea: samArea,
+	samAreaDesc: samAreaDesc,
+	toranji: toranji,
+	toranjiDesc: toranjiDesc,
+	cafeDL: cafeDL,
+	cafeDLDesc: cafeDLDesc,
+	home: home,
+	aboutMe: aboutMe,
+	skills: skills,
+	projects: projects,
+	blog: blog,
+	viewAll: viewAll,
+	show: show,
+	All: All,
+	Designing: Designing,
+	Web: Web,
+	Mobile: Mobile,
+	Others: Others,
+	homePageHello: homePageHello,
+	homePageMy: homePageMy,
+	homePageName: homePageName,
+	homePageJobTitleP1: homePageJobTitleP1,
+	homePageJobTitleP2: homePageJobTitleP2,
+	homePageAboutMe: homePageAboutMe,
+	homePageAboutMeText: homePageAboutMeText,
+	homePageAboutMeBirthday: homePageAboutMeBirthday,
+	homePageEducationAssociate: homePageEducationAssociate,
+	homePageEducationAssociateDate: homePageEducationAssociateDate,
+	homePageEducationBachelor: homePageEducationBachelor,
+	homePageEducationBachelorDate: homePageEducationBachelorDate,
+	HomePageExperienceMain: HomePageExperienceMain,
+	HomePageExperiencDotSwan: HomePageExperiencDotSwan,
+	HomePageExperiencDotSwanFrontEndDate: HomePageExperiencDotSwanFrontEndDate,
+	HomePageExperiencFewzewd: HomePageExperiencFewzewd,
+	HomePageExperiencFewzedFrontEndDate: HomePageExperiencFewzedFrontEndDate,
+	HomePageExperiencXeniacFrontEnd: HomePageExperiencXeniacFrontEnd,
+	HomePageExperiencXeniacFrontEndDate: HomePageExperiencXeniacFrontEndDate,
+	HomePageExperiencXeniacUIUX: HomePageExperiencXeniacUIUX,
+	HomePageExperiencXeniacUIUXDate: HomePageExperiencXeniacUIUXDate,
+	HomePageExperiencXeniacMobile: HomePageExperiencXeniacMobile,
+	HomePageExperiencXeniacMobileDate: HomePageExperiencXeniacMobileDate,
+	HomePageExperienceOther: HomePageExperienceOther,
+	HomePageExperiencSamArena: HomePageExperiencSamArena,
+	HomePageExperiencSamArenaDate: HomePageExperiencSamArenaDate,
+	HomePageExperiencToranji: HomePageExperiencToranji,
+	HomePageExperiencToranjiDate: HomePageExperiencToranjiDate,
+	HomePageExperiencCafeDL: HomePageExperiencCafeDL,
+	HomePageExperiencCafeDLDate: HomePageExperiencCafeDLDate,
+	homePageSkillsMain: homePageSkillsMain,
+	homePageSkillsOther: homePageSkillsOther,
+	homePageFollowMeSN: homePageFollowMeSN,
+	footerCopyright: footerCopyright
+};
+
+const config_i18n_46config_46js_3b728363 = () => ({
+  fallbackLocale: "fa"
+});
+
+// @ts-nocheck
+const localeCodes =  [
+  "fa",
+  "en"
+];
+const localeLoaders = {
+  fa: [
+    {
+      key: "locale_fa_46json_ad67a3f5",
+      load: () => Promise.resolve(locale_fa_46json_ad67a3f5),
+      cache: true
+    }
+  ],
+  en: [
+    {
+      key: "locale_en_46json_0a9724e4",
+      load: () => Promise.resolve(locale_en_46json_0a9724e4),
+      cache: true
+    }
+  ]
+};
+const vueI18nConfigs = [
+  () => Promise.resolve(config_i18n_46config_46js_3b728363)
+];
+const normalizedLocales = [
+  {
+    code: "fa",
+    language: "fa-FA",
+    name: "Farsi"
+  },
+  {
+    code: "en",
+    language: "en-US",
+    name: "English"
+  }
+];
+
+const setupVueI18nOptions = async (defaultLocale) => {
+  const options = await loadVueI18nOptions(vueI18nConfigs);
+  options.locale = defaultLocale || options.locale || "en-US";
+  options.defaultLocale = defaultLocale;
+  options.fallbackLocale ??= false;
+  options.messages ??= {};
+  for (const locale of localeCodes) {
+    options.messages[locale] ??= {};
+  }
+  return options;
+};
+
+function defineNitroPlugin(def) {
+  return def;
+}
+
+function defineRenderHandler(render) {
+  const runtimeConfig = useRuntimeConfig();
+  return eventHandler(async (event) => {
+    const nitroApp = useNitroApp();
+    const ctx = { event, render, response: void 0 };
+    await nitroApp.hooks.callHook("render:before", ctx);
+    if (!ctx.response) {
+      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
+        setResponseHeader(event, "Content-Type", "image/x-icon");
+        return send(
+          event,
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        );
+      }
+      ctx.response = await ctx.render(event);
+      if (!ctx.response) {
+        const _currentStatus = getResponseStatus(event);
+        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
+        return send(
+          event,
+          "No response returned from render handler: " + event.path
+        );
+      }
+    }
+    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
+    if (ctx.response.headers) {
+      setResponseHeaders(event, ctx.response.headers);
+    }
+    if (ctx.response.statusCode || ctx.response.statusMessage) {
+      setResponseStatus(
+        event,
+        ctx.response.statusCode,
+        ctx.response.statusMessage
+      );
+    }
+    return ctx.response.body;
+  });
+}
+
+const e=globalThis.process?.env||Object.create(null),t=globalThis.process||{env:e},n=t!==void 0&&t.env&&t.env.NODE_ENV||void 0,r=[[`claude`,[`CLAUDECODE`,`CLAUDE_CODE`]],[`replit`,[`REPL_ID`]],[`gemini`,[`GEMINI_CLI`]],[`codex`,[`CODEX_SANDBOX`,`CODEX_THREAD_ID`]],[`opencode`,[`OPENCODE`]],[`pi`,[i(`PATH`,/\.pi[\\/]agent/)]],[`auggie`,[`AUGMENT_AGENT`]],[`goose`,[`GOOSE_PROVIDER`]],[`devin`,[i(`EDITOR`,/devin/)]],[`cursor`,[`CURSOR_AGENT`]],[`kiro`,[i(`TERM_PROGRAM`,/kiro/)]]];function i(t,n){return ()=>{let r=e[t];return r?n.test(r):false}}function a(){let t=e.AI_AGENT;if(t)return {name:t.toLowerCase()};for(let[t,n]of r)for(let r of n)if(typeof r==`string`?e[r]:r())return {name:t};return {}}const o=a();o.name;!!o.name;const l=[[`APPVEYOR`],[`AWS_AMPLIFY`,`AWS_APP_ID`,{ci:true}],[`AZURE_PIPELINES`,`SYSTEM_TEAMFOUNDATIONCOLLECTIONURI`],[`AZURE_STATIC`,`INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN`],[`APPCIRCLE`,`AC_APPCIRCLE`],[`BAMBOO`,`bamboo_planKey`],[`BITBUCKET`,`BITBUCKET_COMMIT`],[`BITRISE`,`BITRISE_IO`],[`BUDDY`,`BUDDY_WORKSPACE_ID`],[`BUILDKITE`],[`CIRCLE`,`CIRCLECI`],[`CIRRUS`,`CIRRUS_CI`],[`CLOUDFLARE_PAGES`,`CF_PAGES`,{ci:true}],[`CLOUDFLARE_WORKERS`,`WORKERS_CI`,{ci:true}],[`GOOGLE_CLOUDRUN`,`K_SERVICE`],[`GOOGLE_CLOUDRUN_JOB`,`CLOUD_RUN_JOB`],[`CODEBUILD`,`CODEBUILD_BUILD_ARN`],[`CODEFRESH`,`CF_BUILD_ID`],[`DRONE`],[`DRONE`,`DRONE_BUILD_EVENT`],[`DSARI`],[`GITHUB_ACTIONS`],[`GITLAB`,`GITLAB_CI`],[`GITLAB`,`CI_MERGE_REQUEST_ID`],[`GOCD`,`GO_PIPELINE_LABEL`],[`LAYERCI`],[`JENKINS`,`JENKINS_URL`],[`HUDSON`,`HUDSON_URL`],[`MAGNUM`],[`NETLIFY`],[`NETLIFY`,`NETLIFY_LOCAL`,{ci:false}],[`NEVERCODE`],[`RENDER`],[`SAIL`,`SAILCI`],[`SEMAPHORE`],[`SCREWDRIVER`],[`SHIPPABLE`],[`SOLANO`,`TDDIUM`],[`STRIDER`],[`TEAMCITY`,`TEAMCITY_VERSION`],[`TRAVIS`],[`VERCEL`,`NOW_BUILDER`],[`VERCEL`,`VERCEL`,{ci:false}],[`VERCEL`,`VERCEL_ENV`,{ci:false}],[`APPCENTER`,`APPCENTER_BUILD_ID`],[`CODESANDBOX`,`CODESANDBOX_SSE`,{ci:false}],[`CODESANDBOX`,`CODESANDBOX_HOST`,{ci:false}],[`STACKBLITZ`],[`STORMKIT`],[`CLEAVR`],[`ZEABUR`],[`CODESPHERE`,`CODESPHERE_APP_ID`,{ci:true}],[`RAILWAY`,`RAILWAY_PROJECT_ID`],[`RAILWAY`,`RAILWAY_SERVICE_ID`],[`DENO-DEPLOY`,`DENO_DEPLOY`],[`DENO-DEPLOY`,`DENO_DEPLOYMENT_ID`],[`FIREBASE_APP_HOSTING`,`FIREBASE_APP_HOSTING`,{ci:true}]];function u(){for(let t of l)if(e[t[1]||t[0]])return {name:t[0].toLowerCase(),...t[2]};return e.SHELL===`/bin/jsh`&&t.versions?.webcontainer?{name:`stackblitz`,ci:false}:{name:``,ci:false}}const d=u();d.name;const p=t.platform||``,m=!!e.CI||d.ci!==false,h=!!t.stdout?.isTTY;!!e.DEBUG;const v=n===`test`||!!e.TEST;n===`production`||e.MODE===`production`;const b=n===`dev`||n===`development`||e.MODE===`development`;!!e.MINIMAL||m||v||!h;const S=/^win/i.test(p);!e.NO_COLOR&&(!!e.FORCE_COLOR||(h||S)&&e.TERM!==`dumb`||m);const E=(t.versions?.node||``).replace(/^v/,``)||null;Number(E?.split(`.`)[0])||null;const O=!!t?.versions?.node,k=`Bun`in globalThis,A=`Deno`in globalThis,j=`fastly`in globalThis,M=`Netlify`in globalThis,N=`EdgeRuntime`in globalThis,P=globalThis.navigator?.userAgent===`Cloudflare-Workers`,F=[[M,`netlify`],[N,`edge-light`],[P,`workerd`],[j,`fastly`],[A,`deno`],[k,`bun`],[O,`node`]];function I(){let e=F.find(e=>e[0]);if(e)return {name:e[1]}}const L=I();L?.name||``;
+
+function baseURL() {
+	// TODO: support passing event to `useRuntimeConfig`
+	return useRuntimeConfig().app.baseURL;
+}
+function buildAssetsDir() {
+	// TODO: support passing event to `useRuntimeConfig`
+	return useRuntimeConfig().app.buildAssetsDir;
+}
+function buildAssetsURL(...path) {
+	return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
+}
+function publicAssetsURL(...path) {
+	// TODO: support passing event to `useRuntimeConfig`
+	const app = useRuntimeConfig().app;
+	const publicBase = app.cdnURL || app.baseURL;
+	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
+}
+
+function parseAcceptLanguage(value) {
+  return value.split(",").map((tag) => tag.split(";")[0]).filter(
+    (tag) => !(tag === "*" || tag === "")
+  );
+}
+function createPathIndexLanguageParser(index = 0) {
+  return (path) => {
+    const rawPath = typeof path === "string" ? path : path.pathname;
+    const normalizedPath = rawPath.split("?")[0];
+    const parts = normalizedPath.split("/");
+    if (parts[0] === "") {
+      parts.shift();
+    }
+    return parts.length > index ? parts[index] || "" : "";
+  };
+}
+
+const PROTOCOL_RE = /^https?:\/\//;
+const TRAILING_SLASH_RE = /\/$/;
+function isLocalhostHost(host) {
+  if (!host || host.startsWith("localhost") || host.startsWith("127.") || host.startsWith("0.0.0.0"))
+    return true;
+  const hostname = host.startsWith("[") ? host.slice(0, host.indexOf("]") + 1) : host;
+  return hostname === "[::1]" || hostname === "::1" || hostname === "[::]" || hostname === "::";
+}
+function extractHostname(host) {
+  if (host.startsWith("[")) {
+    const close = host.indexOf("]");
+    return close !== -1 ? host.slice(0, close + 1) : host;
+  }
+  const colonCount = host.split(":").length - 1;
+  return colonCount === 1 ? host.slice(0, host.indexOf(":")) : host;
+}
+function splitHostPort(host) {
+  if (host.startsWith("[")) {
+    const close = host.indexOf("]");
+    const hostname = close !== -1 ? host.slice(0, close + 1) : host;
+    const port = close !== -1 && host[close + 1] === ":" ? host.slice(close + 2) : "";
+    const normalized = hostname === "[::1]" || hostname === "[::]" ? "localhost" : hostname;
+    return { host: normalized, port };
+  }
+  if (host === "0.0.0.0" || host.startsWith("0.0.0.0:")) {
+    const i = host.indexOf(":");
+    return { host: "localhost", port: i !== -1 ? host.slice(i + 1) : "" };
+  }
+  const colonCount = host.split(":").length - 1;
+  if (colonCount === 1) {
+    const i = host.indexOf(":");
+    return { host: host.slice(0, i), port: host.slice(i + 1) };
+  }
+  if (colonCount > 1) {
+    const normalized = host === "::1" || host === "::" ? "localhost" : `[${host}]`;
+    return { host: normalized, port: "" };
+  }
+  return { host, port: "" };
+}
+function getNitroOrigin$1(ctx = {}) {
+  const isDev = ctx.isDev ?? b;
+  const isPrerender = ctx.isPrerender ?? false;
+  let host = "";
+  let port = "";
+  let protocol = process.env.NITRO_SSL_CERT && process.env.NITRO_SSL_KEY ? "https" : "http";
+  if (isDev || isPrerender) {
+    const devEnv = process.env.__NUXT_DEV__ || process.env.NUXT_VITE_NODE_OPTIONS;
+    if (devEnv) {
+      const parsed = JSON.parse(devEnv);
+      const origin = parsed.proxy?.url || parsed.baseURL?.replace("/__nuxt_vite_node__", "");
+      host = origin.replace(PROTOCOL_RE, "").replace(TRAILING_SLASH_RE, "");
+      protocol = origin.startsWith("https") ? "https" : "http";
+    }
+  }
+  if (isDev && isLocalhostHost(host) && ctx.requestHost) {
+    const reqHost = extractHostname(ctx.requestHost);
+    if (reqHost && !isLocalhostHost(reqHost)) {
+      host = ctx.requestHost;
+      protocol = ctx.requestProtocol || protocol;
+    }
+  }
+  if (!host && ctx.requestHost) {
+    host = ctx.requestHost;
+    protocol = ctx.requestProtocol || protocol;
+  }
+  if (!host) {
+    host = process.env.NITRO_HOST || process.env.HOST || "";
+    if (isDev)
+      port = process.env.NITRO_PORT || process.env.PORT || "3000";
+  }
+  const split = splitHostPort(host);
+  host = split.host;
+  if (split.port)
+    port = split.port;
+  host = process.env.NUXT_SITE_HOST_OVERRIDE || host;
+  port = process.env.NUXT_SITE_PORT_OVERRIDE || port;
+  if (host.startsWith("http://") || host.startsWith("https://")) {
+    protocol = host.startsWith("https://") ? "https" : "http";
+    host = host.replace(PROTOCOL_RE, "");
+  } else if (!isDev && (!host || !isLocalhostHost(host))) {
+    protocol = "https";
+  }
+  return `${protocol}://${host}${port ? `:${port}` : ""}/`;
+}
+
+function getNitroOrigin(e) {
+  return getNitroOrigin$1({
+    isDev: false,
+    isPrerender: false,
+    requestHost: e ? getRequestHost(e, { xForwardedHost: true }) : void 0,
+    requestProtocol: e ? getRequestProtocol(e, { xForwardedProto: true }) : void 0
+  });
+}
+
+function getSiteIndexable(e) {
+  const { env, indexable } = getSiteConfig(e);
+  if (typeof indexable !== "undefined")
+    return String(indexable) === "true";
+  return env === "production";
+}
+
+const FILE_EXT_RE = /\.[0-9a-z]+$/i;
+function resolveSitePath(pathOrUrl, options) {
+  let path = pathOrUrl;
+  if (hasProtocol(pathOrUrl, { strict: false, acceptRelative: true })) {
+    const parsed = parseURL(pathOrUrl);
+    path = parsed.pathname;
+  }
+  const base = withLeadingSlash(options.base || "/");
+  if (base !== "/" && path.startsWith(base)) {
+    path = path.slice(base.length);
+  }
+  let origin = withoutTrailingSlash(options.absolute ? options.siteUrl : "");
+  if (base !== "/" && origin.endsWith(base)) {
+    origin = origin.slice(0, origin.indexOf(base));
+  }
+  const baseWithOrigin = options.withBase ? withBase(base, origin || "/") : origin;
+  const resolvedUrl = withBase(path, baseWithOrigin);
+  return path === "/" && !options.withBase ? withTrailingSlash(resolvedUrl) : fixSlashes(options.trailingSlash, resolvedUrl);
+}
+const fileExtensions = [
+  // Images
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "bmp",
+  "webp",
+  "svg",
+  "ico",
+  // Documents
+  "pdf",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "txt",
+  "md",
+  "markdown",
+  // Archives
+  "zip",
+  "rar",
+  "7z",
+  "tar",
+  "gz",
+  // Audio
+  "mp3",
+  "wav",
+  "flac",
+  "ogg",
+  "opus",
+  "m4a",
+  "aac",
+  "midi",
+  "mid",
+  // Video
+  "mp4",
+  "avi",
+  "mkv",
+  "mov",
+  "wmv",
+  "flv",
+  "webm",
+  // Web
+  "html",
+  "css",
+  "js",
+  "json",
+  "xml",
+  "tsx",
+  "jsx",
+  "ts",
+  "vue",
+  "svelte",
+  "xsl",
+  "rss",
+  "atom",
+  // Programming
+  "php",
+  "py",
+  "rb",
+  "java",
+  "c",
+  "cpp",
+  "h",
+  "go",
+  // Data formats
+  "csv",
+  "tsv",
+  "sql",
+  "yaml",
+  "yml",
+  // Fonts
+  "woff",
+  "woff2",
+  "ttf",
+  "otf",
+  "eot",
+  // Executables/Binaries
+  "exe",
+  "msi",
+  "apk",
+  "ipa",
+  "dmg",
+  "iso",
+  "bin",
+  // Scripts/Config
+  "bat",
+  "cmd",
+  "sh",
+  "env",
+  "htaccess",
+  "conf",
+  "toml",
+  "ini",
+  // Package formats
+  "deb",
+  "rpm",
+  "jar",
+  "war",
+  // E-books
+  "epub",
+  "mobi",
+  // Common temporary/backup files
+  "log",
+  "tmp",
+  "bak",
+  "old",
+  "sav"
+];
+function isPathFile(path) {
+  const lastSegment = path.split("/").pop();
+  const ext = (lastSegment || path).match(FILE_EXT_RE)?.[0];
+  return !!(ext && fileExtensions.includes(ext.replace(".", "")));
+}
+function fixSlashes(trailingSlash, pathOrUrl) {
+  const $url = parseURL(pathOrUrl);
+  if (isPathFile($url.pathname))
+    return pathOrUrl;
+  const fixedPath = trailingSlash ? withTrailingSlash($url.pathname) : withoutTrailingSlash($url.pathname);
+  return `${$url.protocol ? `${$url.protocol}//` : ""}${$url.host || ""}${fixedPath}${$url.search || ""}${$url.hash || ""}`;
+}
+
+function createSitePathResolver(e, options = {}) {
+  const siteConfig = getSiteConfig(e);
+  const nitroOrigin = getNitroOrigin(e);
+  const nuxtBase = useRuntimeConfig(e).app.baseURL || "/";
+  return (path) => {
+    return resolveSitePath(path, {
+      ...options,
+      siteUrl: options.canonical !== false || false ? siteConfig.url : nitroOrigin,
+      trailingSlash: siteConfig.trailingSlash,
+      base: nuxtBase
+    });
+  };
+}
+function withSiteUrl(e, path, options = {}) {
+  const siteConfig = e.context.siteConfig?.get();
+  let siteUrl = e.context.siteConfigNitroOrigin;
+  if ((options.canonical !== false || false) && siteConfig.url)
+    siteUrl = siteConfig.url;
+  return resolveSitePath(path, {
+    absolute: true,
+    siteUrl,
+    trailingSlash: siteConfig.trailingSlash,
+    base: e.context.nitro.baseURL,
+    withBase: options.withBase
+  });
+}
+
+function withoutQuery$1(path) {
+  return String(path.split("?")[0]);
+}
+function createNitroRouteRuleMatcher$1(e) {
+  const { nitro, app } = useRuntimeConfig(e);
+  const _routeRulesMatcher = toRouteMatcher(
+    createRouter$1({
+      routes: Object.fromEntries(
+        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [withoutTrailingSlash(path), rules])
+      )
+    })
+  );
+  return (path) => {
+    return defu({}, ..._routeRulesMatcher.matchAll(
+      withoutBase(withoutTrailingSlash(withoutQuery$1(path)), app.baseURL)
+    ).reverse());
+  };
+}
+
+function getSiteRobotConfig(e) {
+  const query = getQuery(e);
+  const hints = [];
+  const { groups, debug } = useRuntimeConfigNuxtRobots(e);
+  let indexable = getSiteIndexable(e);
+  const queryIndexableEnabled = String(query.mockProductionEnv) === "true" || query.mockProductionEnv === "";
+  if (debug || false) {
+    const { _context } = getSiteConfig(e, { debug: debug || false });
+    if (queryIndexableEnabled) {
+      indexable = true;
+      hints.push("You are mocking a production enviroment with ?mockProductionEnv query.");
+    } else if (!indexable && _context.indexable === "nuxt-robots:config") {
+      hints.push("You are blocking indexing with your Nuxt Robots config.");
+    } else if (!queryIndexableEnabled && !_context.indexable) {
+      hints.push(`Indexing is blocked in development. You can mock a production environment with ?mockProductionEnv query.`);
+    } else if (!indexable && !queryIndexableEnabled) {
+      hints.push(`Indexing is blocked by site config set by ${_context.indexable}.`);
+    } else if (indexable && !queryIndexableEnabled) {
+      hints.push(`Indexing is enabled from ${_context.indexable}.`);
+    }
+  }
+  if (groups.some((g) => g.userAgent.includes("*") && g.disallow.includes("/"))) {
+    indexable = false;
+    hints.push("You are blocking all user agents with a wildcard `Disallow /`.");
+  } else if (groups.some((g) => g.disallow.includes("/"))) {
+    hints.push("You are blocking specific user agents with `Disallow /`.");
+  }
+  return { indexable, hints };
+}
+
+function getPathRobotConfig(e, options) {
+  const runtimeConfig = useRuntimeConfig(e);
+  const { robotsDisabledValue, robotsEnabledValue, isNuxtContentV2 } = useRuntimeConfigNuxtRobots(e);
+  if (!options?.skipSiteIndexable) {
+    if (!getSiteRobotConfig(e).indexable) {
+      return {
+        rule: robotsDisabledValue,
+        indexable: false,
+        debug: {
+          source: "Site Config"
+        }
+      };
+    }
+  }
+  const path = options?.path || e.path;
+  let userAgent = options?.userAgent;
+  if (!userAgent) {
+    try {
+      userAgent = getRequestHeader(e, "User-Agent");
+    } catch {
+    }
+  }
+  const nitroApp = useNitroApp();
+  const groups = [
+    // run explicit user agent matching first
+    ...nitroApp._robots.ctx.groups.filter((g) => {
+      if (userAgent) {
+        return g.userAgent.some((ua) => ua.toLowerCase().includes(userAgent.toLowerCase()));
+      }
+      return false;
+    }),
+    // run wildcard matches second
+    ...nitroApp._robots.ctx.groups.filter((g) => g.userAgent.includes("*"))
+  ];
+  for (const group of groups) {
+    if (!options?.skipSiteIndexable && group._indexable === false) {
+      return {
+        indexable: false,
+        rule: robotsDisabledValue,
+        debug: {
+          source: "/robots.txt",
+          line: JSON.stringify(group)
+        }
+      };
+    }
+    const rules = options?.skipSiteIndexable ? (group._rules || []).filter((r) => r.pattern !== "/") : group._rules || [];
+    const robotsTxtRule = matchPathToRule(path, rules);
+    if (robotsTxtRule) {
+      if (!robotsTxtRule.allow) {
+        return {
+          indexable: false,
+          rule: robotsDisabledValue,
+          debug: {
+            source: "/robots.txt",
+            line: `Disallow: ${robotsTxtRule.pattern}`
+          }
+        };
+      }
+      break;
+    }
+  }
+  if (isNuxtContentV2 && nitroApp._robots?.nuxtContentUrls?.has(withoutTrailingSlash(path))) {
+    return {
+      indexable: false,
+      rule: robotsDisabledValue,
+      debug: {
+        source: "Nuxt Content"
+      }
+    };
+  }
+  const { pageMetaRobots } = useRuntimeConfigNuxtRobots(e);
+  const pageMetaRule = pageMetaRobots?.[withoutTrailingSlash(path)];
+  if (typeof pageMetaRule !== "undefined") {
+    const normalised = normaliseRobotsRouteRule({ robots: pageMetaRule });
+    if (normalised && (typeof normalised.allow !== "undefined" || typeof normalised.rule !== "undefined")) {
+      return {
+        indexable: normalised.allow ?? false,
+        rule: normalised.rule || (normalised.allow ? robotsEnabledValue : robotsDisabledValue),
+        debug: {
+          source: "Page Meta"
+        }
+      };
+    }
+  }
+  nitroApp._robotsRuleMatcher = nitroApp._robotsRuleMatcher || createNitroRouteRuleMatcher$1(e);
+  let robotRouteRules = nitroApp._robotsRuleMatcher(path);
+  let routeRulesPath = path;
+  const i18nConfig = runtimeConfig.public?.i18n;
+  if (i18nConfig?.locales && typeof robotRouteRules.robots === "undefined") {
+    const { locales } = i18nConfig;
+    const locale = locales.find((l) => routeRulesPath.startsWith(`/${l.code}`));
+    if (locale) {
+      routeRulesPath = routeRulesPath.replace(`/${locale.code}`, "");
+      robotRouteRules = nitroApp._robotsRuleMatcher(routeRulesPath);
+    }
+  }
+  const routeRules = normaliseRobotsRouteRule(robotRouteRules);
+  if (routeRules && (typeof routeRules.allow !== "undefined" || typeof routeRules.rule !== "undefined")) {
+    return {
+      indexable: routeRules.allow ?? false,
+      rule: routeRules.rule || (routeRules.allow ? robotsEnabledValue : robotsDisabledValue),
+      debug: {
+        source: "Route Rules"
+      }
+    };
+  }
+  return {
+    indexable: true,
+    rule: robotsEnabledValue
+  };
+}
+
+function useRuntimeI18n(nuxtApp, event) {
+  {
+    return useRuntimeConfig(event).public.i18n;
+  }
+}
+function useI18nDetection(nuxtApp) {
+  const detectBrowserLanguage = useRuntimeI18n().detectBrowserLanguage;
+  const detect = detectBrowserLanguage || {};
+  return {
+    ...detect,
+    enabled: !!detectBrowserLanguage,
+    cookieKey: detect.cookieKey || "i18n_redirected"
+  };
+}
+function resolveRootRedirect(config) {
+  if (!config) {
+    return void 0;
+  }
+  return {
+    path: "/" + (isString(config) ? config : config.path).replace(/^\//, ""),
+    code: !isString(config) && config.statusCode || 302
+  };
+}
+function toArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
+function createLocaleConfigs(fallbackLocale) {
+  const localeConfigs = {};
+  for (const locale of localeCodes) {
+    const fallbacks = getFallbackLocaleCodes(fallbackLocale, [locale]);
+    const cacheable = isLocaleWithFallbacksCacheable(locale, fallbacks);
+    localeConfigs[locale] = { fallbacks, cacheable };
+  }
+  return localeConfigs;
+}
+function getFallbackLocaleCodes(fallback, locales) {
+  if (fallback === false) {
+    return [];
+  }
+  if (isArray(fallback)) {
+    return fallback;
+  }
+  let fallbackLocales = [];
+  if (isString(fallback)) {
+    if (locales.every((locale) => locale !== fallback)) {
+      fallbackLocales.push(fallback);
+    }
+    return fallbackLocales;
+  }
+  const targets = [...locales, "default"];
+  for (const locale of targets) {
+    if (locale in fallback == false) {
+      continue;
+    }
+    fallbackLocales = [...fallbackLocales, ...fallback[locale].filter(Boolean)];
+  }
+  return fallbackLocales;
+}
+function isLocaleCacheable(locale) {
+  return localeLoaders[locale] != null && localeLoaders[locale].every((loader) => loader.cache !== false);
+}
+function isLocaleWithFallbacksCacheable(locale, fallbackLocales) {
+  return isLocaleCacheable(locale) && fallbackLocales.every((fallbackLocale) => isLocaleCacheable(fallbackLocale));
+}
+function getDefaultLocaleForDomain(host) {
+  return normalizedLocales.find((l) => !!l.defaultForDomains?.includes(host))?.code;
+}
+const isSupportedLocale = (locale) => localeCodes.includes(locale || "");
+
+function useI18nContext(event) {
+  if (event.context.nuxtI18n == null) {
+    throw new Error("Nuxt I18n server context has not been set up yet.");
+  }
+  return event.context.nuxtI18n;
+}
+function tryUseI18nContext(event) {
+  return event.context.nuxtI18n;
+}
+const getHost = (event) => getRequestURL(event, { xForwardedHost: true }).host;
+async function initializeI18nContext(event) {
+  const runtimeI18n = useRuntimeI18n(void 0, event);
+  const defaultLocale = runtimeI18n.defaultLocale || "";
+  const options = await setupVueI18nOptions(getDefaultLocaleForDomain(getHost(event)) || defaultLocale);
+  const localeConfigs = createLocaleConfigs(options.fallbackLocale);
+  const ctx = createI18nContext();
+  ctx.vueI18nOptions = options;
+  ctx.localeConfigs = localeConfigs;
+  event.context.nuxtI18n = ctx;
+  return ctx;
+}
+function createI18nContext() {
+  return {
+    messages: {},
+    slp: {},
+    localeConfigs: {},
+    trackMap: {},
+    vueI18nOptions: void 0,
+    trackKey(key, locale) {
+      this.trackMap[locale] ??= /* @__PURE__ */ new Set();
+      this.trackMap[locale].add(key);
+    }
+  };
+}
+
+function matchBrowserLocale(locales, browserLocales) {
+  const matchedLocales = [];
+  for (const [index, browserCode] of browserLocales.entries()) {
+    const matchedLocale = locales.find((l) => l.language?.toLowerCase() === browserCode.toLowerCase());
+    if (matchedLocale) {
+      matchedLocales.push({ code: matchedLocale.code, score: 1 - index / browserLocales.length });
+      break;
+    }
+  }
+  for (const [index, browserCode] of browserLocales.entries()) {
+    const languageCode = browserCode.split("-")[0].toLowerCase();
+    const matchedLocale = locales.find((l) => l.language?.split("-")[0].toLowerCase() === languageCode);
+    if (matchedLocale) {
+      matchedLocales.push({ code: matchedLocale.code, score: 0.999 - index / browserLocales.length });
+      break;
+    }
+  }
+  return matchedLocales;
+}
+function compareBrowserLocale(a, b) {
+  if (a.score === b.score) {
+    return b.code.length - a.code.length;
+  }
+  return b.score - a.score;
+}
+function findBrowserLocale(locales, browserLocales) {
+  const matchedLocales = matchBrowserLocale(
+    locales.map((l) => ({ code: l.code, language: l.language || l.code })),
+    browserLocales
+  );
+  return matchedLocales.sort(compareBrowserLocale).at(0)?.code ?? "";
+}
+
+const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند."},{"name":"format-detection","content":"telephone=no"},{"property":"og:title","content":"Yousef Roshandel | Front-End Developer & UI/UX Designer"},{"property":"og:description","content":"Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند."},{"property":"og:url","content":"https://yrlp.ir"},{"name":"twitter:card","content":"summary_large_image"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"stylesheet","href":"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css","integrity":"sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==","crossorigin":"anonymous","referrerpolicy":"no-referrer"}],"style":[],"script":[],"noscript":[],"title":"Yousef Roshandel | Front-End Developer & UI/UX Designer","htmlAttrs":{"lang":"fa"}};
+
+const appRootTag = "div";
+
+const appRootAttrs = {"id":"__nuxt"};
+
+const appTeleportTag = "div";
+
+const appTeleportAttrs = {"id":"teleports"};
+
+const appSpaLoaderTag = "div";
+
+const appSpaLoaderAttrs = {"id":"__nuxt-loader"};
+
+const appId = "nuxt-app";
+
+const separator = "___";
+const pathLanguageParser = createPathIndexLanguageParser(0);
+const getLocaleFromRoutePath = (path) => pathLanguageParser(path);
+const getLocaleFromRouteName = (name) => name.split(separator).at(1) ?? "";
+function normalizeInput(input) {
+  return typeof input !== "object" ? String(input) : String(input?.name || input?.path || "");
+}
+function getLocaleFromRoute(route) {
+  const input = normalizeInput(route);
+  return input[0] === "/" ? getLocaleFromRoutePath(input) : getLocaleFromRouteName(input);
+}
+
+function matchDomainLocale(locales, host, pathLocale) {
+  const normalizeDomain = (domain = "") => domain.replace(/https?:\/\//, "");
+  const matches = locales.filter(
+    (locale) => normalizeDomain(locale.domain) === host || toArray(locale.domains).includes(host)
+  );
+  if (matches.length <= 1) {
+    return matches[0]?.code;
+  }
+  return (
+    // match by current path locale
+    matches.find((l) => l.code === pathLocale)?.code || matches.find((l) => l.defaultForDomains?.includes(host) ?? l.domainDefault)?.code
+  );
+}
+
+const getCookieLocale = (event, cookieName) => (getCookie(event, cookieName)) || void 0;
+const getRouteLocale = (event, route) => getLocaleFromRoute(route);
+const getHeaderLocale = (event) => findBrowserLocale(normalizedLocales, parseAcceptLanguage(getRequestHeader(event, "accept-language") || ""));
+const getHostLocale = (event, path, domainLocales) => {
+  const host = getRequestURL(event, { xForwardedHost: true }).host;
+  const locales = normalizedLocales.map((l) => ({
+    ...l,
+    domain: domainLocales[l.code]?.domain ?? l.domain
+  }));
+  return matchDomainLocale(locales, host, getLocaleFromRoutePath(path));
+};
+const useDetectors = (event, config, nuxtApp) => {
+  if (!event) {
+    throw new Error("H3Event is required for server-side locale detection");
+  }
+  const runtimeI18n = useRuntimeI18n();
+  return {
+    cookie: () => getCookieLocale(event, config.cookieKey),
+    header: () => getHeaderLocale(event) ,
+    navigator: () => void 0,
+    host: (path) => getHostLocale(event, path, runtimeI18n.domainLocales),
+    route: (path) => getRouteLocale(event, path)
+  };
+};
+
+// Generated by @nuxtjs/i18n
+const pathToI18nConfig = {
+  "/blog": {
+    "fa": "/blog",
+    "en": "/blog"
+  },
+  "/projects": {
+    "fa": "/projects",
+    "en": "/projects"
+  },
+  "/": {
+    "fa": "/",
+    "en": "/"
+  },
+  "/ndefined": {
+    "fa": "/ndefined",
+    "en": "/ndefined"
+  }
+};
+const i18nPathToPath = {
+  "/blog": "/blog",
+  "/projects": "/projects",
+  "/": "/",
+  "/ndefined": "/ndefined"
+};
+
+const formatTrailingSlash = withoutTrailingSlash;
+const matcher = createRouterMatcher([], {});
+for (const path of Object.keys(i18nPathToPath)) {
+  matcher.addRoute({ path, component: () => "", meta: {} });
+}
+const getI18nPathToI18nPath = (path, locale) => {
+  if (!path || !locale) {
+    return;
+  }
+  const plainPath = i18nPathToPath[path];
+  const i18nConfig = pathToI18nConfig[plainPath];
+  if (i18nConfig && i18nConfig[locale]) {
+    return i18nConfig[locale] === true ? plainPath : i18nConfig[locale];
+  }
+};
+function isExistingNuxtRoute(path) {
+  if (path === "") {
+    return;
+  }
+  if (path.endsWith("/__nuxt_error")) {
+    return;
+  }
+  const resolvedMatch = matcher.resolve({ path }, { path: "/", name: "", matched: [], params: {}, meta: {} });
+  return resolvedMatch.matched.length > 0 ? resolvedMatch : void 0;
+}
+function matchLocalized(path, locale, defaultLocale) {
+  if (path === "") {
+    return;
+  }
+  const parsed = parsePath(path);
+  const resolvedMatch = matcher.resolve(
+    { path: parsed.pathname || "/" },
+    { path: "/", name: "", matched: [], params: {}, meta: {} }
+  );
+  if (resolvedMatch.matched.length > 0) {
+    const alternate = getI18nPathToI18nPath(resolvedMatch.matched[0].path, locale);
+    const match = matcher.resolve(
+      { params: resolvedMatch.params },
+      { path: alternate || "/", name: "", matched: [], params: {}, meta: {} }
+    );
+    const isPrefixable = prefixable(locale, defaultLocale);
+    return formatTrailingSlash(withLeadingSlash(joinURL(isPrefixable ? locale : "", match.path)), true);
+  }
+}
+function prefixable(currentLocale, defaultLocale) {
+  return (currentLocale !== defaultLocale || "prefix_except_default" === "prefix");
+}
+
+function* detect(detectors, detection, path) {
+  if (detection.enabled) {
+    yield { locale: detectors.cookie(), source: "cookie" };
+    yield { locale: detectors.header(), source: "header" };
+  }
+  {
+    yield { locale: detectors.route(path), source: "route" };
+  }
+  yield { locale: detection.fallbackLocale, source: "fallback" };
+}
+function createRedirectResponse(event, dest, code) {
+  event.node.res.setHeader("location", dest);
+  event.node.res.statusCode = sanitizeStatusCode(code, event.node.res.statusCode);
+  return {
+    headers: event.node.res.getHeaders(),
+    statusCode: event.node.res.statusCode,
+    body: `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=${dest.replace(/"/g, "%22")}"></head></html>`
+  };
+}
+const _ipEgqTLcBvWBINHJA6nVx0lX35XfLFo42v52IS7w_Co = defineNitroPlugin(async (nitro) => {
+  const runtimeI18n = useRuntimeI18n();
+  const rootRedirect = resolveRootRedirect(runtimeI18n.rootRedirect);
+  runtimeI18n.defaultLocale || "";
+  try {
+    const cacheStorage = useStorage("cache");
+    const cachedKeys = await cacheStorage.getKeys("nitro:handlers:i18n");
+    await Promise.all(cachedKeys.map((key) => cacheStorage.removeItem(key)));
+  } catch {
+  }
+  const detection = useI18nDetection();
+  const cookieOptions = {
+    path: "/",
+    domain: detection.cookieDomain || void 0,
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+    secure: detection.cookieSecure
+  };
+  const createBaseUrlGetter = () => {
+    isFunction(runtimeI18n.baseUrl) ? "" : runtimeI18n.baseUrl || "";
+    if (isFunction(runtimeI18n.baseUrl)) {
+      return () => "";
+    }
+    return (event, defaultLocale) => {
+      return "";
+    };
+  };
+  function resolveRedirectPath(event, path, pathLocale, defaultLocale, detector) {
+    let locale = "";
+    for (const detected of detect(detector, detection, event.path)) {
+      if (detected.locale && isSupportedLocale(detected.locale)) {
+        locale = detected.locale;
+        break;
+      }
+    }
+    locale ||= defaultLocale;
+    function getLocalizedMatch(locale2) {
+      const res = matchLocalized(path || "/", locale2, defaultLocale);
+      if (res && res !== event.path) {
+        return res;
+      }
+    }
+    let resolvedPath = void 0;
+    let redirectCode = 302;
+    const requestURL = getRequestURL(event);
+    if (rootRedirect && requestURL.pathname === "/") {
+      locale = detection.enabled && locale || defaultLocale;
+      resolvedPath = isSupportedLocale(detector.route(rootRedirect.path)) && rootRedirect.path || matchLocalized(rootRedirect.path, locale, defaultLocale);
+      redirectCode = rootRedirect.code;
+    } else if (runtimeI18n.redirectStatusCode) {
+      redirectCode = runtimeI18n.redirectStatusCode;
+    }
+    switch (detection.redirectOn) {
+      case "root":
+        if (requestURL.pathname !== "/") {
+          break;
+        }
+      // fallthrough (root has no prefix)
+      case "no prefix":
+        if (pathLocale) {
+          break;
+        }
+      // fallthrough to resolve
+      case "all":
+        resolvedPath ??= getLocalizedMatch(locale);
+        break;
+    }
+    if (requestURL.pathname === "/" && "prefix_except_default" === "prefix") ;
+    return { path: resolvedPath, code: redirectCode, locale };
+  }
+  const baseUrlGetter = createBaseUrlGetter();
+  nitro.hooks.hook("request", async (event) => {
+    await initializeI18nContext(event);
+  });
+  nitro.hooks.hook("render:before", async (context) => {
+    const { event } = context;
+    const ctx = useI18nContext(event);
+    const url = getRequestURL(event);
+    const detector = useDetectors(event, detection);
+    const localeSegment = detector.route(event.path);
+    const pathLocale = isSupportedLocale(localeSegment) && localeSegment || void 0;
+    const path = (pathLocale && url.pathname.slice(pathLocale.length + 1)) ?? url.pathname;
+    if (!url.pathname.includes("/_i18n/4y8NeDwR") && !isExistingNuxtRoute(path)) {
+      return;
+    }
+    const resolved = resolveRedirectPath(event, path, pathLocale, ctx.vueI18nOptions.defaultLocale, detector);
+    if (resolved.path && resolved.path !== url.pathname) {
+      ctx.detectLocale = resolved.locale;
+      detection.useCookie && setCookie(event, detection.cookieKey, resolved.locale, cookieOptions);
+      context.response = createRedirectResponse(
+        event,
+        joinURL(baseUrlGetter(event, ctx.vueI18nOptions.defaultLocale), resolved.path + url.search),
+        resolved.code
+      );
+      return;
+    }
+  });
+  nitro.hooks.hook("render:html", (htmlContext, { event }) => {
+    tryUseI18nContext(event);
+  });
+});
+
 const plugins = [
   __ciizBdXsXw7o8MWQToVyRXzXNBcBNpLKgwmqMCQlo,
-_YlEt9U6B2jqyaclijrJucUg__weIm11cS_N1y07Kq9M
+_YlEt9U6B2jqyaclijrJucUg__weIm11cS_N1y07Kq9M,
+_ipEgqTLcBvWBINHJA6nVx0lX35XfLFo42v52IS7w_Co
 ];
 
 const assets = {
-  "/_nuxt/BgVA5mtW.js": {
+  "/_nuxt/B27p7tIq.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"e97-fqVGI8bE4524byx/7kv+MuTDUBc\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 3735,
-    "path": "../public/_nuxt/BgVA5mtW.js"
+    "etag": "\"eb4-0GlVuokz+g0AZtNX7mUFfsd3aMo\"",
+    "mtime": "2026-04-01T13:25:55.235Z",
+    "size": 3764,
+    "path": "../public/_nuxt/B27p7tIq.js"
   },
-  "/_nuxt/C1CU9f4c.js": {
+  "/_nuxt/BHKFq6-R.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"584-q+GHUAbznAmpgAtNuQXWekOvo9g\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 1412,
-    "path": "../public/_nuxt/C1CU9f4c.js"
+    "etag": "\"5a4-vD3ER6SftyLRI1+OhgHQMF3dI7c\"",
+    "mtime": "2026-04-01T13:25:55.235Z",
+    "size": 1444,
+    "path": "../public/_nuxt/BHKFq6-R.js"
   },
-  "/_nuxt/CFqzNp2V.js": {
+  "/_nuxt/BURay6sG.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"536-3VwVdkw11x9iRD20HRsIS8ntIxI\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 1334,
-    "path": "../public/_nuxt/CFqzNp2V.js"
+    "etag": "\"3a-BKzO0kW8u0hMbINLCGwZ4mLcB2c\"",
+    "mtime": "2026-04-01T13:25:55.235Z",
+    "size": 58,
+    "path": "../public/_nuxt/BURay6sG.js"
   },
-  "/_nuxt/CN7Ow0-C.js": {
+  "/_nuxt/BKAF__fH.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"8b27-8gb2Zy8pPCwq6PmdS3g/9ZxIymY\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 35623,
-    "path": "../public/_nuxt/CN7Ow0-C.js"
+    "etag": "\"1864-k1kSCR9kPMNxY2ohPUrBYiKpDMQ\"",
+    "mtime": "2026-04-01T13:25:55.235Z",
+    "size": 6244,
+    "path": "../public/_nuxt/BKAF__fH.js"
   },
-  "/_nuxt/CUi7638z.js": {
+  "/_nuxt/BauF7B6k.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"30ea-1f+B2zP6HC1mTn9mOzGLmO6zB6A\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 12522,
-    "path": "../public/_nuxt/CUi7638z.js"
+    "etag": "\"6f-O72YXDclF9/eUi5buVTHO45OH0o\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 111,
+    "path": "../public/_nuxt/BauF7B6k.js"
   },
-  "/_nuxt/CRSqjO7B.js": {
+  "/_nuxt/CBqf918M.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"54-k2DqsEkDmXn8VCDXXXRF+wCSjEc\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 84,
-    "path": "../public/_nuxt/CRSqjO7B.js"
+    "etag": "\"55a-Dg63WRuZD204J4fYzTH38Phr1tk\"",
+    "mtime": "2026-04-01T13:25:55.235Z",
+    "size": 1370,
+    "path": "../public/_nuxt/CBqf918M.js"
   },
-  "/_nuxt/CKJbNrV2.js": {
+  "/_nuxt/CLB3pIEV.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"90f-ZdgfautRt7ofhfbNm9xOoE2oVdg\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
-    "size": 2319,
-    "path": "../public/_nuxt/CKJbNrV2.js"
+    "etag": "\"166f-z7BTFrlFRdO9AtunJ6YJvWEtCjM\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 5743,
+    "path": "../public/_nuxt/CLB3pIEV.js"
   },
-  "/_nuxt/CoayIopM.js": {
+  "/_nuxt/CPFS0Faq.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"d2a-bVB0y0Q45GGOVQ0BCfP5S00A0/E\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 3370,
-    "path": "../public/_nuxt/CoayIopM.js"
+    "etag": "\"d7b-AK1aDrH6LUp71prqiv+4s8Z2hvY\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 3451,
+    "path": "../public/_nuxt/CPFS0Faq.js"
   },
-  "/_nuxt/Cx5RCR47.js": {
+  "/_nuxt/Ck_6611X.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"14e1-gTIE0wRAmvSRWQwClDVPbzNQFpA\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 5345,
-    "path": "../public/_nuxt/Cx5RCR47.js"
+    "etag": "\"93e-1GNt17efJdBOBns5LA36yNUJwQY\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 2366,
+    "path": "../public/_nuxt/Ck_6611X.js"
   },
-  "/_nuxt/DxRVUe3k.js": {
+  "/_nuxt/D_36Pjc5.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1645-H08YWk6WyaoZVild76A2rDTKnKU\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 5701,
-    "path": "../public/_nuxt/DxRVUe3k.js"
+    "etag": "\"1301-oTdM+WRk0vsYwO+i9Bw/ZAFePGg\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 4865,
+    "path": "../public/_nuxt/D_36Pjc5.js"
+  },
+  "/_nuxt/Db5_saNA.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"8f5e-GwyrQYtjj4R8qPLVcMr7QFfxzx4\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 36702,
+    "path": "../public/_nuxt/Db5_saNA.js"
+  },
+  "/_nuxt/IbkzRhXN.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"14e2-RI8fwCKuv+EDZbu9x57Ld+8u9x0\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 5346,
+    "path": "../public/_nuxt/IbkzRhXN.js"
+  },
+  "/_nuxt/CiebspFL.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"5c222-dGev95yQpqgefejc6USSWn2B1ho\"",
+    "mtime": "2026-04-01T13:25:55.236Z",
+    "size": 377378,
+    "path": "../public/_nuxt/CiebspFL.js"
   },
   "/_nuxt/PeydaWeb-Black.BYycT0J4.woff2": {
     "type": "font/woff2",
     "etag": "\"49cc-QKUus3Y/CQi7tp3+iS7q94e+IwA\"",
-    "mtime": "2026-03-22T16:12:22.736Z",
+    "mtime": "2026-04-01T13:25:55.237Z",
     "size": 18892,
     "path": "../public/_nuxt/PeydaWeb-Black.BYycT0J4.woff2"
   },
   "/_nuxt/PeydaWeb-Black.DoO-zNYa.woff": {
     "type": "font/woff",
     "etag": "\"6544-Za4wkCI4b6Z1mimuLU7eYivqEsY\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.237Z",
     "size": 25924,
     "path": "../public/_nuxt/PeydaWeb-Black.DoO-zNYa.woff"
+  },
+  "/_nuxt/PeydaWeb-ExtraBold.DO-Hjd5a.woff2": {
+    "type": "font/woff2",
+    "etag": "\"4d80-LuLV2dSWZBeQvnR6kn5LPv6qpJQ\"",
+    "mtime": "2026-04-01T13:25:55.237Z",
+    "size": 19840,
+    "path": "../public/_nuxt/PeydaWeb-ExtraBold.DO-Hjd5a.woff2"
   },
   "/_nuxt/PeydaWeb-ExtraBold.DYmIulwo.woff": {
     "type": "font/woff",
     "etag": "\"6a20-nnQrRjfvX6QueWDhU9eIEUNiN5o\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.237Z",
     "size": 27168,
     "path": "../public/_nuxt/PeydaWeb-ExtraBold.DYmIulwo.woff"
   },
   "/_nuxt/PeydaWeb-Medium.BJ18cSOR.woff2": {
     "type": "font/woff2",
     "etag": "\"4d70-fciGulxi+CwPakeIukRCxRGizO4\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.237Z",
     "size": 19824,
     "path": "../public/_nuxt/PeydaWeb-Medium.BJ18cSOR.woff2"
-  },
-  "/_nuxt/PeydaWeb-ExtraBold.DO-Hjd5a.woff2": {
-    "type": "font/woff2",
-    "etag": "\"4d80-LuLV2dSWZBeQvnR6kn5LPv6qpJQ\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 19840,
-    "path": "../public/_nuxt/PeydaWeb-ExtraBold.DO-Hjd5a.woff2"
   },
   "/_nuxt/PeydaWeb-Medium.DI1hJrjP.woff": {
     "type": "font/woff",
     "etag": "\"69a0-oUwk5Ykezg3wG2otLbMZHPd4AW4\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.237Z",
     "size": 27040,
     "path": "../public/_nuxt/PeydaWeb-Medium.DI1hJrjP.woff"
-  },
-  "/_nuxt/PeydaWeb-Regular.CMvYve93.woff2": {
-    "type": "font/woff2",
-    "etag": "\"4e04-JvvcXbiH4sY9hvYiTjl9M+p8TeI\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 19972,
-    "path": "../public/_nuxt/PeydaWeb-Regular.CMvYve93.woff2"
-  },
-  "/_nuxt/PeydaWeb-SemiBold.B7ajubk8.woff": {
-    "type": "font/woff",
-    "etag": "\"69b4-XQbMCPzZwoKoVuJOVpoFL3crEcM\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 27060,
-    "path": "../public/_nuxt/PeydaWeb-SemiBold.B7ajubk8.woff"
   },
   "/_nuxt/PeydaWeb-SemiBold.rfYbUj19.woff2": {
     "type": "font/woff2",
     "etag": "\"4d70-0SfeLMeo1gtPpm8o18zn7Bt2Phg\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.238Z",
     "size": 19824,
     "path": "../public/_nuxt/PeydaWeb-SemiBold.rfYbUj19.woff2"
   },
-  "/_nuxt/SmIXWwml.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"1785-S2C1IarWqwHABi4di3jZ39wI+qo\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 6021,
-    "path": "../public/_nuxt/SmIXWwml.js"
-  },
-  "/_nuxt/SUSrVYVV.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"44-qvI24he0jZR5oQ1CB24BFSFQwLg\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
-    "size": 68,
-    "path": "../public/_nuxt/SUSrVYVV.js"
+  "/_nuxt/PeydaWeb-Regular.CMvYve93.woff2": {
+    "type": "font/woff2",
+    "etag": "\"4e04-JvvcXbiH4sY9hvYiTjl9M+p8TeI\"",
+    "mtime": "2026-04-01T13:25:55.237Z",
+    "size": 19972,
+    "path": "../public/_nuxt/PeydaWeb-Regular.CMvYve93.woff2"
   },
   "/_nuxt/PeydaWeb-Regular.D2k4UTsV.woff": {
     "type": "font/woff",
     "etag": "\"69d4-R2INm22ktOxDukxSmM7/3FeNPkM\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.238Z",
     "size": 27092,
     "path": "../public/_nuxt/PeydaWeb-Regular.D2k4UTsV.woff"
+  },
+  "/_nuxt/PeydaWeb-SemiBold.B7ajubk8.woff": {
+    "type": "font/woff",
+    "etag": "\"69b4-XQbMCPzZwoKoVuJOVpoFL3crEcM\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 27060,
+    "path": "../public/_nuxt/PeydaWeb-SemiBold.B7ajubk8.woff"
+  },
+  "/_nuxt/blog.D7bPg1hl.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"1b4-ucO/soC9ubMGHd4aLmv+OxI24nA\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 436,
+    "path": "../public/_nuxt/blog.D7bPg1hl.css"
+  },
+  "/_nuxt/TitleBackground.2VBHNX8q.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"2b7-H9o8Q8d9W0/V97kVWNu3hbeWWso\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 695,
+    "path": "../public/_nuxt/TitleBackground.2VBHNX8q.css"
   },
   "/_nuxt/blogs.CzJAHO4F.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"429-rfJz1eWk4BBTbkwIjA6PFPPN2mM\"",
-    "mtime": "2026-03-22T16:12:22.737Z",
+    "mtime": "2026-04-01T13:25:55.238Z",
     "size": 1065,
     "path": "../public/_nuxt/blogs.CzJAHO4F.css"
   },
-  "/_nuxt/blog.D-f-tmvo.css": {
+  "/_nuxt/default.Bq8VKi9E.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"1b4-RhDUeia/NXqE/ayNZNOlsuZtYGM\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 436,
-    "path": "../public/_nuxt/blog.D-f-tmvo.css"
+    "etag": "\"1f2a-BWJvGnsgHg0kOCS/fG1pOajBE8s\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 7978,
+    "path": "../public/_nuxt/default.Bq8VKi9E.css"
   },
-  "/_nuxt/changeAlign.2VBHNX8q.css": {
-    "type": "text/css; charset=utf-8",
-    "etag": "\"2b7-H9o8Q8d9W0/V97kVWNu3hbeWWso\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 695,
-    "path": "../public/_nuxt/changeAlign.2VBHNX8q.css"
+  "/_nuxt/eNXWBsXm.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"185b-EbZzVzx+6w9Ft2jGLmSJCiakuOM\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 6235,
+    "path": "../public/_nuxt/eNXWBsXm.js"
   },
-  "/_nuxt/default.C-KsHn8v.css": {
+  "/_nuxt/entry.F2t5GBOz.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"1b40-tgRVaSmCmmlolIAfRfuLnYCZZhs\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 6976,
-    "path": "../public/_nuxt/default.C-KsHn8v.css"
+    "etag": "\"745-h0dFUuST6R+fOGajACsg0ohiog8\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 1861,
+    "path": "../public/_nuxt/entry.F2t5GBOz.css"
   },
-  "/_nuxt/error-404.DL_4WIao.css": {
+  "/_nuxt/error-404._yXoGkXB.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"dca-KnjyV0UbpsrliiJzZx69defY74k\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 3530,
-    "path": "../public/_nuxt/error-404.DL_4WIao.css"
+    "etag": "\"97e-UvhxUpGzrIO+HDYB4qU9Txgu35A\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 2430,
+    "path": "../public/_nuxt/error-404._yXoGkXB.css"
   },
-  "/_nuxt/error-500.I1Dtv2V5.css": {
+  "/_nuxt/error-500.BENb_mjk.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"75a-vEGyJqldBVJrnMfcLsrGaHcxYl0\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 1882,
-    "path": "../public/_nuxt/error-500.I1Dtv2V5.css"
+    "etag": "\"773-BFLUend+w1t3SP3QDB+Z0A0V5pI\"",
+    "mtime": "2026-04-01T13:25:55.238Z",
+    "size": 1907,
+    "path": "../public/_nuxt/error-500.BENb_mjk.css"
   },
-  "/_nuxt/index.C_I2Ax00.css": {
+  "/_nuxt/index.zY5xukBQ.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"3e57-1SiVArrq0W6NQvjE8HndPbEo/DQ\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
+    "etag": "\"3e57-/5g73wI7m5vJB8JzmkhNIjKDyig\"",
+    "mtime": "2026-04-01T13:25:55.239Z",
     "size": 15959,
-    "path": "../public/_nuxt/index.C_I2Ax00.css"
+    "path": "../public/_nuxt/index.zY5xukBQ.css"
   },
-  "/_nuxt/projects.Bf6tiekS.css": {
+  "/_nuxt/kl8xJ8vM.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3117-OeIUosf0aG5nRg+o/unzHRKPvMk\"",
+    "mtime": "2026-04-01T13:25:55.239Z",
+    "size": 12567,
+    "path": "../public/_nuxt/kl8xJ8vM.js"
+  },
+  "/_nuxt/projects.761duYRg.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"4c3-YKV4CKJ/yUSoutQgYDqhxa+yXWI\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
+    "etag": "\"4c3-kit1Q1fUjdycpdXcH7o+8olb3Lo\"",
+    "mtime": "2026-04-01T13:25:55.239Z",
     "size": 1219,
-    "path": "../public/_nuxt/projects.Bf6tiekS.css"
+    "path": "../public/_nuxt/projects.761duYRg.css"
   },
   "/_nuxt/projects.GjiinsSM.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"627-vABEyuD1704CW8ZMKY80XUnq26g\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
+    "mtime": "2026-04-01T13:25:55.239Z",
     "size": 1575,
     "path": "../public/_nuxt/projects.GjiinsSM.css"
-  },
-  "/_nuxt/builds/latest.json": {
-    "type": "application/json",
-    "etag": "\"47-OYxOENzIrOgwNvCeRBdc7ANqCxo\"",
-    "mtime": "2026-03-22T16:12:22.731Z",
-    "size": 71,
-    "path": "../public/_nuxt/builds/latest.json"
   },
   "/images/icons/behance.svg": {
     "type": "image/svg+xml",
     "etag": "\"336-e2h5N3veewWxvEGHFwnKAbs3ik0\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.243Z",
     "size": 822,
     "path": "../public/images/icons/behance.svg"
-  },
-  "/_nuxt/opb6Ygkm.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"5dbf9-vW+IAMOKnjle/4kRdNaqTBFOqSQ\"",
-    "mtime": "2026-03-22T16:12:22.738Z",
-    "size": 383993,
-    "path": "../public/_nuxt/opb6Ygkm.js"
   },
   "/images/icons/calendar.svg": {
     "type": "image/svg+xml",
     "etag": "\"c17-iPSOS6J9kTkaGl5jzDh6l7ag0Gc\"",
-    "mtime": "2026-03-22T16:12:22.741Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 3095,
     "path": "../public/images/icons/calendar.svg"
   },
   "/images/icons/calendar_gray.svg": {
     "type": "image/svg+xml",
     "etag": "\"bfc-8ivZkrTgmk4Guk2GDqF7R/DcjCU\"",
-    "mtime": "2026-03-22T16:12:22.743Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 3068,
     "path": "../public/images/icons/calendar_gray.svg"
   },
   "/images/icons/dark.svg": {
     "type": "image/svg+xml",
     "etag": "\"8c2-ONIcAXOuIuiy7hIsIYZ31P+SCiI\"",
-    "mtime": "2026-03-22T16:12:22.741Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 2242,
     "path": "../public/images/icons/dark.svg"
   },
   "/images/icons/dribbble.svg": {
     "type": "image/svg+xml",
     "etag": "\"6fc-nlMw4zV/tm6F2yMSWMZllv3JFrU\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 1788,
     "path": "../public/images/icons/dribbble.svg"
   },
   "/images/icons/education.svg": {
     "type": "image/svg+xml",
     "etag": "\"5f2-n6gvNKgYAGLpNiCwGqg/GTowBSk\"",
-    "mtime": "2026-03-22T16:12:22.741Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 1522,
     "path": "../public/images/icons/education.svg"
   },
   "/images/icons/email.svg": {
     "type": "image/svg+xml",
     "etag": "\"b48-impd2YchKD4SWY10JoIINBKfBho\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 2888,
     "path": "../public/images/icons/email.svg"
   },
   "/images/icons/en.svg": {
     "type": "image/svg+xml",
     "etag": "\"5bf-Z+RHQo1WsDYXKm2CgtTQMFDk10g\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 1471,
     "path": "../public/images/icons/en.svg"
   },
   "/images/icons/facebook.svg": {
     "type": "image/svg+xml",
     "etag": "\"1cd-oAMSVn7hC8EqLx6vCFZJzQibXqo\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 461,
     "path": "../public/images/icons/facebook.svg"
   },
   "/images/icons/fa.svg": {
     "type": "image/svg+xml",
     "etag": "\"d67a-9MiTFwOauq9Ns0ooGH3GDIOoFk0\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 54906,
     "path": "../public/images/icons/fa.svg"
   },
   "/images/icons/github.svg": {
     "type": "image/svg+xml",
     "etag": "\"45e-C3KsQnelrtMw9VIYlYhRRQ3ZuY0\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.244Z",
     "size": 1118,
     "path": "../public/images/icons/github.svg"
   },
   "/images/icons/instagram.svg": {
     "type": "image/svg+xml",
     "etag": "\"ca1-PKiL7KiAYQwL+4+Zm9fKDwKyoEA\"",
-    "mtime": "2026-03-22T16:12:22.743Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 3233,
     "path": "../public/images/icons/instagram.svg"
   },
   "/images/icons/language.svg": {
     "type": "image/svg+xml",
     "etag": "\"496-72UIGsh4CBLmn+U9T5TpOXnalYs\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 1174,
     "path": "../public/images/icons/language.svg"
-  },
-  "/images/icons/light.svg": {
-    "type": "image/svg+xml",
-    "etag": "\"840-CWZs5vxi/ZTs9EG3uLyrjLok9wc\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
-    "size": 2112,
-    "path": "../public/images/icons/light.svg"
   },
   "/images/icons/line.svg": {
     "type": "image/svg+xml",
     "etag": "\"16a-3UmCbpC27Dx0v5lQxrFuDRX96z0\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 362,
     "path": "../public/images/icons/line.svg"
   },
-  "/images/icons/linkedin.svg": {
+  "/images/icons/light.svg": {
     "type": "image/svg+xml",
-    "etag": "\"433-042CfivmFxme/yHWhpS3gSO/KuY\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
-    "size": 1075,
-    "path": "../public/images/icons/linkedin.svg"
+    "etag": "\"840-CWZs5vxi/ZTs9EG3uLyrjLok9wc\"",
+    "mtime": "2026-04-01T13:25:55.245Z",
+    "size": 2112,
+    "path": "../public/images/icons/light.svg"
   },
   "/images/icons/location.svg": {
     "type": "image/svg+xml",
     "etag": "\"1c2-RE74EtMRfnn6CZc1ROem78uP22g\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 450,
     "path": "../public/images/icons/location.svg"
-  },
-  "/images/icons/more.svg": {
-    "type": "image/svg+xml",
-    "etag": "\"1c5-ytrKTdhcY12sGuNTQTmke56rFg8\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
-    "size": 453,
-    "path": "../public/images/icons/more.svg"
   },
   "/images/icons/mobile.svg": {
     "type": "image/svg+xml",
     "etag": "\"363-uHGUT+HAdt6vEUU/hpzHC723Kd0\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 867,
     "path": "../public/images/icons/mobile.svg"
+  },
+  "/images/icons/linkedin.svg": {
+    "type": "image/svg+xml",
+    "etag": "\"433-042CfivmFxme/yHWhpS3gSO/KuY\"",
+    "mtime": "2026-04-01T13:25:55.245Z",
+    "size": 1075,
+    "path": "../public/images/icons/linkedin.svg"
+  },
+  "/images/icons/more.svg": {
+    "type": "image/svg+xml",
+    "etag": "\"1c5-ytrKTdhcY12sGuNTQTmke56rFg8\"",
+    "mtime": "2026-04-01T13:25:55.245Z",
+    "size": 453,
+    "path": "../public/images/icons/more.svg"
   },
   "/images/icons/others.svg": {
     "type": "image/svg+xml",
     "etag": "\"3d3-0QrPSKrzAUlRsN8hKX2kzdxRzCA\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 979,
     "path": "../public/images/icons/others.svg"
   },
   "/images/icons/question_icon.svg": {
     "type": "image/svg+xml",
     "etag": "\"539-w7uWJmKkBSbSULu5xA8iZKkLyaY\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 1337,
     "path": "../public/images/icons/question_icon.svg"
   },
   "/images/icons/software_engineering.svg": {
     "type": "image/svg+xml",
     "etag": "\"916-ysGHhfSN5E3dfJoybBUi4g88QEM\"",
-    "mtime": "2026-03-22T16:12:22.743Z",
+    "mtime": "2026-04-01T13:25:55.245Z",
     "size": 2326,
     "path": "../public/images/icons/software_engineering.svg"
-  },
-  "/images/icons/twitter.svg": {
-    "type": "image/svg+xml",
-    "etag": "\"528-gJluERCeYal1Rq5seoXQKp+7hjE\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
-    "size": 1320,
-    "path": "../public/images/icons/twitter.svg"
   },
   "/images/icons/telegram.svg": {
     "type": "image/svg+xml",
     "etag": "\"49f-aVDCZ5D6tpC8684IHLY4eMuUZFs\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 1183,
     "path": "../public/images/icons/telegram.svg"
+  },
+  "/images/icons/twitter.svg": {
+    "type": "image/svg+xml",
+    "etag": "\"528-gJluERCeYal1Rq5seoXQKp+7hjE\"",
+    "mtime": "2026-04-01T13:25:55.246Z",
+    "size": 1320,
+    "path": "../public/images/icons/twitter.svg"
   },
   "/images/icons/uiux.svg": {
     "type": "image/svg+xml",
     "etag": "\"3be-hsSAVbJZXnqv14fIQOkp2xoV9N8\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 958,
     "path": "../public/images/icons/uiux.svg"
-  },
-  "/images/icons/x.svg": {
-    "type": "image/svg+xml",
-    "etag": "\"10b-4hiJa6lQzmhfmrFlY5R6uxUvlDE\"",
-    "mtime": "2026-03-22T16:12:22.743Z",
-    "size": 267,
-    "path": "../public/images/icons/x.svg"
   },
   "/images/icons/web.svg": {
     "type": "image/svg+xml",
     "etag": "\"5e8-caVrUCmRpq7177juF13pBffPFZw\"",
-    "mtime": "2026-03-22T16:12:22.742Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 1512,
     "path": "../public/images/icons/web.svg"
   },
-  "/_nuxt/builds/meta/359ad6fe-f1e8-4c9d-864a-c91058e46932.json": {
-    "type": "application/json",
-    "etag": "\"58-GlF8eLpKWrlZ/XvIVp0nK55i7RU\"",
-    "mtime": "2026-03-22T16:12:22.729Z",
-    "size": 88,
-    "path": "../public/_nuxt/builds/meta/359ad6fe-f1e8-4c9d-864a-c91058e46932.json"
+  "/images/icons/x.svg": {
+    "type": "image/svg+xml",
+    "etag": "\"10b-4hiJa6lQzmhfmrFlY5R6uxUvlDE\"",
+    "mtime": "2026-04-01T13:25:55.246Z",
+    "size": 267,
+    "path": "../public/images/icons/x.svg"
   },
   "/images/icons/youtube.svg": {
     "type": "image/svg+xml",
     "etag": "\"397-neCaFaNjpJOheT9iEIsQfnDpSsA\"",
-    "mtime": "2026-03-22T16:12:22.743Z",
+    "mtime": "2026-04-01T13:25:55.246Z",
     "size": 919,
     "path": "../public/images/icons/youtube.svg"
   },
-  "/_nuxt/builds/meta/dev.json": {
+  "/_nuxt/builds/latest.json": {
     "type": "application/json",
-    "etag": "\"37-4g+ANY0q+qhq25juowxLFY6/Sdc\"",
-    "mtime": "2026-03-22T16:12:22.729Z",
-    "size": 55,
-    "path": "../public/_nuxt/builds/meta/dev.json"
+    "etag": "\"47-XMxwwhmprNPaiMUVd/uBwrBgASE\"",
+    "mtime": "2026-04-01T13:25:55.231Z",
+    "size": 71,
+    "path": "../public/_nuxt/builds/latest.json"
+  },
+  "/_nuxt/builds/meta/80164e29-b8a0-4c45-931d-e3a6983510e8.json": {
+    "type": "application/json",
+    "etag": "\"58-cprbi5AISw/6kbRl0QBH9w9L6Fg\"",
+    "mtime": "2026-04-01T13:25:55.228Z",
+    "size": 88,
+    "path": "../public/_nuxt/builds/meta/80164e29-b8a0-4c45-931d-e3a6983510e8.json"
   }
 };
 
@@ -6620,100 +7893,7 @@ const _Z76R6g = eventHandler((event) => {
 
 const _SxA8c9 = defineEventHandler(() => {});
 
-const r=Object.create(null),i=e=>globalThis.process?.env||globalThis._importMeta_.env||globalThis.Deno?.env.toObject()||globalThis.__env__||(e?r:globalThis),o=new Proxy(r,{get(e,s){return i()[s]??r[s]},has(e,s){const E=i();return s in E||s in r},set(e,s,E){const B=i(true);return B[s]=E,true},deleteProperty(e,s){if(!s)return  false;const E=i(true);return delete E[s],true},ownKeys(){const e=i(true);return Object.keys(e)}}),t=typeof process<"u"&&process.env&&"production"||"",f=[["APPVEYOR"],["AWS_AMPLIFY","AWS_APP_ID",{ci:true}],["AZURE_PIPELINES","SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],["AZURE_STATIC","INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN"],["APPCIRCLE","AC_APPCIRCLE"],["BAMBOO","bamboo_planKey"],["BITBUCKET","BITBUCKET_COMMIT"],["BITRISE","BITRISE_IO"],["BUDDY","BUDDY_WORKSPACE_ID"],["BUILDKITE"],["CIRCLE","CIRCLECI"],["CIRRUS","CIRRUS_CI"],["CLOUDFLARE_PAGES","CF_PAGES",{ci:true}],["CLOUDFLARE_WORKERS","WORKERS_CI",{ci:true}],["CODEBUILD","CODEBUILD_BUILD_ARN"],["CODEFRESH","CF_BUILD_ID"],["DRONE"],["DRONE","DRONE_BUILD_EVENT"],["DSARI"],["GITHUB_ACTIONS"],["GITLAB","GITLAB_CI"],["GITLAB","CI_MERGE_REQUEST_ID"],["GOCD","GO_PIPELINE_LABEL"],["LAYERCI"],["HUDSON","HUDSON_URL"],["JENKINS","JENKINS_URL"],["MAGNUM"],["NETLIFY"],["NETLIFY","NETLIFY_LOCAL",{ci:false}],["NEVERCODE"],["RENDER"],["SAIL","SAILCI"],["SEMAPHORE"],["SCREWDRIVER"],["SHIPPABLE"],["SOLANO","TDDIUM"],["STRIDER"],["TEAMCITY","TEAMCITY_VERSION"],["TRAVIS"],["VERCEL","NOW_BUILDER"],["VERCEL","VERCEL",{ci:false}],["VERCEL","VERCEL_ENV",{ci:false}],["APPCENTER","APPCENTER_BUILD_ID"],["CODESANDBOX","CODESANDBOX_SSE",{ci:false}],["CODESANDBOX","CODESANDBOX_HOST",{ci:false}],["STACKBLITZ"],["STORMKIT"],["CLEAVR"],["ZEABUR"],["CODESPHERE","CODESPHERE_APP_ID",{ci:true}],["RAILWAY","RAILWAY_PROJECT_ID"],["RAILWAY","RAILWAY_SERVICE_ID"],["DENO-DEPLOY","DENO_DEPLOYMENT_ID"],["FIREBASE_APP_HOSTING","FIREBASE_APP_HOSTING",{ci:true}]];function b(){if(globalThis.process?.env)for(const e of f){const s=e[1]||e[0];if(globalThis.process?.env[s])return {name:e[0].toLowerCase(),...e[2]}}return globalThis.process?.env?.SHELL==="/bin/jsh"&&globalThis.process?.versions?.webcontainer?{name:"stackblitz",ci:false}:{name:"",ci:false}}const l=b();l.name;function n(e){return e?e!=="false":false}const I=globalThis.process?.platform||"",T=n(o.CI)||l.ci!==false,R=n(globalThis.process?.stdout&&globalThis.process?.stdout.isTTY);n(o.DEBUG);const a=t==="test"||n(o.TEST),h=t==="dev"||t==="development";n(o.MINIMAL)||T||a||!R;const A=/^win/i.test(I);!n(o.NO_COLOR)&&(n(o.FORCE_COLOR)||(R||A)&&o.TERM!=="dumb"||T);const C=(globalThis.process?.versions?.node||"").replace(/^v/,"")||null;Number(C?.split(".")[0])||null;const W=globalThis.process||Object.create(null),_={versions:{}};new Proxy(W,{get(e,s){if(s==="env")return o;if(s in e)return e[s];if(s in _)return _[s]}});const O=globalThis.process?.release?.name==="node",c=!!globalThis.Bun||!!globalThis.process?.versions?.bun,D=!!globalThis.Deno,L=!!globalThis.fastly,S=!!globalThis.Netlify,u=!!globalThis.EdgeRuntime,N=globalThis.navigator?.userAgent==="Cloudflare-Workers",F=[[S,"netlify"],[u,"edge-light"],[N,"workerd"],[L,"fastly"],[D,"deno"],[c,"bun"],[O,"node"]];function G(){const e=F.find(s=>s[0]);if(e)return {name:e[1]}}const P=G();P?.name||"";
-
-function isLocalhostHost(host) {
-  if (!host || host.startsWith("localhost") || host.startsWith("127.") || host.startsWith("0.0.0.0"))
-    return true;
-  const hostname = host.startsWith("[") ? host.slice(0, host.indexOf("]") + 1) : host;
-  return hostname === "[::1]" || hostname === "::1" || hostname === "[::]" || hostname === "::";
-}
-function extractHostname(host) {
-  if (host.startsWith("[")) {
-    const close = host.indexOf("]");
-    return close !== -1 ? host.slice(0, close + 1) : host;
-  }
-  const colonCount = host.split(":").length - 1;
-  return colonCount === 1 ? host.slice(0, host.indexOf(":")) : host;
-}
-function splitHostPort(host) {
-  if (host.startsWith("[")) {
-    const close = host.indexOf("]");
-    const hostname = close !== -1 ? host.slice(0, close + 1) : host;
-    const port = close !== -1 && host[close + 1] === ":" ? host.slice(close + 2) : "";
-    const normalized = hostname === "[::1]" || hostname === "[::]" ? "localhost" : hostname;
-    return { host: normalized, port };
-  }
-  if (host === "0.0.0.0" || host.startsWith("0.0.0.0:")) {
-    const i = host.indexOf(":");
-    return { host: "localhost", port: i !== -1 ? host.slice(i + 1) : "" };
-  }
-  const colonCount = host.split(":").length - 1;
-  if (colonCount === 1) {
-    const i = host.indexOf(":");
-    return { host: host.slice(0, i), port: host.slice(i + 1) };
-  }
-  if (colonCount > 1) {
-    const normalized = host === "::1" || host === "::" ? "localhost" : `[${host}]`;
-    return { host: normalized, port: "" };
-  }
-  return { host, port: "" };
-}
-function getNitroOrigin$1(ctx = {}) {
-  const isDev = ctx.isDev ?? h;
-  const isPrerender = ctx.isPrerender ?? !!o.prerender;
-  let host = "";
-  let port = "";
-  let protocol = o.NITRO_SSL_CERT && o.NITRO_SSL_KEY ? "https" : "http";
-  if (isDev || isPrerender) {
-    const devEnv = o.__NUXT_DEV__ || o.NUXT_VITE_NODE_OPTIONS;
-    if (devEnv) {
-      const parsed = JSON.parse(devEnv);
-      const origin = parsed.proxy?.url || parsed.baseURL?.replace("/__nuxt_vite_node__", "");
-      host = origin.replace(/^https?:\/\//, "").replace(/\/$/, "");
-      protocol = origin.startsWith("https") ? "https" : "http";
-    }
-  }
-  if (isDev && isLocalhostHost(host) && ctx.requestHost) {
-    const reqHost = extractHostname(ctx.requestHost);
-    if (reqHost && !isLocalhostHost(reqHost)) {
-      host = ctx.requestHost;
-      protocol = ctx.requestProtocol || protocol;
-    }
-  }
-  if (!host && ctx.requestHost) {
-    host = ctx.requestHost;
-    protocol = ctx.requestProtocol || protocol;
-  }
-  if (!host) {
-    host = o.NITRO_HOST || o.HOST || "";
-    if (isDev)
-      port = o.NITRO_PORT || o.PORT || "3000";
-  }
-  const split = splitHostPort(host);
-  host = split.host;
-  if (split.port)
-    port = split.port;
-  host = o.NUXT_SITE_HOST_OVERRIDE || host;
-  port = o.NUXT_SITE_PORT_OVERRIDE || port;
-  if (host.startsWith("http://") || host.startsWith("https://")) {
-    protocol = host.startsWith("https://") ? "https" : "http";
-    host = host.replace(/^https?:\/\//, "");
-  } else if (!isDev && (!host || !isLocalhostHost(host))) {
-    protocol = "https";
-  }
-  return `${protocol}://${host}${port ? `:${port}` : ""}/`;
-}
-
-function getNitroOrigin(e) {
-  return getNitroOrigin$1({
-    isDev: false,
-    isPrerender: false,
-    requestHost: e ? getRequestHost(e, { xForwardedHost: true }) : void 0,
-    requestProtocol: e ? getRequestProtocol(e, { xForwardedProto: true }) : void 0
-  });
-}
-
+const PORT_SUFFIX_RE = /:\d+$/;
 const _2YCHvZ = eventHandler(async (e) => {
   if (e.context._initedSiteConfig)
     return;
@@ -6728,13 +7908,13 @@ const _2YCHvZ = eventHandler(async (e) => {
   {
     siteConfig.push({
       _context: "nitro:init",
-      _priority: -4,
+      _priority: SiteConfigPriority.nitro,
       url: nitroOrigin
     });
   }
   siteConfig.push({
     _context: "runtimeEnv",
-    _priority: 0,
+    _priority: SiteConfigPriority.runtime,
     ...runtimeConfig.site || {},
     ...runtimeConfig.public.site || {},
     ...envSiteConfig(globalThis._importMeta_.env || {})
@@ -6749,12 +7929,12 @@ const _2YCHvZ = eventHandler(async (e) => {
     });
   }
   if (config.multiTenancy) {
-    const host = parseURL(nitroOrigin).host?.replace(/:\d+$/, "") || "";
+    const host = parseURL(nitroOrigin).host?.replace(PORT_SUFFIX_RE, "") || "";
     const tenant = config.multiTenancy?.find((t) => t.hosts.includes(host));
     if (tenant) {
       siteConfig.push({
         _context: `multi-tenancy:${host}`,
-        _priority: 0,
+        _priority: SiteConfigPriority.runtime,
         ...tenant.config
       });
     }
@@ -6765,7 +7945,7 @@ const _2YCHvZ = eventHandler(async (e) => {
   e.context._initedSiteConfig = true;
 });
 
-createConsola({
+const logger = createConsola({
   defaults: {
     tag: "@nuxt/sitemap"
   }
@@ -6776,16 +7956,25 @@ const merger = createDefu((obj, key, value) => {
   return obj[key];
 });
 function mergeOnKey(arr, key) {
-  const res = {};
-  arr.forEach((item) => {
+  const seen = /* @__PURE__ */ new Map();
+  let resultLength = 0;
+  const result = Array.from({ length: arr.length });
+  for (const item of arr) {
     const k = item[key];
-    res[k] = merger(item, res[k] || {});
-  });
-  return Object.values(res);
+    if (seen.has(k)) {
+      const existingIndex = seen.get(k);
+      result[existingIndex] = merger(item, result[existingIndex]);
+    } else {
+      seen.set(k, resultLength);
+      result[resultLength++] = item;
+    }
+  }
+  result.length = resultLength;
+  return result;
 }
 function splitForLocales(path, locales) {
   const prefix = withLeadingSlash(path).split("/")[1];
-  if (locales.includes(prefix))
+  if (prefix && locales.includes(prefix))
     return [prefix, path.replace(`/${prefix}`, "")];
   return [null, path];
 }
@@ -6800,8 +7989,12 @@ function normalizeRuntimeFilters(input) {
     return false;
   }).filter(Boolean);
 }
-function createPathFilter(options = {}) {
-  const urlFilter = createFilter(options);
+function createPathFilter(options = {}, baseURL) {
+  const urlFilter = createFilter({
+    include: normalizeRuntimeFilters(options.include),
+    exclude: normalizeRuntimeFilters(options.exclude)
+  });
+  const hasBase = baseURL !== "/";
   return (loc) => {
     let path = loc;
     try {
@@ -6809,439 +8002,36 @@ function createPathFilter(options = {}) {
     } catch {
       return false;
     }
+    if (hasBase)
+      path = withoutBase(path, baseURL);
     return urlFilter(path);
   };
 }
-function createFilter(options = {}) {
-  const include = options.include || [];
-  const exclude = options.exclude || [];
-  if (include.length === 0 && exclude.length === 0)
-    return () => true;
-  return function(path) {
-    for (const v of [{ rules: exclude, result: false }, { rules: include, result: true }]) {
-      const regexRules = v.rules.filter((r) => r instanceof RegExp);
-      if (regexRules.some((r) => r.test(path)))
-        return v.result;
-      const stringRules = v.rules.filter((r) => typeof r === "string");
-      if (stringRules.length > 0) {
-        const routes = {};
-        for (const r of stringRules) {
-          if (r === path)
-            return v.result;
-          routes[r] = true;
-        }
-        const routeRulesMatcher = toRouteMatcher(createRouter$1({ routes, strictTrailingSlash: false }));
-        if (routeRulesMatcher.matchAll(path).length > 0)
-          return Boolean(v.result);
-      }
-    }
-    return include.length === 0;
-  };
-}
-
-function defineNitroPlugin(def) {
-  return def;
-}
-
-function defineRenderHandler(render) {
-  const runtimeConfig = useRuntimeConfig();
-  return eventHandler(async (event) => {
-    const nitroApp = useNitroApp();
-    const ctx = { event, render, response: void 0 };
-    await nitroApp.hooks.callHook("render:before", ctx);
-    if (!ctx.response) {
-      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
-        setResponseHeader(event, "Content-Type", "image/x-icon");
-        return send(
-          event,
-          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        );
-      }
-      ctx.response = await ctx.render(event);
-      if (!ctx.response) {
-        const _currentStatus = getResponseStatus(event);
-        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
-        return send(
-          event,
-          "No response returned from render handler: " + event.path
-        );
-      }
-    }
-    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
-    if (ctx.response.headers) {
-      setResponseHeaders(event, ctx.response.headers);
-    }
-    if (ctx.response.statusCode || ctx.response.statusMessage) {
-      setResponseStatus(
-        event,
-        ctx.response.statusCode,
-        ctx.response.statusMessage
-      );
-    }
-    return ctx.response.body;
-  });
-}
-
-function baseURL() {
-	// TODO: support passing event to `useRuntimeConfig`
-	return useRuntimeConfig().app.baseURL;
-}
-function buildAssetsDir() {
-	// TODO: support passing event to `useRuntimeConfig`
-	return useRuntimeConfig().app.buildAssetsDir;
-}
-function buildAssetsURL(...path) {
-	return joinRelativeURL(publicAssetsURL(), buildAssetsDir(), ...path);
-}
-function publicAssetsURL(...path) {
-	// TODO: support passing event to `useRuntimeConfig`
-	const app = useRuntimeConfig().app;
-	const publicBase = app.cdnURL || app.baseURL;
-	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
-}
-
-function getSiteIndexable(e) {
-  const { env, indexable } = getSiteConfig(e);
-  if (typeof indexable !== "undefined")
-    return String(indexable) === "true";
-  return env === "production";
-}
-
-function useSiteConfig(e, _options) {
-  return getSiteConfig(e, _options);
-}
-
-function resolveSitePath$1(pathOrUrl, options) {
-  let path = pathOrUrl;
-  if (hasProtocol(pathOrUrl, { strict: false, acceptRelative: true })) {
-    const parsed = parseURL(pathOrUrl);
-    path = parsed.pathname;
-  }
-  const base = withLeadingSlash(options.base || "/");
-  if (base !== "/" && path.startsWith(base)) {
-    path = path.slice(base.length);
-  }
-  let origin = withoutTrailingSlash(options.absolute ? options.siteUrl : "");
-  if (base !== "/" && origin.endsWith(base)) {
-    origin = origin.slice(0, origin.indexOf(base));
-  }
-  const baseWithOrigin = options.withBase ? withBase(base, origin || "/") : origin;
-  const resolvedUrl = withBase(path, baseWithOrigin);
-  return path === "/" && !options.withBase ? withTrailingSlash(resolvedUrl) : fixSlashes$1(options.trailingSlash, resolvedUrl);
-}
-const fileExtensions = [
-  // Images
-  "jpg",
-  "jpeg",
-  "png",
-  "gif",
-  "bmp",
-  "webp",
-  "svg",
-  "ico",
-  // Documents
-  "pdf",
-  "doc",
-  "docx",
-  "xls",
-  "xlsx",
-  "ppt",
-  "pptx",
-  "txt",
-  "md",
-  "markdown",
-  // Archives
-  "zip",
-  "rar",
-  "7z",
-  "tar",
-  "gz",
-  // Audio
-  "mp3",
-  "wav",
-  "flac",
-  "ogg",
-  "opus",
-  "m4a",
-  "aac",
-  "midi",
-  "mid",
-  // Video
-  "mp4",
-  "avi",
-  "mkv",
-  "mov",
-  "wmv",
-  "flv",
-  "webm",
-  // Web
-  "html",
-  "css",
-  "js",
-  "json",
-  "xml",
-  "tsx",
-  "jsx",
-  "ts",
-  "vue",
-  "svelte",
-  "xsl",
-  "rss",
-  "atom",
-  // Programming
-  "php",
-  "py",
-  "rb",
-  "java",
-  "c",
-  "cpp",
-  "h",
-  "go",
-  // Data formats
-  "csv",
-  "tsv",
-  "sql",
-  "yaml",
-  "yml",
-  // Fonts
-  "woff",
-  "woff2",
-  "ttf",
-  "otf",
-  "eot",
-  // Executables/Binaries
-  "exe",
-  "msi",
-  "apk",
-  "ipa",
-  "dmg",
-  "iso",
-  "bin",
-  // Scripts/Config
-  "bat",
-  "cmd",
-  "sh",
-  "env",
-  "htaccess",
-  "conf",
-  "toml",
-  "ini",
-  // Package formats
-  "deb",
-  "rpm",
-  "jar",
-  "war",
-  // E-books
-  "epub",
-  "mobi",
-  // Common temporary/backup files
-  "log",
-  "tmp",
-  "bak",
-  "old",
-  "sav"
-];
-function isPathFile$1(path) {
-  const lastSegment = path.split("/").pop();
-  const ext = (lastSegment || path).match(/\.[0-9a-z]+$/i)?.[0];
-  return ext && fileExtensions.includes(ext.replace(".", ""));
-}
-function fixSlashes$1(trailingSlash, pathOrUrl) {
-  const $url = parseURL(pathOrUrl);
-  if (isPathFile$1($url.pathname))
-    return pathOrUrl;
-  const fixedPath = trailingSlash ? withTrailingSlash($url.pathname) : withoutTrailingSlash($url.pathname);
-  return `${$url.protocol ? `${$url.protocol}//` : ""}${$url.host || ""}${fixedPath}${$url.search || ""}${$url.hash || ""}`;
-}
-
-function createSitePathResolver(e, options = {}) {
-  const siteConfig = getSiteConfig(e);
-  const nitroOrigin = getNitroOrigin(e);
-  const nuxtBase = useRuntimeConfig(e).app.baseURL || "/";
-  return (path) => {
-    return resolveSitePath$1(path, {
-      ...options,
-      siteUrl: options.canonical !== false || false ? siteConfig.url : nitroOrigin,
-      trailingSlash: siteConfig.trailingSlash,
-      base: nuxtBase
-    });
-  };
-}
-function withSiteUrl(e, path, options = {}) {
-  const siteConfig = e.context.siteConfig?.get();
-  let siteUrl = e.context.siteConfigNitroOrigin;
-  if ((options.canonical !== false || false) && siteConfig.url)
-    siteUrl = siteConfig.url;
-  return resolveSitePath$1(path, {
-    absolute: true,
-    siteUrl,
-    trailingSlash: siteConfig.trailingSlash,
-    base: e.context.nitro.baseURL,
-    withBase: options.withBase
-  });
-}
-
-function withoutQuery$1(path) {
-  return path.split("?")[0];
-}
-function createNitroRouteRuleMatcher$1(e) {
-  const { nitro, app } = useRuntimeConfig(e);
-  const _routeRulesMatcher = toRouteMatcher(
-    createRouter$1({
-      routes: Object.fromEntries(
-        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [withoutTrailingSlash(path), rules])
-      )
-    })
-  );
-  return (path) => {
-    return defu({}, ..._routeRulesMatcher.matchAll(
-      // radix3 does not support trailing slashes
-      withoutBase(withoutTrailingSlash(withoutQuery$1(path)), app.baseURL)
-    ).reverse());
-  };
-}
-
-function getSiteRobotConfig(e) {
-  const query = getQuery(e);
-  const hints = [];
-  const { groups, debug } = useRuntimeConfigNuxtRobots(e);
-  let indexable = getSiteIndexable(e);
-  const queryIndexableEnabled = String(query.mockProductionEnv) === "true" || query.mockProductionEnv === "";
-  if (debug || false) {
-    const { _context } = getSiteConfig(e, { debug: debug || false });
-    if (queryIndexableEnabled) {
-      indexable = true;
-      hints.push("You are mocking a production enviroment with ?mockProductionEnv query.");
-    } else if (!indexable && _context.indexable === "nuxt-robots:config") {
-      hints.push("You are blocking indexing with your Nuxt Robots config.");
-    } else if (!queryIndexableEnabled && !_context.indexable) {
-      hints.push(`Indexing is blocked in development. You can mock a production environment with ?mockProductionEnv query.`);
-    } else if (!indexable && !queryIndexableEnabled) {
-      hints.push(`Indexing is blocked by site config set by ${_context.indexable}.`);
-    } else if (indexable && !queryIndexableEnabled) {
-      hints.push(`Indexing is enabled from ${_context.indexable}.`);
+function findPageMapping(pathWithoutPrefix, pages) {
+  const stripped = pathWithoutPrefix[0] === "/" ? pathWithoutPrefix.slice(1) : pathWithoutPrefix;
+  const pageKey = stripped.endsWith("/index") ? stripped.slice(0, -6) || "index" : stripped || "index";
+  if (pages[pageKey])
+    return { mappings: pages[pageKey], paramSegments: [] };
+  const sortedKeys = Object.keys(pages).sort((a, b) => b.length - a.length);
+  for (const key of sortedKeys) {
+    if (pageKey.startsWith(`${key}/`)) {
+      const paramPath = pageKey.slice(key.length + 1);
+      return { mappings: pages[key], paramSegments: paramPath.split("/") };
     }
   }
-  if (groups.some((g) => g.userAgent.includes("*") && g.disallow.includes("/"))) {
-    indexable = false;
-    hints.push("You are blocking all user agents with a wildcard `Disallow /`.");
-  } else if (groups.some((g) => g.disallow.includes("/"))) {
-    hints.push("You are blocking specific user agents with `Disallow /`.");
-  }
-  return { indexable, hints };
+  return null;
+}
+function applyDynamicParams(customPath, paramSegments) {
+  if (!paramSegments.length)
+    return customPath;
+  let i = 0;
+  return customPath.replace(/\[[^\]]+\]/g, () => paramSegments[i++] || "");
 }
 
-function getPathRobotConfig(e, options) {
-  const runtimeConfig = useRuntimeConfig(e);
-  const { robotsDisabledValue, robotsEnabledValue, isNuxtContentV2 } = useRuntimeConfigNuxtRobots(e);
-  if (!options?.skipSiteIndexable) {
-    if (!getSiteRobotConfig(e).indexable) {
-      return {
-        rule: robotsDisabledValue,
-        indexable: false,
-        debug: {
-          source: "Site Config"
-        }
-      };
-    }
-  }
-  const path = options?.path || e.path;
-  let userAgent = options?.userAgent;
-  if (!userAgent) {
-    try {
-      userAgent = getRequestHeader(e, "User-Agent");
-    } catch {
-    }
-  }
-  const nitroApp = useNitroApp();
-  const groups = [
-    // run explicit user agent matching first
-    ...nitroApp._robots.ctx.groups.filter((g) => {
-      if (userAgent) {
-        return g.userAgent.some((ua) => ua.toLowerCase().includes(userAgent.toLowerCase()));
-      }
-      return false;
-    }),
-    // run wildcard matches second
-    ...nitroApp._robots.ctx.groups.filter((g) => g.userAgent.includes("*"))
-  ];
-  for (const group of groups) {
-    if (group._indexable === false) {
-      return {
-        indexable: false,
-        rule: robotsDisabledValue,
-        debug: {
-          source: "/robots.txt",
-          line: JSON.stringify(group)
-        }
-      };
-    }
-    const robotsTxtRule = matchPathToRule(path, group._rules || []);
-    if (robotsTxtRule) {
-      if (!robotsTxtRule.allow) {
-        return {
-          indexable: false,
-          rule: robotsDisabledValue,
-          debug: {
-            source: "/robots.txt",
-            line: `Disallow: ${robotsTxtRule.pattern}`
-          }
-        };
-      }
-      break;
-    }
-  }
-  if (isNuxtContentV2 && nitroApp._robots?.nuxtContentUrls?.has(withoutTrailingSlash(path))) {
-    return {
-      indexable: false,
-      rule: robotsDisabledValue,
-      debug: {
-        source: "Nuxt Content"
-      }
-    };
-  }
-  const { pageMetaRobots } = useRuntimeConfigNuxtRobots(e);
-  const pageMetaRule = pageMetaRobots?.[withoutTrailingSlash(path)];
-  if (typeof pageMetaRule !== "undefined") {
-    const normalised = normaliseRobotsRouteRule({ robots: pageMetaRule });
-    if (normalised && (typeof normalised.allow !== "undefined" || typeof normalised.rule !== "undefined")) {
-      return {
-        indexable: normalised.allow ?? false,
-        rule: normalised.rule || (normalised.allow ? robotsEnabledValue : robotsDisabledValue),
-        debug: {
-          source: "Page Meta"
-        }
-      };
-    }
-  }
-  nitroApp._robotsRuleMatcher = nitroApp._robotsRuleMatcher || createNitroRouteRuleMatcher$1(e);
-  let robotRouteRules = nitroApp._robotsRuleMatcher(path);
-  let routeRulesPath = path;
-  if (runtimeConfig.public?.i18n?.locales && typeof robotRouteRules.robots === "undefined") {
-    const { locales } = runtimeConfig.public.i18n;
-    const locale = locales.find((l) => routeRulesPath.startsWith(`/${l.code}`));
-    if (locale) {
-      routeRulesPath = routeRulesPath.replace(`/${locale.code}`, "");
-      robotRouteRules = nitroApp._robotsRuleMatcher(routeRulesPath);
-    }
-  }
-  const routeRules = normaliseRobotsRouteRule(robotRouteRules);
-  if (routeRules && (typeof routeRules.allow !== "undefined" || typeof routeRules.rule !== "undefined")) {
-    return {
-      indexable: routeRules.allow ?? false,
-      rule: routeRules.rule || (routeRules.allow ? robotsEnabledValue : robotsDisabledValue),
-      debug: {
-        source: "Route Rules"
-      }
-    };
-  }
-  return {
-    indexable: true,
-    rule: robotsEnabledValue
-  };
+function xmlEscape(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
 }
-
-function useSimpleSitemapRuntimeConfig(e) {
+function useSitemapRuntimeConfig(e) {
   const clone = JSON.parse(JSON.stringify(useRuntimeConfig(e).sitemap));
   for (const k in clone.sitemaps) {
     const sitemap = clone.sitemaps[k];
@@ -7252,33 +8042,41 @@ function useSimpleSitemapRuntimeConfig(e) {
   return Object.freeze(clone);
 }
 
-const _lvXiNL = defineEventHandler(async (e) => {
+const _Qn3hvz = defineEventHandler(async (e) => {
   const fixPath = createSitePathResolver(e, { absolute: false, withBase: true });
-  const { sitemapName: fallbackSitemapName, cacheMaxAgeSeconds, version, xslColumns, xslTips } = useSimpleSitemapRuntimeConfig();
+  const { sitemapName: fallbackSitemapName, cacheMaxAgeSeconds, version, xslColumns, xslTips } = useSitemapRuntimeConfig();
   setHeader(e, "Content-Type", "application/xslt+xml");
   if (cacheMaxAgeSeconds)
     setHeader(e, "Cache-Control", `public, max-age=${cacheMaxAgeSeconds}, must-revalidate`);
   else
     setHeader(e, "Cache-Control", `no-cache, no-store`);
-  const { name: siteName, url: siteUrl } = useSiteConfig(e);
+  const { name: siteName, url: siteUrl } = getSiteConfig(e);
   const referrer = getHeader(e, "Referer") || "/";
   const referrerPath = parseURL(referrer).pathname;
   const isNotIndexButHasIndex = referrerPath !== "/sitemap.xml" && referrerPath !== "/sitemap_index.xml" && referrerPath.endsWith(".xml");
   const sitemapName = parseURL(referrer).pathname.split("/").pop()?.split("-sitemap")[0] || fallbackSitemapName;
   const title = `${siteName}${sitemapName !== "sitemap.xml" ? ` - ${sitemapName === "sitemap_index.xml" ? "index" : sitemapName}` : ""}`.replace(/&/g, "&amp;");
-  const canonicalQuery = getQuery$1(referrer).canonical;
-  const isShowingCanonical = typeof canonicalQuery !== "undefined" && canonicalQuery !== "false";
-  const conditionalTips = [
-    'You are looking at a <a href="https://developer.mozilla.org/en-US/docs/Web/XSLT/Transforming_XML_with_XSLT/An_Overview" style="color: #398465" target="_blank">XML stylesheet</a>. Read the <a href="https://nuxtseo.com/sitemap/guides/customising-ui" style="color: #398465" target="_blank">docs</a> to learn how to customize it. View the page source to see the raw XML.',
-    `URLs missing? Check Nuxt Devtools Sitemap tab (or the <a href="${withQuery("/__sitemap__/debug.json", { sitemap: sitemapName })}" style="color: #398465" target="_blank">debug endpoint</a>).`
-  ];
-  if (!isShowingCanonical) {
-    const canonicalPreviewUrl = withQuery(referrer, { canonical: "" });
-    conditionalTips.push(`Your canonical site URL is <strong>${siteUrl}</strong>.`);
-    conditionalTips.push(`You can preview your canonical sitemap by visiting <a href="${canonicalPreviewUrl}" style="color: #398465; white-space: nowrap;">${fixPath(canonicalPreviewUrl)}?canonical</a>`);
-  } else {
-    conditionalTips.push(`You are viewing the canonical sitemap. You can switch to using the request origin: <a href="${fixPath(referrer)}" style="color: #398465; white-space: nowrap ">${fixPath(referrer)}</a>`);
+  getQuery$1(referrer).canonical;
+  const debugUrl = xmlEscape(withQuery("/__sitemap__/debug.json", { sitemap: sitemapName }));
+  xmlEscape(referrerPath);
+  xmlEscape(withQuery(referrerPath, { canonical: "" }));
+  const fetchErrors = [];
+  const xslQuery = getQuery(e);
+  if (xslQuery.error_messages) {
+    const errorMessages = xslQuery.error_messages;
+    const errorUrls = xslQuery.error_urls;
+    if (errorMessages) {
+      const messages = Array.isArray(errorMessages) ? errorMessages : [errorMessages];
+      const urls = Array.isArray(errorUrls) ? errorUrls : errorUrls ? [errorUrls] : [];
+      messages.forEach((msg, i) => {
+        const errorParts = [xmlEscape(msg)];
+        if (urls[i])
+          errorParts.push(xmlEscape(urls[i]));
+        fetchErrors.push(`<span class="error-item">${errorParts.join(" \u2014 ")}</span>`);
+      });
+    }
   }
+  const hasRuntimeErrors = fetchErrors.length > 0;
   let columns = [...xslColumns];
   if (!columns.length) {
     columns = [
@@ -7302,172 +8100,359 @@ const _lvXiNL = defineEventHandler(async (e) => {
         <title>XML Sitemap</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <style type="text/css">
+          :root {
+            --accent: #00dc82;
+            --accent-hover: #00b86b;
+            --bg: #0a0a0a;
+            --bg-elevated: #141414;
+            --bg-subtle: #1a1a1a;
+            --border: #262626;
+            --border-subtle: #1f1f1f;
+            --text: #e5e5e5;
+            --text-muted: #737373;
+            --text-faint: #525252;
+            --error: #ef4444;
+            --error-bg: rgba(239,68,68,0.1);
+            --warning: #f59e0b;
+          }
+          * { box-sizing: border-box; }
           body {
-            font-family: Inter, Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            color: #333;
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 13px;
+            color: var(--text);
+            background: var(--bg);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
           }
+          a { color: inherit; transition: color 0.15s; }
+          a:hover { color: var(--accent); }
 
-          table {
-            border: none;
-            border-collapse: collapse;
+          /* Debug bar (dev only) */
+          .debug-bar {
+            position: fixed;
+            bottom: 0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 1rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 100;
+            font-size: 11px;
           }
-
-          .bg-yellow-200 {
-            background-color: #fef9c3;
-          }
-
-          .p-5 {
-            padding: 1.25rem;
-          }
-
-          .rounded {
-            border-radius: 4px;
-            }
-
-          .shadow {
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-          }
-
-          #sitemap tr:nth-child(odd) td {
-            background-color: #f8f8f8 !important;
-          }
-
-          #sitemap tbody tr:hover td {
-            background-color: #fff;
-          }
-
-          #sitemap tbody tr:hover td, #sitemap tbody tr:hover td a {
-            color: #000;
-          }
-
-          .expl a {
-            color: #398465
-            font-weight: 600;
-          }
-
-          .expl a:visited {
-            color: #398465
-          }
-
-          a {
-            color: #000;
+          .debug-bar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
             text-decoration: none;
           }
-
-          a:visited {
-            color: #777;
+          .debug-bar-brand:hover { color: var(--text); }
+          .debug-bar-brand svg { flex-shrink: 0; }
+          .debug-bar-hint {
+            color: var(--text-faint);
+            margin-right: auto;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
-
-          a:hover {
-            text-decoration: underline;
+          .debug-bar-hint code {
+            background: var(--bg-subtle);
+            padding: 0.1rem 0.3rem;
+            border-radius: 3px;
+            font-size: 10px;
           }
+          .mode-badge {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+          }
+          .mode-dev { background: rgba(245,158,11,0.15); color: var(--warning); }
+          .mode-prod { background: rgba(0,220,130,0.12); color: var(--accent); }
+          .mode-toggle {
+            display: inline-flex;
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--bg-subtle);
+            padding: 2px;
+            gap: 1px;
+          }
+          .mode-toggle a {
+            padding: 0.2rem 0.4rem;
+            font-size: 9px;
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--text-muted);
+            border-radius: 2px;
+            transition: all 0.15s;
+          }
+          .mode-toggle a:hover { color: var(--text); }
+          .mode-toggle a.active {
+            background: var(--accent);
+            color: #0a0a0a;
+          }
+          .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 500;
+            transition: all 0.15s;
+          }
+          .btn-primary {
+            background: var(--accent);
+            color: #0a0a0a;
+          }
+          .btn-primary:hover { background: var(--accent-hover); color: #0a0a0a; }
+          .btn svg { width: 12px; height: 12px; }
 
-          td {
+          /* Error banner */
+          .error-banner {
+            background: var(--error-bg);
+            border-bottom: 1px solid rgba(239,68,68,0.2);
+            padding: 0.75rem 1.5rem;
+            color: #fca5a5;
             font-size: 12px;
           }
-
-          .text-2xl {
-            font-size: 2rem;
-            font-weight: 600;
-            line-height: 1.25;
+          .error-banner strong { color: var(--error); }
+          .error-item { display: block; margin-top: 0.375rem; color: #fca5a5; }
+          .error-debug-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.625rem;
+            padding: 0.25rem 0.5rem;
+            background: var(--error);
+            color: #fff;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.15s;
           }
+          .error-debug-link:hover { background: #dc2626; color: #fff; }
 
+          /* Main content */
+          .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+          }
+          .header {
+            margin-bottom: 1.25rem;
+          }
+          .header h1 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: var(--text);
+          }
+          .header-meta {
+            color: var(--text-muted);
+            font-size: 12px;
+          }
+          .header-meta a {
+            color: var(--text-muted);
+            text-decoration: underline;
+            text-decoration-color: var(--border);
+            text-underline-offset: 2px;
+          }
+          .header-meta a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+          /* Table */
+          .table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-elevated);
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+          }
           th {
             text-align: left;
-            padding-right: 30px;
+            padding: 0.625rem 1rem;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+          }
+          td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
             font-size: 12px;
+            color: var(--text);
+          }
+          tr:last-child td { border-bottom: none; }
+          tr:hover td { background: rgba(255,255,255,0.02); }
+          td a {
+            text-decoration: none;
+            word-break: break-all;
+            color: var(--text);
+          }
+          td a:hover { color: var(--accent); }
+          .inline-warning {
+            font-size: 11px;
+            color: var(--warning);
+            margin-top: 0.25rem;
+            line-height: 1.4;
+          }
+          .inline-warning::before {
+            content: "\u26A0 ";
+          }
+          .count {
+            display: inline-block;
+            min-width: 1.25rem;
+            padding: 0.125rem 0.375rem;
+            background: var(--bg-subtle);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+          }
+          .count:empty::before { content: "0"; }
+
+          /* Light mode */
+          @media (prefers-color-scheme: light) {
+            :root {
+              --accent: #00a963;
+              --accent-hover: #008f54;
+              --bg: #ffffff;
+              --bg-elevated: #f5f5f5;
+              --bg-subtle: #ebebeb;
+              --border: #d4d4d4;
+              --border-subtle: #e5e5e5;
+              --text: #171717;
+              --text-muted: #525252;
+              --text-faint: #737373;
+              --error: #dc2626;
+              --error-bg: rgba(220,38,38,0.08);
+              --warning: #b45309;
+            }
+            tr:hover td { background: rgba(0,0,0,0.02); }
+            .btn-primary { color: #fff; }
+            .btn-primary:hover { color: #fff; }
+            .mode-toggle a.active { color: #fff; }
+            .error-banner { color: #991b1b; }
+            .error-item { color: #b91c1c; }
+            .error-debug-link { color: #fff; }
+            .error-debug-link:hover { color: #fff; }
           }
 
-          thead th {
-            border-bottom: 1px solid #000;
+          .debug-bar-version {
+            color: var(--text-faint);
+            font-size: 10px;
           }
-          .fixed { position: fixed; }
-          .right-2 { right: 2rem; }
-          .top-2 { top: 2rem; }
-          .w-30 { width: 30rem; }
-          p { margin: 0; }
-          li { padding-bottom: 0.5rem; line-height: 1.5; }
-          h1 { margin: 0; }
-          .mb-5 { margin-bottom: 1.25rem; }
-          .mb-3 { margin-bottom: 0.75rem; }
+
+          /* Responsive */
+          @media (max-width: 640px) {
+            .debug-bar { padding: 0 0.75rem; gap: 0.5rem; width: 95%; }
+            .debug-bar-brand span { display: none; }
+            .debug-bar-hint { display: none; }
+            .debug-bar-version { display: none; }
+            .mode-badge { display: none; }
+            .container { padding: 1rem; }
+            th, td { padding: 0.5rem 0.75rem; }
+          }
+          ${""}
         </style>
       </head>
       <body>
-        <div style="grid-template-columns: 1fr 1fr; display: grid; margin: 3rem;">
-            <div>
-             <div id="content">
-          <h1 class="text-2xl mb-3">XML Sitemap</h1>
-          <h2>${title}</h2>
-          ${isNotIndexButHasIndex ? `<p style="font-size: 12px; margin-bottom: 1rem;"><a href="${fixPath("/sitemap_index.xml")}">${fixPath("/sitemap_index.xml")}</a></p>` : ""}
+        ${hasRuntimeErrors ? `<div class="error-banner">
+            <strong>Sitemap Generation Errors</strong>
+            ${fetchErrors.join("")}
+            <a href="${debugUrl}" target="_blank" class="error-debug-link">View Debug Info \u2192</a>
+          </div>` : ""}
+        <div class="container">
+          <div class="header">
+            <h1>${xmlEscape(title)}</h1>
+            <div class="header-meta">
+              ${isNotIndexButHasIndex ? `Part of <a href="${xmlEscape(fixPath("/sitemap_index.xml"))}">${xmlEscape(fixPath("/sitemap_index.xml"))}</a> \xB7 ` : ""}
+              <xsl:if test="count(sitemap:sitemapindex/sitemap:sitemap) &gt; 0">
+                <xsl:value-of select="count(sitemap:sitemapindex/sitemap:sitemap)"/> sitemaps
+              </xsl:if>
+              <xsl:if test="count(sitemap:sitemapindex/sitemap:sitemap) &lt; 1">
+                <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/> URLs
+              </xsl:if>
+            </div>
+          </div>
           <xsl:if test="count(sitemap:sitemapindex/sitemap:sitemap) &gt; 0">
-            <p class="expl" style="margin-bottom: 1rem;">
-              This XML Sitemap Index file contains
-              <xsl:value-of select="count(sitemap:sitemapindex/sitemap:sitemap)"/> sitemaps.
-            </p>
-            <table id="sitemap" cellpadding="3">
-              <thead>
-                <tr>
-                  <th width="75%">Sitemap</th>
-                  <th width="25%">Last Modified</th>
-                </tr>
-              </thead>
-              <tbody>
-                <xsl:for-each select="sitemap:sitemapindex/sitemap:sitemap">
-                  <xsl:variable name="sitemapURL">
-                    <xsl:value-of select="sitemap:loc"/>
-                  </xsl:variable>
+            <div class="table-wrap">
+              <table>
+                <thead>
                   <tr>
-                    <td>
-                      <a href="{$sitemapURL}">
-                        <xsl:value-of select="sitemap:loc"/>
-                      </a>
-                    </td>
-                    <td>
-                      <xsl:value-of
-                        select="concat(substring(sitemap:lastmod,0,11),concat(' ', substring(sitemap:lastmod,12,5)),concat(' ', substring(sitemap:lastmod,20,6)))"/>
-                    </td>
+                    <th style="width:70%">Sitemap</th>
+                    <th style="width:30%">Last Modified</th>
                   </tr>
-                </xsl:for-each>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="sitemap:sitemapindex/sitemap:sitemap">
+                    <xsl:variable name="sitemapURL">
+                      <xsl:value-of select="sitemap:loc"/>
+                    </xsl:variable>
+                    <tr>
+                      <td>
+                        <a href="{$sitemapURL}">
+                          <xsl:value-of select="sitemap:loc"/>
+                        </a>
+                      </td>
+                      <td>
+                        <xsl:value-of
+                          select="concat(substring(sitemap:lastmod,0,11),concat(' ', substring(sitemap:lastmod,12,5)),concat(' ', substring(sitemap:lastmod,20,6)))"/>
+                      </td>
+                    </tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </div>
           </xsl:if>
           <xsl:if test="count(sitemap:sitemapindex/sitemap:sitemap) &lt; 1">
-            <p class="expl" style="margin-bottom: 1rem;">
-              This XML Sitemap contains
-              <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/> URLs.
-            </p>
-            <table id="sitemap" cellpadding="3">
-              <thead>
-                <tr>
-                  ${columns.map((c) => `<th width="${c.width}">${c.label}</th>`).join("\n")}
-                </tr>
-              </thead>
-              <tbody>
-                <xsl:variable name="lower" select="'abcdefghijklmnopqrstuvwxyz'"/>
-                <xsl:variable name="upper" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
-                <xsl:for-each select="sitemap:urlset/sitemap:url">
+            <div class="table-wrap">
+              <table>
+                <thead>
                   <tr>
-                    <td>
-                      <xsl:variable name="itemURL">
-                        <xsl:value-of select="sitemap:loc"/>
-                      </xsl:variable>
-                      <a href="{$itemURL}">
-                        <xsl:value-of select="sitemap:loc"/>
-                      </a>
-                    </td>
-                    ${columns.filter((c) => c.label !== "URL").map((c) => `<td>
-<xsl:value-of select="${c.select}"/>
-</td>`).join("\n")}
+                    ${columns.map((c) => `<th style="width:${c.width}">${c.label}</th>`).join("\n")}
                   </tr>
-                </xsl:for-each>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <xsl:for-each select="sitemap:urlset/sitemap:url">
+                    <tr>
+                      <td>
+                        <xsl:variable name="itemURL">
+                          <xsl:value-of select="sitemap:loc"/>
+                        </xsl:variable>
+                        <a href="{$itemURL}">
+                          <xsl:value-of select="sitemap:loc"/>
+                        </a>
+                        ${""}
+                      </td>
+                      ${columns.filter((c) => c.label !== "URL").map((c) => `<td><span class="count"><xsl:value-of select="${c.select}"/></span></td>`).join("\n")}
+                    </tr>
+                  </xsl:for-each>
+                </tbody>
+              </table>
+            </div>
           </xsl:if>
         </div>
-        </div>
-                    ${""}
-        </div>
+        ${""}
       </body>
     </html>
   </xsl:template>
@@ -7475,95 +8460,48 @@ const _lvXiNL = defineEventHandler(async (e) => {
 `;
 });
 
-function resolveSitePath(pathOrUrl, options) {
-  let path = pathOrUrl;
-  if (hasProtocol(pathOrUrl, { strict: false, acceptRelative: true })) {
-    const parsed = parseURL(pathOrUrl);
-    path = parsed.pathname;
-  }
-  const base = withLeadingSlash(options.base || "/");
-  if (base !== "/" && path.startsWith(base)) {
-    path = path.slice(base.length);
-  }
-  let origin = withoutTrailingSlash(options.siteUrl );
-  if (base !== "/" && origin.endsWith(base)) {
-    origin = origin.slice(0, origin.indexOf(base));
-  }
-  const baseWithOrigin = origin;
-  const resolvedUrl = withBase(path, baseWithOrigin);
-  return path === "/" && true ? withTrailingSlash(resolvedUrl) : fixSlashes(options.trailingSlash, resolvedUrl);
-}
-function isPathFile(path) {
-  const lastSegment = path.split("/").pop();
-  return !!(lastSegment || path).match(/\.[0-9a-z]+$/i)?.[0];
-}
-function fixSlashes(trailingSlash, pathOrUrl) {
-  const $url = parseURL(pathOrUrl);
-  if (isPathFile($url.pathname))
-    return pathOrUrl;
-  const fixedPath = trailingSlash ? withTrailingSlash($url.pathname) : withoutTrailingSlash($url.pathname);
-  return `${$url.protocol ? `${$url.protocol}//` : ""}${$url.host || ""}${fixedPath}${$url.search || ""}${$url.hash || ""}`;
-}
-
-function withoutQuery(path) {
-  return path.split("?")[0];
-}
-function createNitroRouteRuleMatcher() {
-  const { nitro, app } = useRuntimeConfig();
-  const _routeRulesMatcher = toRouteMatcher(
-    createRouter$1({
-      routes: Object.fromEntries(
-        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [path === "/" ? path : withoutTrailingSlash(path), rules])
-      )
-    })
-  );
-  return (pathOrUrl) => {
-    const path = pathOrUrl[0] === "/" ? pathOrUrl : parseURL(pathOrUrl, app.baseURL).pathname;
-    const pathWithoutQuery = withoutQuery(path);
-    return defu({}, ..._routeRulesMatcher.matchAll(
-      // radix3 does not support trailing slashes
-      withoutBase(pathWithoutQuery === "/" ? pathWithoutQuery : withoutTrailingSlash(pathWithoutQuery), app.baseURL)
-    ).reverse());
-  };
-}
-
 function resolve(s, resolvers) {
-  if (typeof s === "undefined" || !resolvers)
-    return s;
-  s = typeof s === "string" ? s : s.toString();
-  if (hasProtocol(s, { acceptRelative: true, strict: false }))
-    return resolvers.fixSlashes(s);
-  return resolvers.canonicalUrlResolver(s);
+  if (typeof s === "undefined")
+    return void 0;
+  const str = typeof s === "string" ? s : s.toString();
+  if (!resolvers)
+    return str;
+  if (hasProtocol(str, { acceptRelative: true, strict: false }))
+    return resolvers.fixSlashes(str);
+  return resolvers.canonicalUrlResolver(str);
 }
 function removeTrailingSlash(s) {
   return s.replace(/\/(\?|#|$)/, "$1");
 }
 function preNormalizeEntry(_e, resolvers) {
-  const e = typeof _e === "string" ? { loc: _e } : { ..._e };
-  if (e.url && !e.loc) {
-    e.loc = e.url;
-    delete e.url;
+  const input = typeof _e === "string" ? { loc: _e } : { ..._e };
+  if (input.url && !input.loc) {
+    input.loc = input.url;
   }
-  if (typeof e.loc !== "string") {
-    e.loc = "";
+  delete input.url;
+  if (typeof input.loc !== "string") {
+    input.loc = "";
   }
+  const skipEncoding = input._encoded === true;
+  const e = input;
   e.loc = removeTrailingSlash(e.loc);
   e._abs = hasProtocol(e.loc, { acceptRelative: false, strict: false });
   try {
     e._path = e._abs ? parseURL(e.loc) : parsePath(e.loc);
-  } catch (e2) {
-    e2._path = null;
+  } catch {
+    e._path = null;
   }
   if (e._path) {
-    const query = parseQuery(e._path.search);
-    const qs = stringifyQuery(query);
-    e._relativeLoc = `${encodePath(e._path?.pathname)}${qs.length ? `?${qs}` : ""}`;
+    const search = e._path.search;
+    const qs = search && search.length > 1 ? stringifyQuery(parseQuery(search)) : "";
+    const pathname = skipEncoding ? e._path.pathname : encodePath(e._path.pathname);
+    e._relativeLoc = `${pathname}${qs.length ? `?${qs}` : ""}`;
     if (e._path.host) {
       e.loc = stringifyParsedURL(e._path);
     } else {
       e.loc = e._relativeLoc;
     }
-  } else {
+  } else if (!skipEncoding && !isEncoded(e.loc)) {
     e.loc = encodeURI(e.loc);
   }
   if (e.loc === "")
@@ -7571,6 +8509,13 @@ function preNormalizeEntry(_e, resolvers) {
   e.loc = resolve(e.loc, resolvers);
   e._key = `${e._sitemap || ""}${withoutTrailingSlash(e.loc)}`;
   return e;
+}
+function isEncoded(url) {
+  try {
+    return url !== decodeURIComponent(url);
+  } catch {
+    return false;
+  }
 }
 function normaliseEntry(_e, defaults, resolvers) {
   const e = defu(_e, defaults);
@@ -7585,29 +8530,31 @@ function normaliseEntry(_e, defaults, resolvers) {
     delete e.lastmod;
   e.loc = resolve(e.loc, resolvers);
   if (e.alternatives) {
-    e.alternatives = mergeOnKey(e.alternatives.map((e2) => {
-      const a = { ...e2 };
-      if (typeof a.href === "string")
-        a.href = resolve(a.href, resolvers);
-      else if (typeof a.href === "object" && a.href)
-        a.href = resolve(a.href.href, resolvers);
-      return a;
-    }), "hreflang");
+    const alternatives = e.alternatives.map((a) => ({ ...a }));
+    for (const alt of alternatives) {
+      if (typeof alt.href === "string") {
+        alt.href = resolve(alt.href, resolvers);
+      } else if (typeof alt.href === "object" && alt.href) {
+        alt.href = resolve(alt.href.href, resolvers);
+      }
+    }
+    e.alternatives = mergeOnKey(alternatives, "hreflang");
   }
   if (e.images) {
-    e.images = mergeOnKey(e.images.map((i) => {
-      i = { ...i };
-      i.loc = resolve(i.loc, resolvers);
-      return i;
-    }), "loc");
+    const images = e.images.map((i) => ({ ...i }));
+    for (const img of images) {
+      img.loc = resolve(img.loc, resolvers);
+    }
+    e.images = mergeOnKey(images, "loc");
   }
   if (e.videos) {
-    e.videos = e.videos.map((v) => {
-      v = { ...v };
-      if (v.content_loc)
-        v.content_loc = resolve(v.content_loc, resolvers);
-      return v;
-    });
+    const videos = e.videos.map((v) => ({ ...v }));
+    for (const video of videos) {
+      if (video.content_loc) {
+        video.content_loc = resolve(video.content_loc, resolvers);
+      }
+    }
+    e.videos = mergeOnKey(videos, "content_loc");
   }
   return e;
 }
@@ -7622,8 +8569,9 @@ function isValidW3CDate(d) {
 }
 function normaliseDate(d) {
   if (typeof d === "string") {
-    if (d.includes("T")) {
-      const t = d.split("T")[1];
+    const tIdx = d.indexOf("T");
+    if (tIdx !== -1) {
+      const t = d.slice(tIdx + 1);
       if (!t.includes("+") && !t.includes("-") && !t.includes("Z")) {
         d += "Z";
       }
@@ -7643,34 +8591,466 @@ function normaliseDate(d) {
   return date;
 }
 
+function sortInPlace(urls) {
+  urls.sort((a, b) => {
+    const aLoc = typeof a === "string" ? a : a.loc;
+    const bLoc = typeof b === "string" ? b : b.loc;
+    const aSegments = aLoc.split("/").length;
+    const bSegments = bLoc.split("/").length;
+    if (aSegments !== bSegments) {
+      return aSegments - bSegments;
+    }
+    return aLoc.localeCompare(bLoc, void 0, { numeric: true });
+  });
+  return urls;
+}
+
+new XMLParser({
+  isArray: (tagName) => tagName === "sitemap",
+  removeNSPrefix: true,
+  trimValues: true
+});
+
+function isValidString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+function parseNumber(value) {
+  if (typeof value === "number")
+    return value;
+  if (typeof value === "string" && value.trim()) {
+    const num = Number.parseFloat(value.trim());
+    return Number.isNaN(num) ? void 0 : num;
+  }
+  return void 0;
+}
+function parseInteger(value) {
+  if (typeof value === "number")
+    return Math.floor(value);
+  if (typeof value === "string" && value.trim()) {
+    const num = Number.parseInt(value.trim(), 10);
+    return Number.isNaN(num) ? void 0 : num;
+  }
+  return void 0;
+}
+function extractUrlFromParsedElement(urlElement, warnings) {
+  if (!isValidString(urlElement.loc)) {
+    warnings.push({
+      type: "validation",
+      message: "URL entry missing required loc element",
+      context: { url: String(urlElement.loc || "undefined") }
+    });
+    return null;
+  }
+  const urlObj = { loc: urlElement.loc };
+  if (isValidString(urlElement.lastmod)) {
+    urlObj.lastmod = urlElement.lastmod;
+  }
+  if (isValidString(urlElement.changefreq)) {
+    const validFreqs = ["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"];
+    if (validFreqs.includes(urlElement.changefreq)) {
+      urlObj.changefreq = urlElement.changefreq;
+    } else {
+      warnings.push({
+        type: "validation",
+        message: "Invalid changefreq value",
+        context: { url: urlElement.loc, field: "changefreq", value: urlElement.changefreq }
+      });
+    }
+  }
+  const priority = parseNumber(urlElement.priority);
+  if (priority !== void 0 && !Number.isNaN(priority)) {
+    if (priority < 0 || priority > 1) {
+      warnings.push({
+        type: "validation",
+        message: "Priority value should be between 0.0 and 1.0, clamping to valid range",
+        context: { url: urlElement.loc, field: "priority", value: priority }
+      });
+    }
+    urlObj.priority = Math.max(0, Math.min(1, priority));
+  } else if (urlElement.priority !== void 0) {
+    warnings.push({
+      type: "validation",
+      message: "Invalid priority value",
+      context: { url: urlElement.loc, field: "priority", value: urlElement.priority }
+    });
+  }
+  if (urlElement.image) {
+    const images = Array.isArray(urlElement.image) ? urlElement.image : [urlElement.image];
+    const validImages = images.map((img) => {
+      if (isValidString(img.loc)) {
+        return { loc: img.loc };
+      } else {
+        warnings.push({
+          type: "validation",
+          message: "Image missing required loc element",
+          context: { url: urlElement.loc, field: "image.loc" }
+        });
+        return null;
+      }
+    }).filter((img) => img !== null);
+    if (validImages.length > 0) {
+      urlObj.images = validImages;
+    }
+  }
+  if (urlElement.video) {
+    const videos = Array.isArray(urlElement.video) ? urlElement.video : [urlElement.video];
+    const validVideos = videos.map((video) => {
+      const missingFields = [];
+      if (!isValidString(video.title))
+        missingFields.push("title");
+      if (!isValidString(video.thumbnail_loc))
+        missingFields.push("thumbnail_loc");
+      if (!isValidString(video.description))
+        missingFields.push("description");
+      if (!isValidString(video.content_loc))
+        missingFields.push("content_loc");
+      if (missingFields.length > 0) {
+        warnings.push({
+          type: "validation",
+          message: `Video missing required fields: ${missingFields.join(", ")}`,
+          context: { url: urlElement.loc, field: "video" }
+        });
+        return null;
+      }
+      const videoObj = {
+        title: video.title,
+        thumbnail_loc: video.thumbnail_loc,
+        description: video.description,
+        content_loc: video.content_loc
+      };
+      if (isValidString(video.player_loc)) {
+        videoObj.player_loc = video.player_loc;
+      }
+      const duration = parseInteger(video.duration);
+      if (duration !== void 0) {
+        videoObj.duration = duration;
+      } else if (video.duration !== void 0) {
+        warnings.push({
+          type: "validation",
+          message: "Invalid video duration value",
+          context: { url: urlElement.loc, field: "video.duration", value: video.duration }
+        });
+      }
+      if (isValidString(video.expiration_date)) {
+        videoObj.expiration_date = video.expiration_date;
+      }
+      const rating = parseNumber(video.rating);
+      if (rating !== void 0) {
+        if (rating < 0 || rating > 5) {
+          warnings.push({
+            type: "validation",
+            message: "Video rating should be between 0.0 and 5.0",
+            context: { url: urlElement.loc, field: "video.rating", value: rating }
+          });
+        }
+        videoObj.rating = rating;
+      } else if (video.rating !== void 0) {
+        warnings.push({
+          type: "validation",
+          message: "Invalid video rating value",
+          context: { url: urlElement.loc, field: "video.rating", value: video.rating }
+        });
+      }
+      const viewCount = parseInteger(video.view_count);
+      if (viewCount !== void 0) {
+        videoObj.view_count = viewCount;
+      } else if (video.view_count !== void 0) {
+        warnings.push({
+          type: "validation",
+          message: "Invalid video view_count value",
+          context: { url: urlElement.loc, field: "video.view_count", value: video.view_count }
+        });
+      }
+      if (isValidString(video.publication_date)) {
+        videoObj.publication_date = video.publication_date;
+      }
+      if (isValidString(video.family_friendly)) {
+        const validValues = ["yes", "no"];
+        if (validValues.includes(video.family_friendly)) {
+          videoObj.family_friendly = video.family_friendly;
+        } else {
+          warnings.push({
+            type: "validation",
+            message: 'Invalid video family_friendly value, should be "yes" or "no"',
+            context: { url: urlElement.loc, field: "video.family_friendly", value: video.family_friendly }
+          });
+        }
+      }
+      if (isValidString(video.requires_subscription)) {
+        const validValues = ["yes", "no"];
+        if (validValues.includes(video.requires_subscription)) {
+          videoObj.requires_subscription = video.requires_subscription;
+        } else {
+          warnings.push({
+            type: "validation",
+            message: 'Invalid video requires_subscription value, should be "yes" or "no"',
+            context: { url: urlElement.loc, field: "video.requires_subscription", value: video.requires_subscription }
+          });
+        }
+      }
+      if (isValidString(video.live)) {
+        const validValues = ["yes", "no"];
+        if (validValues.includes(video.live)) {
+          videoObj.live = video.live;
+        } else {
+          warnings.push({
+            type: "validation",
+            message: 'Invalid video live value, should be "yes" or "no"',
+            context: { url: urlElement.loc, field: "video.live", value: video.live }
+          });
+        }
+      }
+      if (video.restriction && typeof video.restriction === "object") {
+        const restriction = video.restriction;
+        if (isValidString(restriction.relationship) && isValidString(restriction["#text"])) {
+          const validRelationships = ["allow", "deny"];
+          if (validRelationships.includes(restriction.relationship)) {
+            videoObj.restriction = {
+              relationship: restriction.relationship,
+              restriction: restriction["#text"]
+            };
+          } else {
+            warnings.push({
+              type: "validation",
+              message: 'Invalid video restriction relationship, should be "allow" or "deny"',
+              context: { url: urlElement.loc, field: "video.restriction.relationship", value: restriction.relationship }
+            });
+          }
+        }
+      }
+      if (video.platform && typeof video.platform === "object") {
+        const platform = video.platform;
+        if (isValidString(platform.relationship) && isValidString(platform["#text"])) {
+          const validRelationships = ["allow", "deny"];
+          if (validRelationships.includes(platform.relationship)) {
+            videoObj.platform = {
+              relationship: platform.relationship,
+              platform: platform["#text"]
+            };
+          } else {
+            warnings.push({
+              type: "validation",
+              message: 'Invalid video platform relationship, should be "allow" or "deny"',
+              context: { url: urlElement.loc, field: "video.platform.relationship", value: platform.relationship }
+            });
+          }
+        }
+      }
+      if (video.price) {
+        const prices = Array.isArray(video.price) ? video.price : [video.price];
+        const validPrices = prices.map((price) => {
+          const priceValue = price["#text"];
+          if (priceValue == null || typeof priceValue !== "string" && typeof priceValue !== "number") {
+            warnings.push({
+              type: "validation",
+              message: "Video price missing value",
+              context: { url: urlElement.loc, field: "video.price" }
+            });
+            return null;
+          }
+          const validTypes = ["rent", "purchase", "package", "subscription"];
+          if (price.type && !validTypes.includes(price.type)) {
+            warnings.push({
+              type: "validation",
+              message: `Invalid video price type "${price.type}", should be one of: ${validTypes.join(", ")}`,
+              context: { url: urlElement.loc, field: "video.price.type", value: price.type }
+            });
+          }
+          return {
+            price: String(priceValue),
+            currency: price.currency,
+            type: price.type
+          };
+        }).filter((p) => p !== null);
+        if (validPrices.length > 0) {
+          videoObj.price = validPrices;
+        }
+      }
+      if (video.uploader && typeof video.uploader === "object") {
+        const uploader = video.uploader;
+        if (isValidString(uploader.info) && isValidString(uploader["#text"])) {
+          videoObj.uploader = {
+            uploader: uploader["#text"],
+            info: uploader.info
+          };
+        } else {
+          warnings.push({
+            type: "validation",
+            message: "Video uploader missing required info or name",
+            context: { url: urlElement.loc, field: "video.uploader" }
+          });
+        }
+      }
+      if (video.tag) {
+        const tags = Array.isArray(video.tag) ? video.tag : [video.tag];
+        const validTags = tags.filter(isValidString);
+        if (validTags.length > 0) {
+          videoObj.tag = validTags;
+        }
+      }
+      return videoObj;
+    }).filter((video) => video !== null);
+    if (validVideos.length > 0) {
+      urlObj.videos = validVideos;
+    }
+  }
+  if (urlElement.link) {
+    const links = Array.isArray(urlElement.link) ? urlElement.link : [urlElement.link];
+    const alternatives = links.map((link) => {
+      if (link.rel === "alternate" && isValidString(link.hreflang) && isValidString(link.href)) {
+        return {
+          hreflang: link.hreflang,
+          href: link.href
+        };
+      } else {
+        warnings.push({
+          type: "validation",
+          message: 'Alternative link missing required rel="alternate", hreflang, or href',
+          context: { url: urlElement.loc, field: "link" }
+        });
+        return null;
+      }
+    }).filter((alt) => alt !== null);
+    if (alternatives.length > 0) {
+      urlObj.alternatives = alternatives;
+    }
+  }
+  if (urlElement.news && typeof urlElement.news === "object") {
+    const news = urlElement.news;
+    if (isValidString(news.title) && isValidString(news.publication_date) && news.publication && isValidString(news.publication.name) && isValidString(news.publication.language)) {
+      urlObj.news = {
+        title: news.title,
+        publication_date: news.publication_date,
+        publication: {
+          name: news.publication.name,
+          language: news.publication.language
+        }
+      };
+    } else {
+      warnings.push({
+        type: "validation",
+        message: "News entry missing required fields (title, publication_date, publication.name, publication.language)",
+        context: { url: urlElement.loc, field: "news" }
+      });
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(urlObj).filter(
+      ([_, value]) => value != null && (!Array.isArray(value) || value.length > 0)
+    )
+  );
+}
+async function parseSitemapXml(xml) {
+  const warnings = [];
+  if (!xml) {
+    throw new Error("Empty XML input provided");
+  }
+  const { XMLParser } = await import('fast-xml-parser');
+  const parser = new XMLParser({
+    isArray: (tagName) => ["url", "image", "video", "link", "tag", "price"].includes(tagName),
+    removeNSPrefix: true,
+    parseAttributeValue: false,
+    ignoreAttributes: false,
+    attributeNamePrefix: "",
+    trimValues: true
+  });
+  try {
+    const parsed = parser.parse(xml);
+    if (!parsed?.urlset) {
+      throw new Error("XML does not contain a valid urlset element");
+    }
+    if (!parsed.urlset.url) {
+      throw new Error("Sitemap contains no URL entries");
+    }
+    const urls = Array.isArray(parsed.urlset.url) ? parsed.urlset.url : [parsed.urlset.url];
+    const validUrls = urls.map((url) => extractUrlFromParsedElement(url, warnings)).filter((url) => url !== null);
+    if (validUrls.length === 0 && urls.length > 0) {
+      warnings.push({
+        type: "validation",
+        message: "No valid URLs found in sitemap after validation"
+      });
+    }
+    return { urls: validUrls, warnings };
+  } catch (error) {
+    if (error instanceof Error && (error.message === "Empty XML input provided" || error.message === "XML does not contain a valid urlset element" || error.message === "Sitemap contains no URL entries")) {
+      throw error;
+    }
+    throw new Error(`Failed to parse XML: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+function normalizeSourceInput(source) {
+  if (typeof source === "string") {
+    return { context: { name: "hook" }, fetch: source };
+  }
+  if (Array.isArray(source)) {
+    return { context: { name: "hook" }, fetch: source };
+  }
+  return source;
+}
+async function tryFetchWithFallback(url, options, event) {
+  const isExternalUrl = !url.startsWith("/");
+  if (isExternalUrl) {
+    const strategies = [
+      // Strategy 1: Use globalThis.$fetch (original approach)
+      () => globalThis.$fetch(url, options),
+      // Strategy 2: If event is available, try using event context even for external URLs
+      event ? () => event.$fetch(url, options) : null,
+      // Strategy 3: Use native fetch as last resort
+      () => $fetch(url, options)
+    ].filter(Boolean);
+    let lastError = null;
+    for (const strategy of strategies) {
+      try {
+        return await strategy();
+      } catch (error) {
+        lastError = error;
+        continue;
+      }
+    }
+    throw lastError;
+  }
+  const fetchContainer = url.startsWith("/") && event ? event : globalThis;
+  return await fetchContainer.$fetch(url, options);
+}
 async function fetchDataSource(input, event) {
   const context = typeof input.context === "string" ? { name: input.context } : input.context || { name: "fetch" };
-  context.tips = context.tips || [];
   const url = typeof input.fetch === "string" ? input.fetch : input.fetch[0];
   const options = typeof input.fetch === "string" ? {} : input.fetch[1];
   const start = Date.now();
-  const timeout = options.timeout || 5e3;
+  const isExternalUrl = !url.startsWith("/");
+  const timeout = isExternalUrl ? 1e4 : options.timeout || 5e3;
   const timeoutController = new AbortController();
   const abortRequestTimeout = setTimeout(() => timeoutController.abort(), timeout);
-  let isHtmlResponse = false;
   try {
-    const fetchContainer = url.startsWith("/") && event ? event : globalThis;
-    const urls = await fetchContainer.$fetch(url, {
+    let isMaybeErrorResponse = false;
+    const isXmlRequest = parseURL(url).pathname.endsWith(".xml");
+    const mergedHeaders = defu(
+      options?.headers,
+      {
+        Accept: isXmlRequest ? "text/xml" : "application/json"
+      },
+      event && !isExternalUrl ? { host: getRequestHost(event, { xForwardedHost: true }) } : {}
+    );
+    const fetchOptions = {
       ...options,
-      responseType: "json",
+      responseType: isXmlRequest ? "text" : "json",
       signal: timeoutController.signal,
-      headers: defu(options?.headers, {
-        Accept: "application/json"
-      }, event ? { Host: getRequestHost(event, { xForwardedHost: true }) } : {}),
+      headers: mergedHeaders,
+      // Use ofetch's built-in retry for external sources
+      ...isExternalUrl && {
+        retry: 2,
+        retryDelay: 200
+      },
       // @ts-expect-error untyped
       onResponse({ response }) {
         if (typeof response._data === "string" && response._data.startsWith("<!DOCTYPE html>"))
-          isHtmlResponse = true;
+          isMaybeErrorResponse = true;
       }
-    });
+    };
+    const res = await tryFetchWithFallback(url, fetchOptions, event);
     const timeTakenMs = Date.now() - start;
-    if (isHtmlResponse) {
-      context.tips.push("This is usually because the URL isn't correct or is throwing an error. Please check the URL");
+    if (isMaybeErrorResponse) {
       return {
         ...input,
         context,
@@ -7678,6 +9058,13 @@ async function fetchDataSource(input, event) {
         timeTakenMs,
         error: "Received HTML response instead of JSON"
       };
+    }
+    let urls = [];
+    if (typeof res === "object") {
+      urls = res.urls || res;
+    } else if (typeof res === "string" && parseURL(url).pathname.endsWith(".xml")) {
+      const result = await parseSitemapXml(res);
+      urls = result.urls;
     }
     return {
       ...input,
@@ -7687,16 +9074,26 @@ async function fetchDataSource(input, event) {
     };
   } catch (_err) {
     const error = _err;
-    if (error.message.includes("This operation was aborted"))
-      context.tips.push("The request has taken too long. Make sure app sources respond within 5 seconds or adjust the timeout fetch option.");
-    else
-      context.tips.push(`Response returned a status of ${error.response?.status || "unknown"}.`);
-    console.error("[@nuxtjs/sitemap] Failed to fetch source.", { url, error });
+    if (isExternalUrl) {
+      const errorInfo = {
+        url,
+        timeout,
+        error: error.message,
+        statusCode: error.response?.status,
+        statusText: error.response?.statusText,
+        method: options?.method || "GET"
+      };
+      logger.error("Failed to fetch external source.", errorInfo);
+    } else {
+      logger.error("Failed to fetch source.", { url, error: error.message });
+    }
     return {
       ...input,
       context,
       urls: [],
-      error: error.message
+      error: error.message,
+      _isFailure: true
+      // Mark as failure to prevent caching
     };
   } finally {
     if (abortRequestTimeout) {
@@ -7704,140 +9101,240 @@ async function fetchDataSource(input, event) {
     }
   }
 }
-function globalSitemapSources() {
-  return import('../virtual/global-sources.mjs').then((m) => m.sources);
+async function globalSitemapSources() {
+  const m = await import('../virtual/global-sources.mjs');
+  return [...m.sources];
 }
-function childSitemapSources(definition) {
-  return definition?._hasSourceChunk ? import('../virtual/child-sources.mjs').then((m) => m.sources[definition.sitemapName] || []) : Promise.resolve([]);
+async function childSitemapSources(definition) {
+  if (!definition?._hasSourceChunk)
+    return [];
+  const m = await import('../virtual/child-sources.mjs');
+  return [...m.sources[definition.sitemapName] || []];
 }
 async function resolveSitemapSources(sources, event) {
   return (await Promise.all(
     sources.map((source) => {
-      if (typeof source === "object" && "urls" in source) {
+      const normalized = normalizeSourceInput(source);
+      if ("urls" in normalized) {
         return {
           timeTakenMs: 0,
-          ...source,
-          urls: source.urls
+          ...normalized,
+          urls: normalized.urls
         };
       }
-      if (source.fetch)
-        return fetchDataSource(source, event);
+      if (normalized.fetch)
+        return fetchDataSource(normalized, event);
       return {
-        ...source,
+        ...normalized,
         error: "Invalid source"
       };
     })
   )).flat();
 }
 
-function sortSitemapUrls(urls) {
-  return urls.sort(
-    (a, b) => {
-      const aLoc = typeof a === "string" ? a : a.loc;
-      const bLoc = typeof b === "string" ? b : b.loc;
-      return aLoc.localeCompare(bLoc, void 0, { numeric: true });
+function parseChunkInfo(sitemapName, sitemaps, defaultChunkSize) {
+  defaultChunkSize = defaultChunkSize || 1e3;
+  if (typeof sitemaps.chunks !== "undefined" && !Number.isNaN(Number(sitemapName))) {
+    return {
+      isChunked: true,
+      baseSitemapName: "sitemap",
+      chunkIndex: Number(sitemapName),
+      chunkSize: defaultChunkSize
+    };
+  }
+  if (sitemapName.includes("-")) {
+    const parts = sitemapName.split("-");
+    const lastPart = parts.pop();
+    if (!Number.isNaN(Number(lastPart))) {
+      const baseSitemapName = parts.join("-");
+      const baseSitemap = sitemaps[baseSitemapName];
+      if (baseSitemap && (baseSitemap.chunks || baseSitemap._isChunking)) {
+        const chunkSize = typeof baseSitemap.chunks === "number" ? baseSitemap.chunks : baseSitemap.chunkSize || defaultChunkSize;
+        return {
+          isChunked: true,
+          baseSitemapName,
+          chunkIndex: Number(lastPart),
+          chunkSize
+        };
+      }
     }
-  ).sort((a, b) => {
-    const aLoc = (typeof a === "string" ? a : a.loc) || "";
-    const bLoc = (typeof b === "string" ? b : b.loc) || "";
-    const aSegments = aLoc.split("/").length;
-    const bSegments = bLoc.split("/").length;
-    if (aSegments > bSegments)
-      return 1;
-    if (aSegments < bSegments)
-      return -1;
-    return 0;
-  });
+  }
+  return {
+    isChunked: false,
+    baseSitemapName: sitemapName,
+    chunkIndex: void 0,
+    chunkSize: defaultChunkSize
+  };
+}
+function getSitemapConfig(sitemapName, sitemaps, defaultChunkSize = 1e3) {
+  const chunkInfo = parseChunkInfo(sitemapName, sitemaps, defaultChunkSize);
+  if (chunkInfo.isChunked) {
+    if (chunkInfo.baseSitemapName === "sitemap" && typeof sitemaps.chunks !== "undefined") {
+      return {
+        ...sitemaps.chunks,
+        sitemapName,
+        _isChunking: true,
+        _chunkSize: chunkInfo.chunkSize
+      };
+    }
+    const baseSitemap = sitemaps[chunkInfo.baseSitemapName];
+    if (baseSitemap) {
+      return {
+        ...baseSitemap,
+        sitemapName,
+        // Use the full name with chunk index
+        _isChunking: true,
+        _chunkSize: chunkInfo.chunkSize
+      };
+    }
+  }
+  return sitemaps[sitemapName];
+}
+function sliceUrlsForChunk(urls, sitemapName, sitemaps, defaultChunkSize = 1e3) {
+  const chunkInfo = parseChunkInfo(sitemapName, sitemaps, defaultChunkSize);
+  if (chunkInfo.isChunked && chunkInfo.chunkIndex !== void 0) {
+    const startIndex = chunkInfo.chunkIndex * chunkInfo.chunkSize;
+    const endIndex = (chunkInfo.chunkIndex + 1) * chunkInfo.chunkSize;
+    return urls.slice(startIndex, endIndex);
+  }
+  return urls;
 }
 
-function resolveKey(k) {
-  switch (k) {
-    case "images":
-      return "image";
-    case "videos":
-      return "video";
-    // news & others?
-    case "news":
-      return "news";
-    default:
-      return k;
-  }
-}
-function handleObject(key, obj) {
-  return [
-    `        <${key}:${key}>`,
-    ...Object.entries(obj).map(([sk, sv]) => {
-      if (key === "video" && Array.isArray(sv)) {
-        return sv.map((v) => {
-          if (typeof v === "string") {
-            return [
-              `            `,
-              `<${key}:${sk}>`,
-              escapeValueForXml(v),
-              `</${key}:${sk}>`
-            ].join("");
-          }
-          const attributes = Object.entries(v).filter(([ssk]) => ssk !== sk).map(([ssk, ssv]) => `${ssk}="${escapeValueForXml(ssv)}"`).join(" ");
-          return [
-            `            <${key}:${sk} ${attributes}>`,
-            // value is the same sk
-            v[sk],
-            `</${key}:${sk}>`
-          ].join("");
-        }).join("\n");
-      }
-      if (typeof sv === "object") {
-        if (key === "video") {
-          const attributes = Object.entries(sv).filter(([ssk]) => ssk !== sk).map(([ssk, ssv]) => `${ssk}="${escapeValueForXml(ssv)}"`).join(" ");
-          return [
-            `            <${key}:${sk} ${attributes}>`,
-            // value is the same sk
-            sv[sk],
-            `</${key}:${sk}>`
-          ].join("");
-        }
-        return [
-          `            <${key}:${sk}>`,
-          ...Object.entries(sv).map(([ssk, ssv]) => `                <${key}:${ssk}>${escapeValueForXml(ssv)}</${key}:${ssk}>`),
-          `            </${key}:${sk}>`
-        ].join("\n");
-      }
-      return `            <${key}:${sk}>${escapeValueForXml(sv)}</${key}:${sk}>`;
-    }),
-    `        </${key}:${key}>`
-  ].join("\n");
-}
-function handleArray(key, arr) {
-  if (arr.length === 0)
-    return false;
-  key = resolveKey(key);
-  if (key === "alternatives") {
-    return arr.map((obj) => [
-      `        <xhtml:link rel="alternate" ${Object.entries(obj).map(([sk, sv]) => `${sk}="${escapeValueForXml(sv)}"`).join(" ")} />`
-    ].join("\n")).join("\n");
-  }
-  return arr.map((obj) => handleObject(key, obj)).join("\n");
-}
-function handleEntry(k, e) {
-  return Array.isArray(e[k]) ? handleArray(k, e[k]) : typeof e[k] === "object" ? handleObject(k, e[k]) : `        <${k}>${escapeValueForXml(e[k])}</${k}>`;
-}
-function wrapSitemapXml(input, resolvers, options) {
-  const xsl = options.xsl ? resolvers.relativeBaseUrlResolver(options.xsl) : false;
-  const credits = options.credits;
-  input.unshift(`<?xml version="1.0" encoding="UTF-8"?>${xsl ? `<?xml-stylesheet type="text/xsl" href="${xsl}"?>` : ""}`);
-  if (credits)
-    input.push(`<!-- XML Sitemap generated by @nuxtjs/sitemap v${options.version} at ${(/* @__PURE__ */ new Date()).toISOString()} -->`);
-  if (options.minify)
-    return input.join("").replace(/(?<!<[^>]*)\s(?![^<]*>)/g, "");
-  return input.join("\n");
-}
 function escapeValueForXml(value) {
   if (value === true || value === false)
     return value ? "yes" : "no";
-  return String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+  return xmlEscape(String(value));
+}
+function yesNo(v) {
+  return v === "yes" || v === true ? "yes" : "no";
+}
+const URLSET_OPENING_TAG = '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+function buildUrlXml(url, NL, I1, I2, I3, I4) {
+  let xml = `${I1}<url>${NL}`;
+  if (url.loc)
+    xml += `${I2}<loc>${xmlEscape(url.loc)}</loc>${NL}`;
+  if (url.lastmod)
+    xml += `${I2}<lastmod>${url.lastmod}</lastmod>${NL}`;
+  if (url.changefreq)
+    xml += `${I2}<changefreq>${url.changefreq}</changefreq>${NL}`;
+  if (url.priority !== void 0) {
+    const p = typeof url.priority === "number" ? url.priority : Number.parseFloat(url.priority);
+    xml += `${I2}<priority>${p.toFixed(1)}</priority>${NL}`;
+  }
+  if (url.alternatives) {
+    for (const alt of url.alternatives) {
+      let attrs = "";
+      for (const [k, v] of Object.entries(alt)) attrs += ` ${k}="${xmlEscape(String(v))}"`;
+      xml += `${I2}<xhtml:link rel="alternate"${attrs} />${NL}`;
+    }
+  }
+  if (url.images) {
+    for (const img of url.images) {
+      xml += `${I2}<image:image>${NL}${I3}<image:loc>${xmlEscape(img.loc)}</image:loc>${NL}`;
+      if (img.title)
+        xml += `${I3}<image:title>${xmlEscape(img.title)}</image:title>${NL}`;
+      if (img.caption)
+        xml += `${I3}<image:caption>${xmlEscape(img.caption)}</image:caption>${NL}`;
+      if (img.geo_location)
+        xml += `${I3}<image:geo_location>${xmlEscape(img.geo_location)}</image:geo_location>${NL}`;
+      if (img.license)
+        xml += `${I3}<image:license>${xmlEscape(img.license)}</image:license>${NL}`;
+      xml += `${I2}</image:image>${NL}`;
+    }
+  }
+  if (url.videos) {
+    for (const video of url.videos) {
+      xml += `${I2}<video:video>${NL}${I3}<video:title>${xmlEscape(video.title)}</video:title>${NL}`;
+      if (video.thumbnail_loc)
+        xml += `${I3}<video:thumbnail_loc>${xmlEscape(video.thumbnail_loc)}</video:thumbnail_loc>${NL}`;
+      xml += `${I3}<video:description>${xmlEscape(video.description)}</video:description>${NL}`;
+      if (video.content_loc)
+        xml += `${I3}<video:content_loc>${xmlEscape(video.content_loc)}</video:content_loc>${NL}`;
+      if (video.player_loc)
+        xml += `${I3}<video:player_loc>${xmlEscape(video.player_loc)}</video:player_loc>${NL}`;
+      if (video.duration !== void 0)
+        xml += `${I3}<video:duration>${video.duration}</video:duration>${NL}`;
+      if (video.expiration_date)
+        xml += `${I3}<video:expiration_date>${video.expiration_date}</video:expiration_date>${NL}`;
+      if (video.rating !== void 0)
+        xml += `${I3}<video:rating>${video.rating}</video:rating>${NL}`;
+      if (video.view_count !== void 0)
+        xml += `${I3}<video:view_count>${video.view_count}</video:view_count>${NL}`;
+      if (video.publication_date)
+        xml += `${I3}<video:publication_date>${video.publication_date}</video:publication_date>${NL}`;
+      if (video.family_friendly !== void 0)
+        xml += `${I3}<video:family_friendly>${yesNo(video.family_friendly)}</video:family_friendly>${NL}`;
+      if (video.restriction)
+        xml += `${I3}<video:restriction relationship="${video.restriction.relationship || "allow"}">${xmlEscape(video.restriction.restriction)}</video:restriction>${NL}`;
+      if (video.platform)
+        xml += `${I3}<video:platform relationship="${video.platform.relationship || "allow"}">${xmlEscape(video.platform.platform)}</video:platform>${NL}`;
+      if (video.requires_subscription !== void 0)
+        xml += `${I3}<video:requires_subscription>${yesNo(video.requires_subscription)}</video:requires_subscription>${NL}`;
+      if (video.price) {
+        for (const price of video.price) {
+          const c = price.currency ? ` currency="${price.currency}"` : "";
+          const t = price.type ? ` type="${price.type}"` : "";
+          xml += `${I3}<video:price${c}${t}>${xmlEscape(String(price.price ?? ""))}</video:price>${NL}`;
+        }
+      }
+      if (video.uploader) {
+        const info = video.uploader.info ? ` info="${xmlEscape(video.uploader.info)}"` : "";
+        xml += `${I3}<video:uploader${info}>${xmlEscape(video.uploader.uploader)}</video:uploader>${NL}`;
+      }
+      if (video.live !== void 0)
+        xml += `${I3}<video:live>${yesNo(video.live)}</video:live>${NL}`;
+      if (video.tag) {
+        const tags = Array.isArray(video.tag) ? video.tag : [video.tag];
+        for (const t of tags) xml += `${I3}<video:tag>${xmlEscape(t)}</video:tag>${NL}`;
+      }
+      if (video.category)
+        xml += `${I3}<video:category>${xmlEscape(video.category)}</video:category>${NL}`;
+      if (video.gallery_loc)
+        xml += `${I3}<video:gallery_loc>${xmlEscape(video.gallery_loc)}</video:gallery_loc>${NL}`;
+      xml += `${I2}</video:video>${NL}`;
+    }
+  }
+  if (url.news) {
+    xml += `${I2}<news:news>${NL}${I3}<news:publication>${NL}`;
+    xml += `${I4}<news:name>${xmlEscape(url.news.publication.name)}</news:name>${NL}`;
+    xml += `${I4}<news:language>${xmlEscape(url.news.publication.language)}</news:language>${NL}`;
+    xml += `${I3}</news:publication>${NL}`;
+    if (url.news.title)
+      xml += `${I3}<news:title>${xmlEscape(url.news.title)}</news:title>${NL}`;
+    if (url.news.publication_date)
+      xml += `${I3}<news:publication_date>${url.news.publication_date}</news:publication_date>${NL}`;
+    xml += `${I2}</news:news>${NL}`;
+  }
+  xml += `${I1}</url>`;
+  return xml;
+}
+function urlsToXml(urls, resolvers, { version, xsl, credits, minify }, errorInfo) {
+  let xslHref = xsl ? resolvers.relativeBaseUrlResolver(xsl) : false;
+  if (xslHref && errorInfo?.messages.length) {
+    xslHref = withQuery(xslHref, {
+      errors: "true",
+      error_messages: errorInfo.messages,
+      error_urls: errorInfo.urls
+    });
+  }
+  const NL = minify ? "" : "\n";
+  const I1 = minify ? "" : "    ";
+  const I2 = minify ? "" : "        ";
+  const I3 = minify ? "" : "            ";
+  const I4 = minify ? "" : "                ";
+  let xml = xslHref ? `<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="${escapeValueForXml(xslHref)}"?>${NL}` : `<?xml version="1.0" encoding="UTF-8"?>${NL}`;
+  xml += URLSET_OPENING_TAG + NL;
+  for (const url of urls) {
+    xml += buildUrlXml(url, NL, I1, I2, I3, I4) + NL;
+  }
+  xml += "</urlset>";
+  if (credits) {
+    xml += `${NL}<!-- XML Sitemap generated by @nuxtjs/sitemap v${version} at ${(/* @__PURE__ */ new Date()).toISOString()} -->`;
+  }
+  return xml;
 }
 
-function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
+function resolveSitemapEntries(sitemap, urls, runtimeConfig, resolvers, baseURL) {
   const {
     autoI18n,
     isI18nMapped
@@ -7845,8 +9342,8 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
   const filterPath = createPathFilter({
     include: sitemap.include,
     exclude: sitemap.exclude
-  });
-  const _urls = sources.flatMap((e) => e.urls).map((_e) => {
+  }, baseURL || "/");
+  const _urls = urls.map((_e) => {
     const e = preNormalizeEntry(_e, resolvers);
     if (!e.loc || !filterPath(e.loc))
       return false;
@@ -7856,6 +9353,13 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
   const withoutPrefixPaths = {};
   if (autoI18n && autoI18n.strategy !== "no_prefix") {
     const localeCodes = autoI18n.locales.map((l) => l.code);
+    const localeByCode = new Map(autoI18n.locales.map((l) => [l.code, l]));
+    const isPrefixStrategy = autoI18n.strategy === "prefix";
+    const isPrefixExceptOrAndDefault = autoI18n.strategy === "prefix_and_default" || autoI18n.strategy === "prefix_except_default";
+    const xDefaultAndLocales = [{ code: "x-default", _hreflang: "x-default" }, ...autoI18n.locales];
+    const defaultLocale = autoI18n.defaultLocale;
+    const hasPages = !!autoI18n.pages;
+    const hasDifferentDomains = !!autoI18n.differentDomains;
     validI18nUrlsForTransform = _urls.map((_e, i) => {
       if (_e._abs)
         return false;
@@ -7863,15 +9367,15 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
       let localeCode = split[0];
       const pathWithoutPrefix = split[1];
       if (!localeCode)
-        localeCode = autoI18n.defaultLocale;
+        localeCode = defaultLocale;
       const e = _e;
       e._pathWithoutPrefix = pathWithoutPrefix;
-      const locale = autoI18n.locales.find((l) => l.code === localeCode);
+      const locale = localeByCode.get(localeCode);
       if (!locale)
         return false;
       e._locale = locale;
       e._index = i;
-      e._key = `${e._sitemap || ""}${e._path?.pathname || "/"}${e._path.search}`;
+      e._key = `${e._sitemap || ""}${e._path?.pathname || "/"}${e._path?.search || ""}`;
       withoutPrefixPaths[pathWithoutPrefix] = withoutPrefixPaths[pathWithoutPrefix] || [];
       if (!withoutPrefixPaths[pathWithoutPrefix].some((e2) => e2._locale.code === locale.code))
         withoutPrefixPaths[pathWithoutPrefix].push(e);
@@ -7879,9 +9383,9 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
     }).filter(Boolean);
     for (const e of validI18nUrlsForTransform) {
       if (!e._i18nTransform && !e.alternatives?.length) {
-        const alternatives = withoutPrefixPaths[e._pathWithoutPrefix].map((u) => {
+        const alternatives = (withoutPrefixPaths[e._pathWithoutPrefix] || []).map((u) => {
           const entries = [];
-          if (u._locale.code === autoI18n.defaultLocale) {
+          if (u._locale.code === defaultLocale) {
             entries.push({
               href: u.loc,
               hreflang: "x-default"
@@ -7889,7 +9393,7 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
           }
           entries.push({
             href: u.loc,
-            hreflang: u._locale._hreflang || autoI18n.defaultLocale
+            hreflang: u._locale._hreflang || defaultLocale
           });
           return entries;
         }).flat().filter(Boolean);
@@ -7897,12 +9401,11 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
           e.alternatives = alternatives;
       } else if (e._i18nTransform) {
         delete e._i18nTransform;
-        if (autoI18n.strategy === "no_prefix") ;
-        if (autoI18n.differentDomains) {
+        if (hasDifferentDomains) {
+          const defLocale = localeByCode.get(defaultLocale);
           e.alternatives = [
             {
-              // apply default locale domain
-              ...autoI18n.locales.find((l) => [l.code, l.language].includes(autoI18n.defaultLocale)),
+              ...defLocale,
               code: "x-default"
             },
             ...autoI18n.locales.filter((l) => !!l.domain)
@@ -7913,38 +9416,60 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
             };
           });
         } else {
+          const pageMatch = hasPages ? findPageMapping(e._pathWithoutPrefix, autoI18n.pages) : null;
+          const pathSearch = e._path?.search || "";
+          const pathWithoutPrefix = e._pathWithoutPrefix;
           for (const l of autoI18n.locales) {
-            let loc = joinURL(`/${l.code}`, e._pathWithoutPrefix);
-            if (autoI18n.differentDomains || ["prefix_and_default", "prefix_except_default"].includes(autoI18n.strategy) && l.code === autoI18n.defaultLocale)
-              loc = e._pathWithoutPrefix;
+            let loc = pathWithoutPrefix;
+            if (pageMatch && pageMatch.mappings[l.code] !== void 0) {
+              const customPath = pageMatch.mappings[l.code];
+              if (customPath === false)
+                continue;
+              if (typeof customPath === "string") {
+                loc = customPath[0] === "/" ? customPath : `/${customPath}`;
+                loc = applyDynamicParams(loc, pageMatch.paramSegments);
+                if (isPrefixStrategy || isPrefixExceptOrAndDefault && l.code !== defaultLocale)
+                  loc = joinURL(`/${l.code}`, loc);
+              }
+            } else if (!hasDifferentDomains && !(isPrefixExceptOrAndDefault && l.code === defaultLocale)) {
+              loc = joinURL(`/${l.code}`, pathWithoutPrefix);
+            }
             const _sitemap = isI18nMapped ? l._sitemap : void 0;
+            const alternatives = [];
+            for (const locale of xDefaultAndLocales) {
+              const code = locale.code === "x-default" ? defaultLocale : locale.code;
+              const isDefault = locale.code === "x-default" || locale.code === defaultLocale;
+              let href = pathWithoutPrefix;
+              if (pageMatch && pageMatch.mappings[code] !== void 0) {
+                const customPath = pageMatch.mappings[code];
+                if (customPath === false)
+                  continue;
+                if (typeof customPath === "string") {
+                  href = customPath[0] === "/" ? customPath : `/${customPath}`;
+                  href = applyDynamicParams(href, pageMatch.paramSegments);
+                  if (isPrefixStrategy || isPrefixExceptOrAndDefault && !isDefault)
+                    href = joinURL("/", code, href);
+                }
+              } else if (isPrefixStrategy) {
+                href = joinURL("/", code, pathWithoutPrefix);
+              } else if (isPrefixExceptOrAndDefault && !isDefault) {
+                href = joinURL("/", code, pathWithoutPrefix);
+              }
+              if (!filterPath(href))
+                continue;
+              alternatives.push({
+                hreflang: locale._hreflang,
+                href
+              });
+            }
+            const { _index: _, ...rest } = e;
             const newEntry = preNormalizeEntry({
               _sitemap,
-              ...e,
-              _index: void 0,
-              _key: `${_sitemap || ""}${loc || "/"}${e._path.search}`,
+              ...rest,
+              _key: `${_sitemap || ""}${loc || "/"}${pathSearch}`,
               _locale: l,
               loc,
-              alternatives: [{ code: "x-default", _hreflang: "x-default" }, ...autoI18n.locales].map((locale) => {
-                const code = locale.code === "x-default" ? autoI18n.defaultLocale : locale.code;
-                const isDefault = locale.code === "x-default" || locale.code === autoI18n.defaultLocale;
-                let href = "";
-                if (autoI18n.strategy === "prefix") {
-                  href = joinURL("/", code, e._pathWithoutPrefix);
-                } else if (["prefix_and_default", "prefix_except_default"].includes(autoI18n.strategy)) {
-                  if (isDefault) {
-                    href = e._pathWithoutPrefix;
-                  } else {
-                    href = joinURL("/", code, e._pathWithoutPrefix);
-                  }
-                }
-                if (!filterPath(href))
-                  return false;
-                return {
-                  hreflang: locale._hreflang,
-                  href
-                };
-              }).filter(Boolean)
+              alternatives
             }, resolvers);
             if (e._locale.code === newEntry._locale.code) {
               _urls[e._index] = newEntry;
@@ -7957,7 +9482,7 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
       }
       if (isI18nMapped) {
         e._sitemap = e._sitemap || e._locale._sitemap;
-        e._key = `${e._sitemap || ""}${e.loc || "/"}${e._path.search}`;
+        e._key = `${e._sitemap || ""}${e.loc || "/"}${e._path?.search || ""}`;
       }
       if (e._index)
         _urls[e._index] = e;
@@ -7965,7 +9490,7 @@ function resolveSitemapEntries(sitemap, sources, runtimeConfig, resolvers) {
   }
   return _urls;
 }
-async function buildSitemapUrls(sitemap, resolvers, runtimeConfig) {
+async function buildSitemapUrls(sitemap, resolvers, runtimeConfig, nitro) {
   const {
     sitemaps,
     // enhancing
@@ -7977,60 +9502,298 @@ async function buildSitemapUrls(sitemap, resolvers, runtimeConfig) {
     // chunking
     defaultSitemapsChunkSize
   } = runtimeConfig;
-  const isChunking = typeof sitemaps.chunks !== "undefined" && !Number.isNaN(Number(sitemap.sitemapName));
-  function maybeSort(urls) {
-    return sortEntries ? sortSitemapUrls(urls) : urls;
+  const chunkSize = defaultSitemapsChunkSize || void 0;
+  const chunkInfo = parseChunkInfo(sitemap.sitemapName, sitemaps, chunkSize);
+  function maybeSort(urls2) {
+    return sortEntries ? sortInPlace(urls2) : urls2;
   }
-  function maybeSlice(urls) {
-    if (isChunking && defaultSitemapsChunkSize) {
-      const chunk = Number(sitemap.sitemapName);
-      return urls.slice(chunk * defaultSitemapsChunkSize, (chunk + 1) * defaultSitemapsChunkSize);
-    }
-    return urls;
+  function maybeSlice(urls2) {
+    return sliceUrlsForChunk(urls2, sitemap.sitemapName, sitemaps, chunkSize);
   }
   if (autoI18n?.differentDomains) {
-    const domain = autoI18n.locales.find((e) => [e.language, e.code].includes(sitemap.sitemapName))?.domain;
+    const domain = autoI18n.locales.find((e) => e.language === sitemap.sitemapName || e.code === sitemap.sitemapName)?.domain;
     if (domain) {
       const _tester = resolvers.canonicalUrlResolver;
       resolvers.canonicalUrlResolver = (path) => resolveSitePath(path, {
+        absolute: true,
+        withBase: false,
         siteUrl: withHttps(domain),
         trailingSlash: _tester("/test/").endsWith("/"),
         base: "/"
       });
     }
   }
-  const sources = sitemap.includeAppSources ? await globalSitemapSources() : [];
-  sources.push(...await childSitemapSources(sitemap));
-  const resolvedSources = await resolveSitemapSources(sources, resolvers.event);
-  const enhancedUrls = resolveSitemapEntries(sitemap, resolvedSources, { autoI18n, isI18nMapped }, resolvers);
+  let effectiveSitemap = sitemap;
+  const baseSitemapName = chunkInfo.baseSitemapName;
+  if (chunkInfo.isChunked && baseSitemapName !== sitemap.sitemapName && sitemaps[baseSitemapName]) {
+    effectiveSitemap = sitemaps[baseSitemapName];
+  }
+  let sourcesInput = effectiveSitemap.includeAppSources ? [...await globalSitemapSources(), ...await childSitemapSources(effectiveSitemap)] : await childSitemapSources(effectiveSitemap);
+  if (nitro && resolvers.event) {
+    const ctx = {
+      event: resolvers.event,
+      sitemapName: baseSitemapName,
+      sources: sourcesInput
+    };
+    await nitro.hooks.callHook("sitemap:sources", ctx);
+    sourcesInput = ctx.sources;
+  }
+  const sources = await resolveSitemapSources(sourcesInput, resolvers.event);
+  const failedSources = sources.filter((source) => source.error && source._isFailure).map((source) => ({
+    url: typeof source.fetch === "string" ? source.fetch : source.fetch?.[0] || "unknown",
+    error: source.error || "Unknown error"
+  }));
+  const resolvedCtx = {
+    urls: sources.flatMap((s) => s.urls),
+    sitemapName: sitemap.sitemapName,
+    event: resolvers.event
+  };
+  await nitro?.hooks.callHook("sitemap:input", resolvedCtx);
+  const enhancedUrls = resolveSitemapEntries(sitemap, resolvedCtx.urls, { autoI18n, isI18nMapped }, resolvers, useRuntimeConfig().app.baseURL);
+  if (isMultiSitemap) {
+    const sitemapNames = Object.keys(sitemaps).filter((k) => k !== "index");
+    const warnedSitemaps = nitro?._sitemapWarnedSitemaps || /* @__PURE__ */ new Set();
+    for (const e of enhancedUrls) {
+      const hasMatchingSitemap = typeof e._sitemap === "string" && (sitemapNames.includes(e._sitemap) || isI18nMapped && sitemapNames.some((name) => name.startsWith(`${e._sitemap}-`)));
+      if (typeof e._sitemap === "string" && !hasMatchingSitemap) {
+        if (!warnedSitemaps.has(e._sitemap)) {
+          warnedSitemaps.add(e._sitemap);
+          logger.error(`Sitemap \`${e._sitemap}\` not found in sitemap config. Available sitemaps: ${sitemapNames.join(", ")}. Entry \`${e.loc}\` will be omitted.`);
+        }
+      }
+    }
+    if (nitro) {
+      nitro._sitemapWarnedSitemaps = warnedSitemaps;
+    }
+  }
   const filteredUrls = enhancedUrls.filter((e) => {
-    if (isMultiSitemap && e._sitemap && sitemap.sitemapName)
-      return e._sitemap === sitemap.sitemapName;
+    if (e._sitemap === false)
+      return false;
+    if (isMultiSitemap && e._sitemap && sitemap.sitemapName) {
+      if (sitemap._isChunking)
+        return e._sitemap === baseSitemapName || isI18nMapped && sitemap.sitemapName.startsWith(`${e._sitemap}-`);
+      return e._sitemap === sitemap.sitemapName || isI18nMapped && sitemap.sitemapName.startsWith(`${e._sitemap}-`);
+    }
     return true;
   });
   const sortedUrls = maybeSort(filteredUrls);
-  return maybeSlice(sortedUrls);
+  const urls = maybeSlice(sortedUrls);
+  return { urls, failedSources };
 }
-function urlsToXml(urls, resolvers, { version, xsl, credits, minify }) {
-  const urlset = urls.map((e) => {
-    const keys = Object.keys(e).filter((k) => !k.startsWith("_"));
-    return [
-      "    <url>",
-      keys.map((k) => handleEntry(k, e)).filter(Boolean).join("\n"),
-      "    </url>"
-    ].join("\n");
-  });
-  return wrapSitemapXml([
-    '<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    urlset.join("\n"),
-    "</urlset>"
-  ], resolvers, { version, xsl, credits, minify });
+
+const buildSitemapIndexCached = defineCachedFunction(
+  async (event, resolvers, runtimeConfig, nitro) => {
+    return buildSitemapIndexInternal(resolvers, runtimeConfig, nitro);
+  },
+  {
+    name: "sitemap:index",
+    group: "sitemap",
+    maxAge: 60 * 10,
+    // 10 minutes default
+    base: "sitemap",
+    // Use the sitemap storage
+    getKey: (event) => {
+      const host = getHeader(event, "host") || getHeader(event, "x-forwarded-host") || "";
+      const proto = getHeader(event, "x-forwarded-proto") || "https";
+      return `sitemap-index-${proto}-${host}`;
+    },
+    swr: true
+    // Enable stale-while-revalidate
+  }
+);
+async function buildSitemapIndexInternal(resolvers, runtimeConfig, nitro) {
+  const {
+    sitemaps,
+    // enhancing
+    autoLastmod,
+    // chunking
+    defaultSitemapsChunkSize,
+    autoI18n,
+    isI18nMapped,
+    sortEntries,
+    sitemapsPathPrefix
+  } = runtimeConfig;
+  if (!sitemaps)
+    throw new Error("Attempting to build a sitemap index without required `sitemaps` configuration.");
+  function maybeSort(urls) {
+    return sortEntries ? sortInPlace(urls) : urls;
+  }
+  const chunks = {};
+  const allFailedSources = [];
+  for (const sitemapName in sitemaps) {
+    if (sitemapName === "index" || sitemapName === "chunks")
+      continue;
+    const sitemapConfig = sitemaps[sitemapName];
+    if (sitemapConfig.chunks || sitemapConfig._isChunking) {
+      sitemapConfig._isChunking = true;
+      sitemapConfig._chunkSize = sitemapConfig.chunkSize || (typeof sitemapConfig.chunks === "number" ? sitemapConfig.chunks : defaultSitemapsChunkSize || 1e3);
+    } else {
+      chunks[sitemapName] = chunks[sitemapName] || { urls: [] };
+    }
+  }
+  if (typeof sitemaps.chunks !== "undefined") {
+    const sitemap = sitemaps.chunks;
+    let sourcesInput = await globalSitemapSources();
+    if (nitro && resolvers.event) {
+      const ctx = {
+        event: resolvers.event,
+        sitemapName: sitemap.sitemapName,
+        sources: sourcesInput
+      };
+      await nitro.hooks.callHook("sitemap:sources", ctx);
+      sourcesInput = ctx.sources;
+    }
+    const sources = await resolveSitemapSources(sourcesInput, resolvers.event);
+    const failedSources = sources.filter((source) => source.error && source._isFailure).map((source) => ({
+      url: typeof source.fetch === "string" ? source.fetch : source.fetch?.[0] || "unknown",
+      error: source.error || "Unknown error"
+    }));
+    allFailedSources.push(...failedSources);
+    const resolvedCtx = {
+      urls: sources.flatMap((s) => s.urls),
+      sitemapName: sitemap.sitemapName,
+      event: resolvers.event
+    };
+    await nitro?.hooks.callHook("sitemap:input", resolvedCtx);
+    const normalisedUrls = resolveSitemapEntries(sitemap, resolvedCtx.urls, { autoI18n, isI18nMapped }, resolvers, useRuntimeConfig().app.baseURL);
+    const enhancedUrls = normalisedUrls.map((e) => defu(e, sitemap.defaults));
+    const sortedUrls = maybeSort(enhancedUrls);
+    sortedUrls.forEach((url, i) => {
+      const chunkIndex = Math.floor(i / defaultSitemapsChunkSize);
+      chunks[chunkIndex] = chunks[chunkIndex] || { urls: [] };
+      chunks[chunkIndex].urls.push(url);
+    });
+  }
+  const entries = [];
+  for (const name in chunks) {
+    const sitemap = chunks[name];
+    const entry = {
+      _sitemapName: name,
+      sitemap: resolvers.canonicalUrlResolver(joinURL(sitemapsPathPrefix || "", `/${name}.xml`))
+    };
+    let lastmod = sitemap.urls.filter((a) => !!a?.lastmod).map((a) => typeof a.lastmod === "string" ? new Date(a.lastmod) : a.lastmod).sort((a, b) => (b?.getTime() || 0) - (a?.getTime() || 0))?.[0];
+    if (!lastmod && autoLastmod)
+      lastmod = /* @__PURE__ */ new Date();
+    if (lastmod)
+      entry.lastmod = normaliseDate(lastmod);
+    entries.push(entry);
+  }
+  for (const sitemapName in sitemaps) {
+    const sitemapConfig = sitemaps[sitemapName];
+    if (sitemapName !== "index" && sitemapConfig._isChunking) {
+      const chunkSize = sitemapConfig._chunkSize || defaultSitemapsChunkSize || 1e3;
+      let sourcesInput = sitemapConfig.includeAppSources ? [...await globalSitemapSources(), ...await childSitemapSources(sitemapConfig)] : await childSitemapSources(sitemapConfig);
+      if (nitro && resolvers.event) {
+        const ctx = {
+          event: resolvers.event,
+          sitemapName: sitemapConfig.sitemapName,
+          sources: sourcesInput
+        };
+        await nitro.hooks.callHook("sitemap:sources", ctx);
+        sourcesInput = ctx.sources;
+      }
+      const sources = await resolveSitemapSources(sourcesInput, resolvers.event);
+      const failedSources = sources.filter((source) => source.error && source._isFailure).map((source) => ({
+        url: typeof source.fetch === "string" ? source.fetch : source.fetch?.[0] || "unknown",
+        error: source.error || "Unknown error"
+      }));
+      allFailedSources.push(...failedSources);
+      const resolvedCtx = {
+        urls: sources.flatMap((s) => s.urls),
+        sitemapName: sitemapConfig.sitemapName,
+        event: resolvers.event
+      };
+      await nitro?.hooks.callHook("sitemap:input", resolvedCtx);
+      const normalisedUrls = resolveSitemapEntries(sitemapConfig, resolvedCtx.urls, { autoI18n, isI18nMapped }, resolvers, useRuntimeConfig().app.baseURL);
+      const totalUrls = normalisedUrls.length;
+      const chunkCount = Math.ceil(totalUrls / chunkSize);
+      sitemapConfig._chunkCount = chunkCount;
+      for (let i = 0; i < chunkCount; i++) {
+        const chunkName = `${sitemapName}-${i}`;
+        const entry = {
+          _sitemapName: chunkName,
+          sitemap: resolvers.canonicalUrlResolver(joinURL(sitemapsPathPrefix || "", `/${chunkName}.xml`))
+        };
+        const chunkUrls = normalisedUrls.slice(i * chunkSize, (i + 1) * chunkSize);
+        let lastmod = chunkUrls.filter((a) => !!a?.lastmod).map((a) => typeof a.lastmod === "string" ? new Date(a.lastmod) : a.lastmod).sort((a, b) => (b?.getTime() || 0) - (a?.getTime() || 0))?.[0];
+        if (!lastmod && autoLastmod)
+          lastmod = /* @__PURE__ */ new Date();
+        if (lastmod)
+          entry.lastmod = normaliseDate(lastmod);
+        entries.push(entry);
+      }
+    }
+  }
+  if (sitemaps.index) {
+    entries.push(...sitemaps.index.sitemaps.map((entry) => {
+      return typeof entry === "string" ? { sitemap: entry } : entry;
+    }));
+  }
+  return { entries, failedSources: allFailedSources };
+}
+function urlsToIndexXml(sitemaps, resolvers, { version, xsl, credits, minify }, errorInfo) {
+  const sitemapXml = sitemaps.map((e) => [
+    "    <sitemap>",
+    `        <loc>${escapeValueForXml(e.sitemap)}</loc>`,
+    // lastmod is optional
+    e.lastmod ? `        <lastmod>${escapeValueForXml(e.lastmod)}</lastmod>` : false,
+    "    </sitemap>"
+  ].filter(Boolean).join("\n")).join("\n");
+  const xmlParts = [
+    '<?xml version="1.0" encoding="UTF-8"?>'
+  ];
+  if (xsl) {
+    let relativeBaseUrl = resolvers.relativeBaseUrlResolver?.(xsl) ?? xsl;
+    if (errorInfo && errorInfo.messages.length > 0) {
+      relativeBaseUrl = withQuery(relativeBaseUrl, {
+        errors: "true",
+        error_messages: errorInfo.messages,
+        error_urls: errorInfo.urls
+      });
+    }
+    xmlParts.push(`<?xml-stylesheet type="text/xsl" href="${escapeValueForXml(relativeBaseUrl)}"?>`);
+  }
+  xmlParts.push(
+    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    sitemapXml,
+    "</sitemapindex>"
+  );
+  if (credits) {
+    xmlParts.push(`<!-- XML Sitemap Index generated by @nuxtjs/sitemap v${version} at ${(/* @__PURE__ */ new Date()).toISOString()} -->`);
+  }
+  return minify ? xmlParts.join("").replace(/(?<!<[^>]*)\s(?![^<]*>)/g, "") : xmlParts.join("\n");
+}
+async function buildSitemapIndex(resolvers, runtimeConfig, nitro) {
+  if (typeof runtimeConfig.cacheMaxAgeSeconds === "number" && runtimeConfig.cacheMaxAgeSeconds > 0 && resolvers.event) {
+    return buildSitemapIndexCached(resolvers.event, resolvers, runtimeConfig, nitro);
+  }
+  return buildSitemapIndexInternal(resolvers, runtimeConfig, nitro);
+}
+
+function withoutQuery(path) {
+  return path.split("?")[0];
+}
+function createNitroRouteRuleMatcher() {
+  const { nitro, app } = useRuntimeConfig();
+  const _routeRulesMatcher = toRouteMatcher(
+    createRouter$1({
+      routes: Object.fromEntries(
+        Object.entries(nitro?.routeRules || {}).map(([path, rules]) => [withoutTrailingSlash(path), rules])
+      )
+    })
+  );
+  return (pathOrUrl) => {
+    const path = pathOrUrl[0] === "/" ? pathOrUrl : parseURL(pathOrUrl, app.baseURL).pathname;
+    return defu({}, ..._routeRulesMatcher.matchAll(
+      withoutBase(withoutTrailingSlash(withoutQuery(path)), app.baseURL)
+    ).reverse());
+  };
 }
 
 function useNitroUrlResolvers(e) {
   const canonicalQuery = getQuery(e).canonical;
   const isShowingCanonical = typeof canonicalQuery !== "undefined" && canonicalQuery !== "false";
-  const siteConfig = useSiteConfig(e);
+  const siteConfig = getSiteConfig(e);
   return {
     event: e,
     fixSlashes: (path) => fixSlashes(siteConfig.trailingSlash, path),
@@ -8043,17 +9806,18 @@ function useNitroUrlResolvers(e) {
     relativeBaseUrlResolver: createSitePathResolver(e, { absolute: false, withBase: true })
   };
 }
-async function createSitemap(event, definition, runtimeConfig) {
+async function buildSitemapXml(event, definition, resolvers, runtimeConfig) {
   const { sitemapName } = definition;
   const nitro = useNitroApp();
-  const resolvers = useNitroUrlResolvers(event);
-  let sitemapUrls = await buildSitemapUrls(definition, resolvers, runtimeConfig);
+  const { urls: sitemapUrls, failedSources } = await buildSitemapUrls(definition, resolvers, runtimeConfig, nitro);
   const routeRuleMatcher = createNitroRouteRuleMatcher();
   const { autoI18n } = runtimeConfig;
-  sitemapUrls = sitemapUrls.map((u) => {
+  let validCount = 0;
+  for (let i = 0; i < sitemapUrls.length; i++) {
+    const u = sitemapUrls[i];
     const path = u._path?.pathname || u.loc;
     if (!getPathRobotConfig(event, { path, skipSiteIndexable: true }).indexable)
-      return false;
+      continue;
     let routeRules = routeRuleMatcher(path);
     if (autoI18n?.locales && autoI18n?.strategy !== "no_prefix") {
       const match = splitForLocales(path, autoI18n.locales.map((l) => l.code));
@@ -8062,43 +9826,166 @@ async function createSitemap(event, definition, runtimeConfig) {
         routeRules = defu(routeRules, routeRuleMatcher(pathWithoutPrefix));
     }
     if (routeRules.sitemap === false)
-      return false;
-    if (typeof routeRules.index !== "undefined" && !routeRules.index || typeof routeRules.robots !== "undefined" && !routeRules.robots) {
-      return false;
-    }
+      continue;
+    if (typeof routeRules.robots !== "undefined" && !routeRules.robots)
+      continue;
     const hasRobotsDisabled = Object.entries(routeRules.headers || {}).some(([name, value]) => name.toLowerCase() === "x-robots-tag" && value.toLowerCase().includes("noindex"));
     if (routeRules.redirect || hasRobotsDisabled)
-      return false;
-    return routeRules.sitemap ? defu(u, routeRules.sitemap) : u;
-  }).filter(Boolean);
+      continue;
+    sitemapUrls[validCount++] = routeRules.sitemap ? defu(u, routeRules.sitemap) : u;
+  }
+  sitemapUrls.length = validCount;
+  const locSize = sitemapUrls.length;
   const resolvedCtx = {
     urls: sitemapUrls,
-    sitemapName
+    sitemapName,
+    event
   };
   await nitro.hooks.callHook("sitemap:resolved", resolvedCtx);
-  const maybeSort = (urls2) => runtimeConfig.sortEntries ? sortSitemapUrls(urls2) : urls2;
-  const normalizedPreDedupe = resolvedCtx.urls.map((e) => normaliseEntry(e, definition.defaults, resolvers));
-  const urls = maybeSort(mergeOnKey(normalizedPreDedupe, "_key").map((e) => normaliseEntry(e, definition.defaults, resolvers)));
-  const sitemap = urlsToXml(urls, resolvers, runtimeConfig);
-  const ctx = { sitemap, sitemapName };
+  if (resolvedCtx.urls.length !== locSize) {
+    resolvedCtx.urls = resolvedCtx.urls.map((e) => preNormalizeEntry(e, resolvers));
+  }
+  const maybeSort = (urls2) => runtimeConfig.sortEntries ? sortInPlace(urls2) : urls2;
+  const defaults = definition.defaults || {};
+  const normalizedPreDedupe = resolvedCtx.urls.map((e) => normaliseEntry(e, defaults, resolvers));
+  const urls = maybeSort(mergeOnKey(normalizedPreDedupe, "_key").map((e) => normaliseEntry(e, defaults, resolvers)));
+  if (definition._isChunking && definition.sitemapName.includes("-")) {
+    const parts = definition.sitemapName.split("-");
+    const lastPart = parts.pop();
+    if (!Number.isNaN(Number(lastPart))) {
+      const chunkIndex = Number(lastPart);
+      const baseSitemapName = parts.join("-");
+      if (urls.length === 0 && chunkIndex > 0) {
+        throw createError$1({
+          statusCode: 404,
+          message: `Sitemap chunk ${chunkIndex} for "${baseSitemapName}" does not exist.`
+        });
+      }
+    }
+  }
+  const errorInfo = failedSources.length > 0 ? {
+    messages: failedSources.map((f) => f.error),
+    urls: failedSources.map((f) => f.url)
+  } : void 0;
+  const sitemap = urlsToXml(urls, resolvers, runtimeConfig, errorInfo);
+  const ctx = { sitemap, sitemapName, event };
   await nitro.hooks.callHook("sitemap:output", ctx);
-  setHeader(event, "Content-Type", "text/xml; charset=UTF-8");
-  if (runtimeConfig.cacheMaxAgeSeconds)
-    setHeader(event, "Cache-Control", `public, max-age=${runtimeConfig.cacheMaxAgeSeconds}, must-revalidate`);
-  else
-    setHeader(event, "Cache-Control", `no-cache, no-store`);
-  event.context._isSitemap = true;
   return ctx.sitemap;
 }
-
-const _wEyccC = defineEventHandler(async (e) => {
-  const runtimeConfig = useSimpleSitemapRuntimeConfig();
-  const { sitemaps } = runtimeConfig;
-  if ("index" in sitemaps) {
-    return sendRedirect(e, withBase("/sitemap_index.xml", useRuntimeConfig().app.baseURL), 301);
+const buildSitemapXmlCached = defineCachedFunction(
+  buildSitemapXml,
+  {
+    name: "sitemap:xml",
+    group: "sitemap",
+    maxAge: 60 * 10,
+    // Default 10 minutes
+    base: "sitemap",
+    // Use the sitemap storage
+    getKey: (event, definition) => {
+      const host = getHeader(event, "host") || getHeader(event, "x-forwarded-host") || "";
+      const proto = getHeader(event, "x-forwarded-proto") || "https";
+      const sitemapName = definition.sitemapName || "default";
+      return `${sitemapName}-${proto}-${host}`;
+    },
+    swr: true
+    // Enable stale-while-revalidate
   }
+);
+async function createSitemap(event, definition, runtimeConfig) {
+  const resolvers = useNitroUrlResolvers(event);
+  const shouldCache = typeof runtimeConfig.cacheMaxAgeSeconds === "number" && runtimeConfig.cacheMaxAgeSeconds > 0;
+  const xml = shouldCache ? await buildSitemapXmlCached(event, definition, resolvers, runtimeConfig) : await buildSitemapXml(event, definition, resolvers, runtimeConfig);
+  setHeader(event, "Content-Type", "text/xml; charset=UTF-8");
+  if (runtimeConfig.cacheMaxAgeSeconds) {
+    setHeader(event, "Cache-Control", `public, max-age=${runtimeConfig.cacheMaxAgeSeconds}, s-maxage=${runtimeConfig.cacheMaxAgeSeconds}, stale-while-revalidate=3600`);
+    const now = /* @__PURE__ */ new Date();
+    setHeader(event, "X-Sitemap-Generated", now.toISOString());
+    setHeader(event, "X-Sitemap-Cache-Duration", `${runtimeConfig.cacheMaxAgeSeconds}s`);
+    const expiryTime = new Date(now.getTime() + runtimeConfig.cacheMaxAgeSeconds * 1e3);
+    setHeader(event, "X-Sitemap-Cache-Expires", expiryTime.toISOString());
+    const remainingSeconds = Math.floor((expiryTime.getTime() - now.getTime()) / 1e3);
+    setHeader(event, "X-Sitemap-Cache-Remaining", `${remainingSeconds}s`);
+  } else {
+    setHeader(event, "Cache-Control", `no-cache, no-store`);
+  }
+  event.context._isSitemap = true;
+  return xml;
+}
+
+async function sitemapXmlEventHandler(e) {
+  const runtimeConfig = useSitemapRuntimeConfig();
+  const { sitemaps } = runtimeConfig;
+  if ("index" in sitemaps)
+    return sendRedirect(e, withBase("/sitemap_index.xml", useRuntimeConfig().app.baseURL), 301);
   return createSitemap(e, Object.values(sitemaps)[0], runtimeConfig);
-});
+}
+async function sitemapIndexXmlEventHandler(e) {
+  const runtimeConfig = useSitemapRuntimeConfig();
+  const nitro = useNitroApp();
+  const resolvers = useNitroUrlResolvers(e);
+  const { entries: sitemaps, failedSources } = await buildSitemapIndex(resolvers, runtimeConfig, nitro);
+  const indexResolvedCtx = { sitemaps, event: e };
+  await nitro.hooks.callHook("sitemap:index-resolved", indexResolvedCtx);
+  const errorInfo = failedSources.length > 0 ? { messages: failedSources.map((f) => f.error), urls: failedSources.map((f) => f.url) } : void 0;
+  const output = urlsToIndexXml(indexResolvedCtx.sitemaps, resolvers, runtimeConfig, errorInfo);
+  const ctx = { sitemap: output, sitemapName: "sitemap", event: e };
+  await nitro.hooks.callHook("sitemap:output", ctx);
+  setHeader(e, "Content-Type", "text/xml; charset=UTF-8");
+  if (runtimeConfig.cacheMaxAgeSeconds) {
+    setHeader(e, "Cache-Control", `public, max-age=${runtimeConfig.cacheMaxAgeSeconds}, s-maxage=${runtimeConfig.cacheMaxAgeSeconds}, stale-while-revalidate=3600`);
+    const now = /* @__PURE__ */ new Date();
+    setHeader(e, "X-Sitemap-Generated", now.toISOString());
+    setHeader(e, "X-Sitemap-Cache-Duration", `${runtimeConfig.cacheMaxAgeSeconds}s`);
+    const expiryTime = new Date(now.getTime() + runtimeConfig.cacheMaxAgeSeconds * 1e3);
+    setHeader(e, "X-Sitemap-Cache-Expires", expiryTime.toISOString());
+    const remainingSeconds = Math.floor((expiryTime.getTime() - now.getTime()) / 1e3);
+    setHeader(e, "X-Sitemap-Cache-Remaining", `${remainingSeconds}s`);
+  } else {
+    setHeader(e, "Cache-Control", `no-cache, no-store`);
+  }
+  return ctx.sitemap;
+}
+async function sitemapChildXmlEventHandler(e) {
+  if (!e.path.endsWith(".xml"))
+    return;
+  const runtimeConfig = useSitemapRuntimeConfig(e);
+  const { sitemaps } = runtimeConfig;
+  let sitemapName = getRouterParam(e, "sitemap");
+  if (!sitemapName) {
+    const path = e.path;
+    const match = path.match(/(?:\/__sitemap__\/)?(.+)\.xml$/);
+    if (match)
+      sitemapName = match[1];
+  }
+  if (!sitemapName)
+    throw createError$1({ statusCode: 400, message: "Invalid sitemap request" });
+  sitemapName = sitemapName.replace(/\.xml$/, "");
+  sitemapName = withLeadingSlash(sitemapName);
+  if (sitemapName.startsWith("/__sitemap__/"))
+    sitemapName = sitemapName.replace("/__sitemap__/", "/");
+  if (runtimeConfig.sitemapsPathPrefix) {
+    const prefix = withLeadingSlash(runtimeConfig.sitemapsPathPrefix);
+    if (sitemapName.startsWith(prefix))
+      sitemapName = sitemapName.replace(prefix, "/");
+  }
+  sitemapName = withoutLeadingSlash(withoutTrailingSlash(sitemapName));
+  const chunkInfo = parseChunkInfo(sitemapName, sitemaps, runtimeConfig.defaultSitemapsChunkSize);
+  const isAutoChunked = typeof sitemaps.chunks !== "undefined" && !Number.isNaN(Number(sitemapName));
+  const sitemapExists = sitemapName in sitemaps || chunkInfo.baseSitemapName in sitemaps || isAutoChunked;
+  if (!sitemapExists)
+    throw createError$1({ statusCode: 404, message: `Sitemap "${sitemapName}" not found.` });
+  if (chunkInfo.isChunked && chunkInfo.chunkIndex !== void 0) {
+    const baseSitemap = sitemaps[chunkInfo.baseSitemapName];
+    if (baseSitemap && !baseSitemap.chunks && !baseSitemap._isChunking)
+      throw createError$1({ statusCode: 404, message: `Sitemap "${chunkInfo.baseSitemapName}" does not support chunking.` });
+    if (baseSitemap?._chunkCount !== void 0 && chunkInfo.chunkIndex >= baseSitemap._chunkCount)
+      throw createError$1({ statusCode: 404, message: `Chunk ${chunkInfo.chunkIndex} does not exist for sitemap "${chunkInfo.baseSitemapName}".` });
+  }
+  const sitemapConfig = getSitemapConfig(sitemapName, sitemaps, runtimeConfig.defaultSitemapsChunkSize || void 0);
+  return createSitemap(e, sitemapConfig, runtimeConfig);
+}
+
+const _KsDBVw = defineEventHandler(sitemapXmlEventHandler);
 
 const _T1_d1M = defineEventHandler(async (e) => {
   const nitroApp = useNitroApp();
@@ -8127,7 +10014,7 @@ const _T1_d1M = defineEventHandler(async (e) => {
         }
       });
       if (String(contentWithRobotRules).trim().startsWith("<!DOCTYPE")) {
-        logger.error("Invalid HTML returned from /__robots__/nuxt-content.json, skipping.");
+        logger$1.error("Invalid HTML returned from /__robots__/nuxt-content.json, skipping.");
       } else {
         for (const group of robotsTxtCtx.groups) {
           if (group.userAgent.includes("*")) {
@@ -8167,28 +10054,139 @@ const _AjPtEK = defineEventHandler(async (e) => {
   }
 });
 
+const storage = prefixStorage(useStorage(), "i18n");
+function cachedFunctionI18n(fn, opts) {
+  opts = { maxAge: 1, ...opts };
+  const pending = {};
+  async function get(key, resolver) {
+    const isPending = pending[key];
+    if (!isPending) {
+      pending[key] = Promise.resolve(resolver());
+    }
+    try {
+      return await pending[key];
+    } finally {
+      delete pending[key];
+    }
+  }
+  return async (...args) => {
+    const key = [opts.name, opts.getKey(...args)].join(":").replace(/:\/$/, ":index");
+    const maxAge = opts.maxAge ?? 1;
+    const isCacheable = !opts.shouldBypassCache(...args) && maxAge >= 0;
+    const cache = isCacheable && await storage.getItemRaw(key);
+    if (!cache || cache.ttl < Date.now()) {
+      pending[key] = Promise.resolve(fn(...args));
+      const value = await get(key, () => fn(...args));
+      if (isCacheable) {
+        await storage.setItemRaw(key, { ttl: Date.now() + maxAge * 1e3, value, mtime: Date.now() });
+      }
+      return value;
+    }
+    return cache.value;
+  };
+}
+
+const _getMessages = async (locale) => {
+  return { [locale]: await getLocaleMessagesMerged(locale, localeLoaders[locale]) };
+};
+const _getMessagesCached = cachedFunctionI18n(_getMessages, {
+  name: "messages",
+  maxAge: 60 * 60 * 24,
+  getKey: (locale) => locale,
+  shouldBypassCache: (locale) => !isLocaleCacheable(locale)
+});
+const getMessages = _getMessagesCached;
+const _getMergedMessages = async (locale, fallbackLocales) => {
+  const merged = {};
+  try {
+    if (fallbackLocales.length > 0) {
+      const messages = await Promise.all(fallbackLocales.map(getMessages));
+      for (const message2 of messages) {
+        deepCopy(message2, merged);
+      }
+    }
+    const message = await getMessages(locale);
+    deepCopy(message, merged);
+    return merged;
+  } catch (e) {
+    throw new Error("Failed to merge messages: " + e.message);
+  }
+};
+const getMergedMessages = cachedFunctionI18n(_getMergedMessages, {
+  name: "merged-single",
+  maxAge: 60 * 60 * 24,
+  getKey: (locale, fallbackLocales) => `${locale}-[${[...new Set(fallbackLocales)].sort().join("-")}]`,
+  shouldBypassCache: (locale, fallbackLocales) => !isLocaleWithFallbacksCacheable(locale, fallbackLocales)
+});
+const _getAllMergedMessages = async (locales) => {
+  const merged = {};
+  try {
+    const messages = await Promise.all(locales.map(getMessages));
+    for (const message of messages) {
+      deepCopy(message, merged);
+    }
+    return merged;
+  } catch (e) {
+    throw new Error("Failed to merge messages: " + e.message);
+  }
+};
+cachedFunctionI18n(_getAllMergedMessages, {
+  name: "merged-all",
+  maxAge: 60 * 60 * 24,
+  getKey: (locales) => locales.join("-"),
+  shouldBypassCache: (locales) => !locales.every((locale) => isLocaleCacheable(locale))
+});
+
+const _messagesHandler = defineEventHandler(async (event) => {
+  const locale = getRouterParam(event, "locale");
+  if (!locale) {
+    throw createError$1({ status: 400, message: "Locale not specified." });
+  }
+  const ctx = useI18nContext(event);
+  if (ctx.localeConfigs && locale in ctx.localeConfigs === false) {
+    throw createError$1({ status: 404, message: `Locale '${locale}' not found.` });
+  }
+  const messages = await getMergedMessages(locale, ctx.localeConfigs?.[locale]?.fallbacks ?? []);
+  deepCopy(messages, ctx.messages);
+  return ctx.messages;
+});
+const _cachedMessageLoader = defineCachedFunction(_messagesHandler, {
+  name: "i18n:messages-internal",
+  maxAge: 60 * 60 * 24,
+  getKey: (event) => [getRouterParam(event, "locale") ?? "null", getRouterParam(event, "hash") ?? "null"].join("-"),
+  async shouldBypassCache(event) {
+    const locale = getRouterParam(event, "locale");
+    if (locale == null) {
+      return false;
+    }
+    const ctx = tryUseI18nContext(event) || await initializeI18nContext(event);
+    return !ctx.localeConfigs?.[locale]?.cacheable;
+  }
+});
+const _messagesHandlerCached = defineCachedEventHandler(_cachedMessageLoader, {
+  name: "i18n:messages",
+  maxAge: 10,
+  swr: false,
+  getKey: (event) => [getRouterParam(event, "locale") ?? "null", getRouterParam(event, "hash") ?? "null"].join("-")
+});
+const _VOMy5Q = _messagesHandlerCached;
+
 const _lazy_K4ULKH = () => import('../routes/renderer.mjs').then(function (n) { return n.r; });
-const _lazy_XLfP2d = () => import('../routes/sitemap_index.xml.mjs');
-const _lazy_wijdaV = () => import('../routes/__sitemap__/_sitemap_.xml.mjs');
+const _lazy_pZG47c = () => import('../routes/sitemap_index.xml.mjs');
+const _lazy_tba986 = () => import('../routes/__sitemap__/_sitemap_.xml.mjs');
 
 const handlers = [
   { route: '', handler: _Z76R6g, lazy: false, middleware: true, method: undefined },
   { route: '/__nuxt_error', handler: _lazy_K4ULKH, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
   { route: '', handler: _2YCHvZ, lazy: false, middleware: true, method: undefined },
-  { route: '/sitemap_index.xml', handler: _lazy_XLfP2d, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/index.xml', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/fa-FA.xml', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/en-US.xml', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/index.xml/_payload.json', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/fa-FA.xml/_payload.json', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/en-US.xml/_payload.json', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/**:sitemap', handler: _lazy_wijdaV, lazy: true, middleware: false, method: undefined },
-  { route: '/__sitemap__/style.xsl', handler: _lvXiNL, lazy: false, middleware: false, method: undefined },
-  { route: '/sitemap.xml', handler: _wEyccC, lazy: false, middleware: false, method: undefined },
+  { route: '/sitemap_index.xml', handler: _lazy_pZG47c, lazy: true, middleware: false, method: undefined },
+  { route: '/__sitemap__/**:sitemap', handler: _lazy_tba986, lazy: true, middleware: false, method: undefined },
+  { route: '/__sitemap__/style.xsl', handler: _Qn3hvz, lazy: false, middleware: false, method: undefined },
+  { route: '/sitemap.xml', handler: _KsDBVw, lazy: false, middleware: false, method: undefined },
   { route: '/robots.txt', handler: _T1_d1M, lazy: false, middleware: false, method: undefined },
   { route: '', handler: _AjPtEK, lazy: false, middleware: true, method: undefined },
-  { route: '/sitemap_index.xml/_payload.json', handler: _lazy_K4ULKH, lazy: true, middleware: false, method: undefined },
+  { route: '/_i18n/:hash/:locale/messages.json', handler: _VOMy5Q, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_K4ULKH, lazy: true, middleware: false, method: undefined }
 ];
 
@@ -8272,7 +10270,7 @@ function createNitroApp() {
     if (!input.toString().startsWith("/")) {
       return globalThis.fetch(input, init);
     }
-    return C$1(
+    return C(
       nodeHandler,
       input,
       init
@@ -8605,5 +10603,5 @@ trapUnhandledNodeErrors();
 setupGracefulShutdown(listener, nitroApp);
 const nodeServer = {};
 
-export { $fetch as $, createSitemap as A, sanitizeStatusCode as B, getContext as C, baseURL as D, createHooks as E, getRequestProtocol as F, getRequestHeaders as G, executeAsync as H, klona as I, getRequestHeader as J, destr as K, isEqual as L, setCookie as M, getCookie as N, deleteCookie as O, nodeServer as P, getResponseStatus as a, buildAssetsURL as b, getQuery as c, defineRenderHandler as d, createError$1 as e, getRouteRules as f, getResponseStatusText as g, useNitroApp as h, globalSitemapSources as i, joinURL as j, resolveSitemapEntries as k, defu as l, escapeValueForXml as m, normaliseDate as n, defineEventHandler as o, publicAssetsURL as p, useSimpleSitemapRuntimeConfig as q, resolveSitemapSources as r, sortSitemapUrls as s, useNitroUrlResolvers as t, useRuntimeConfig as u, setHeader as v, wrapSitemapXml as w, withoutLeadingSlash as x, withoutTrailingSlash as y, getRouterParam as z };
+export { $fetch$1 as $, hasProtocol as A, isScriptProtocol as B, withQuery as C, sanitizeStatusCode as D, getContext as E, parsePath as F, parseQuery as G, baseURL as H, defu as I, executeAsync as J, hash$1 as K, getRequestURL as L, getRequestHeader as M, getCookie as N, klona as O, isEqual as P, createDefu as Q, setCookie as R, deleteCookie as S, withoutTrailingSlash as T, isEqual$1 as U, withTrailingSlash as V, nodeServer as W, appRootTag as a, appRootAttrs as b, buildAssetsURL as c, appSpaLoaderTag as d, appSpaLoaderAttrs as e, getResponseStatus as f, getResponseStatusText as g, appId as h, defineRenderHandler as i, appTeleportTag as j, appTeleportAttrs as k, getQuery as l, createError$1 as m, appHead as n, destr as o, publicAssetsURL as p, getRouteRules as q, joinURL as r, useNitroApp as s, defineEventHandler as t, useRuntimeConfig as u, sitemapIndexXmlEventHandler as v, sitemapChildXmlEventHandler as w, parseURL as x, encodePath as y, decodePath as z };
 //# sourceMappingURL=nitro.mjs.map

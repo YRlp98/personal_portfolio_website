@@ -56,42 +56,6 @@ const sources = [
                 ]
             },
             {
-                "loc": "/",
-                "_sitemap": "fa-FA",
-                "alternatives": [
-                    {
-                        "hreflang": "fa-FA",
-                        "href": "/"
-                    },
-                    {
-                        "hreflang": "en-US",
-                        "href": "/en"
-                    },
-                    {
-                        "hreflang": "x-default",
-                        "href": "/"
-                    }
-                ]
-            },
-            {
-                "loc": "/en",
-                "_sitemap": "en-US",
-                "alternatives": [
-                    {
-                        "hreflang": "fa-FA",
-                        "href": "/"
-                    },
-                    {
-                        "hreflang": "en-US",
-                        "href": "/en"
-                    },
-                    {
-                        "hreflang": "x-default",
-                        "href": "/"
-                    }
-                ]
-            },
-            {
                 "loc": "/projects",
                 "_sitemap": "fa-FA",
                 "alternatives": [
@@ -128,36 +92,40 @@ const sources = [
                 ]
             },
             {
-                "loc": "/sitemap.xml",
-                "_sitemap": "fa-FA"
+                "loc": "/",
+                "_sitemap": "fa-FA",
+                "alternatives": [
+                    {
+                        "hreflang": "fa-FA",
+                        "href": "/"
+                    },
+                    {
+                        "hreflang": "en-US",
+                        "href": "/en"
+                    },
+                    {
+                        "hreflang": "x-default",
+                        "href": "/"
+                    }
+                ]
             },
             {
-                "loc": "/en/sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/index-sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/en/index-sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/fa-FA-sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/en/fa-FA-sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/en-US-sitemap.xml",
-                "_sitemap": "fa-FA"
-            },
-            {
-                "loc": "/en/en-US-sitemap.xml",
-                "_sitemap": "fa-FA"
+                "loc": "/en",
+                "_sitemap": "en-US",
+                "alternatives": [
+                    {
+                        "hreflang": "fa-FA",
+                        "href": "/"
+                    },
+                    {
+                        "hreflang": "en-US",
+                        "href": "/en"
+                    },
+                    {
+                        "hreflang": "x-default",
+                        "href": "/"
+                    }
+                ]
             }
         ],
         "sourceType": "app"

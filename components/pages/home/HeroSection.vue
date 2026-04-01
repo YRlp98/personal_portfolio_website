@@ -20,7 +20,6 @@
 <script>
 import ScrollIcon from "../../icons/ScrollIcon.vue";
 import IconBackground from "../../backgrounds/IconBackground.vue";
-import changeDirection from "../../../assets/mixins/changeDirection";
 
 export default {
 	name: "HeroSection",
@@ -28,16 +27,20 @@ export default {
 		ScrollIcon,
 		IconBackground,
 	},
+	setup() {
+		const { changeDirection } = useDirection()
+		const i18n = useI18n()
+		return {
+			changeDirection,
+			activeLang: computed(() => i18n.locale.value),
+		}
+	},
 	data() {
 		return {
 		};
 	},
-	computed: {
-	  activeLang() { return this.$i18n.locale; },
-	},
-	mixins: [changeDirection],
 	mounted() {
-		if (process.client) {
+		if (import.meta.client) {
 			this.$nextTick(() => {
 				this.$gsap.from(this.$refs.heroWelcome.children, {
 					opacity: 0,

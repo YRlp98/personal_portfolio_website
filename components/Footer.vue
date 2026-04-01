@@ -46,26 +46,29 @@
 import SocialNetwork from "~/components/widgets/SocialNetwork.vue";
 import TitleBackground from "~/components/backgrounds/TitleBackground.vue";
 
-import changeDirection from "../assets/mixins/changeDirection";
-import changeAlign from "../assets/mixins/changeAlign";
-
 export default {
   name: "Footer",
   components: {
     SocialNetwork,
     TitleBackground,
   },
+  setup() {
+    const { changeDirection, changeAlign } = useDirection()
+    return {
+      changeDirection,
+      changeAlign,
+    }
+  },
   data() {
     return {
     };
   },
   computed: {
-    activeLang() { return this.$i18n.locale; },
+    activeLang() { return useI18n().locale.value; },
   },
-  mixins: [changeDirection, changeAlign],
   methods: {
     goto(id) {
-      this.$router.push(id);
+      useRouter().push(id);
     },
   },
 };

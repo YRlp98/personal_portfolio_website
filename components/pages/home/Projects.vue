@@ -30,7 +30,6 @@ import TitleBackground from "../../../components/backgrounds/TitleBackground.vue
 import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
 
 import projects from "~/data/projects.json";
-import changeAlign from "../../../assets/mixins/changeAlign";
 
 export default {
   name: "Projects",
@@ -39,15 +38,19 @@ export default {
     TitleBackground,
     TextOnlyButton,
   },
+  setup() {
+    const { changeAlign } = useDirection()
+    const i18n = useI18n()
+    return {
+      changeAlign,
+      activeLang: computed(() => i18n.locale.value),
+    }
+  },
   data() {
     return {
       projects: projects.slice(0, 6),
     };
   },
-  computed: {
-    activeLang() { return this.$i18n.locale; },
-  },
-  mixins: [changeAlign],
 };
 </script>
 

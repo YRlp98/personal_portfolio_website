@@ -10,12 +10,12 @@
     "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
-    "@nuxtjs/i18n": "^9.0.0",
-    "@nuxtjs/robots": "^5.0.0",
-    "@nuxtjs/sitemap": "^6.0.0",
+    "@nuxtjs/i18n": "^10.2.4",
+    "@nuxtjs/robots": "^6.0.0",
+    "@nuxtjs/sitemap": "^8.0.0",
     "caniuse-lite": "^1.0.30001507",
     "gsap": "^3.12.5",
-    "nuxt": "^3.17.0"
+    "nuxt": "^4.4.0"
   },
   "devDependencies": {
     "push-dir": "^0.4.1",

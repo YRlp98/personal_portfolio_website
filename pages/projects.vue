@@ -23,12 +23,15 @@
 
 <script>
 import ProjectCard from "~/components/widgets/ProjectCard.vue";
-import changeDirection from "../assets/mixins/changeDirection";
 import projects from "~/data/projects.json";
 
 export default {
+  name: "projects",
+  components: { ProjectCard },
   setup() {
     const route = useRoute()
+    const { changeDirection } = useDirection()
+    const i18n = useI18n()
     const canonicalUrl = computed(() => 'https://yrlp.ir' + route.path)
 
     useHead({
@@ -43,17 +46,19 @@ export default {
         { rel: 'canonical', href: () => canonicalUrl.value },
       ],
     })
+
+    return {
+      changeDirection,
+      activeLang: computed(() => i18n.locale.value),
+    }
   },
 
-  name: "projects",
-  components: { ProjectCard },
   data() {
     return {
       projects,
       activeTag: "All",
     };
   },
-  mixins: [changeDirection],
   methods: {
     onClick(tag) {
       this.activeTag = tag;
@@ -65,9 +70,6 @@ export default {
     },
   },
   computed: {
-    activeLang() {
-      return this.$i18n.locale;
-    },
     tags() {
       return [
         { key: "All", name: this.$t("All"), color: "#ffffff" },
