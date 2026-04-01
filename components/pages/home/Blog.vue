@@ -30,7 +30,6 @@ import BlogCard from "../../widgets/BlogCard.vue";
 import TitleBackground from "../../../components/backgrounds/TitleBackground.vue";
 import TextOnlyButton from "../../widgets/TextOnlyButton.vue";
 
-import changeAlign from "../../../assets/mixins/changeAlign";
 import blogs from "~/data/blogs.json";
 
 export default {
@@ -40,15 +39,19 @@ export default {
     TitleBackground,
     TextOnlyButton,
   },
+  setup() {
+    const { changeAlign } = useDirection()
+    const i18n = useI18n()
+    return {
+      changeAlign,
+      activeLang: computed(() => i18n.locale.value),
+    }
+  },
   data() {
     return {
       blogs: blogs.slice(0, 3),
     };
   },
-  computed: {
-    activeLang() { return this.$i18n.locale; },
-  },
-  mixins: [changeAlign],
 };
 </script>
 

@@ -125,8 +125,6 @@ import SkillProgress from "./SkillProgress.vue";
 import SkillSimple from "./SkillSimple.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
 
-import changeAlign from "../../../assets/mixins/changeAlign";
-
 export default {
   name: "Skills",
   components: {
@@ -134,6 +132,14 @@ export default {
     SkillProgress,
     SkillSimple,
     TitleBackground,
+  },
+  setup() {
+    const { changeAlign } = useDirection()
+    const i18n = useI18n()
+    return {
+      changeAlign,
+      activeLang: computed(() => i18n.locale.value),
+    }
   },
   data() {
     return {
@@ -235,10 +241,6 @@ export default {
       ],
     };
   },
-  computed: {
-    activeLang() { return this.$i18n.locale; },
-  },
-  mixins: [changeAlign],
 };
 </script>
 

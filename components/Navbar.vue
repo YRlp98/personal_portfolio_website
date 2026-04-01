@@ -53,20 +53,20 @@ export default {
   },
   methods: {
     goto(id) {
-      this.$router.push(id);
+      useRouter().push(id);
     },
     handleScroll() {
       this.isScrolled = window.scrollY > 10;
     },
   },
   mounted() {
-    if (process.client) {
+    if (import.meta.client) {
       this.handleScroll();
       window.addEventListener("scroll", this.handleScroll, { passive: true });
     }
   },
   beforeUnmount() {
-    if (process.client) {
+    if (import.meta.client) {
       window.removeEventListener("scroll", this.handleScroll);
     }
   },

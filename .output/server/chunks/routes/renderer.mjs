@@ -1,11 +1,10 @@
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'vue-bundle-renderer/runtime';
-import { b as buildAssetsURL, u as useRuntimeConfig, g as getResponseStatusText, a as getResponseStatus, d as defineRenderHandler, p as publicAssetsURL, c as getQuery, e as createError, f as getRouteRules, j as joinURL, h as useNitroApp } from '../nitro/nitro.mjs';
+import { a as appRootTag, b as appRootAttrs, c as buildAssetsURL, d as appSpaLoaderTag, e as appSpaLoaderAttrs, u as useRuntimeConfig, g as getResponseStatusText, f as getResponseStatus, h as appId, i as defineRenderHandler, p as publicAssetsURL, j as appTeleportTag, k as appTeleportAttrs, l as getQuery, m as createError, n as appHead, o as destr, q as getRouteRules, r as joinURL, s as useNitroApp } from '../nitro/nitro.mjs';
 import { renderToString } from 'vue/server-renderer';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'unhead/server';
 import { stringify, uneval } from 'devalue';
 import { walkResolver } from 'unhead/utils';
 import { isRef, toValue, hasInjectionContext, inject, ref, watchEffect, getCurrentInstance, onBeforeUnmount, onDeactivated, onActivated } from 'vue';
-import { DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin } from 'unhead/plugins';
 
 const VueResolver = (_, value) => {
   return isRef(value) ? toValue(value) : value;
@@ -74,17 +73,8 @@ function createHead(options = {}) {
   return head;
 }
 
-const appHead = {"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"name":"description","content":"Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند."},{"name":"format-detection","content":"telephone=no"},{"property":"og:title","content":"Yousef Roshandel | Front-End Developer & UI/UX Designer"},{"property":"og:description","content":"Yousef Roshandel is a passionate Front-End Developer and UI/UX Designer creating modern, user-friendly websites. یوسف روشندل، توسعه‌دهنده فرانت‌اند و طراح UI/UX با اشتیاق برای خلق تجربه‌های دیجیتال مدرن و کاربرپسند."},{"property":"og:url","content":"https://yrlp.ir"},{"name":"twitter:card","content":"summary_large_image"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"stylesheet","href":"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css","integrity":"sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==","crossorigin":"anonymous","referrerpolicy":"no-referrer"}],"style":[],"script":[],"noscript":[],"title":"Yousef Roshandel | Front-End Developer & UI/UX Designer","htmlAttrs":{"lang":"fa"}};
-
-const appRootTag = "div";
-
-const appRootAttrs = {"id":"__nuxt"};
-
-const appTeleportTag = "div";
-
-const appTeleportAttrs = {"id":"teleports"};
-
-const appId = "nuxt-app";
+const NUXT_PAYLOAD_INLINE = false;
+const NUXT_RUNTIME_PAYLOAD_EXTRACTION = false;
 
 const APP_ROOT_OPEN_TAG = `<${appRootTag}${propsToString(appRootAttrs)}>`;
 const APP_ROOT_CLOSE_TAG = `</${appRootTag}>`;
@@ -120,7 +110,11 @@ const getSPARenderer = lazyCachedFunction(async () => {
 	// @ts-expect-error virtual file
 	const spaTemplate = await import('../virtual/_virtual_spa-template.mjs').then((r) => r.template).catch(() => "").then((r) => {
 		{
-			return APP_ROOT_OPEN_TAG + r + APP_ROOT_CLOSE_TAG;
+			const APP_SPA_LOADER_OPEN_TAG = `<${appSpaLoaderTag}${propsToString(appSpaLoaderAttrs)}>`;
+			const APP_SPA_LOADER_CLOSE_TAG = `</${appSpaLoaderTag}>`;
+			const appTemplate = APP_ROOT_OPEN_TAG + APP_ROOT_CLOSE_TAG;
+			const loaderTemplate = r ? APP_SPA_LOADER_OPEN_TAG + r + APP_SPA_LOADER_CLOSE_TAG : "";
+			return appTemplate + loaderTemplate;
 		}
 	});
 	// Create SPA renderer and cache the result for all requests
@@ -216,8 +210,6 @@ function splitPayload(ssrContext) {
 
 const unheadOptions = {
   disableDefaults: true,
-  disableCapoSorting: false,
-  plugins: [DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin],
 };
 
 function createSSRContext(event) {
@@ -254,9 +246,9 @@ async function renderInlineStyles(usedModules) {
 	return Array.from(inlinedStyles).map((style) => ({ innerHTML: style }));
 }
 
-const renderSSRHeadOptions = {"omitLineBreaks":false};
+const renderSSRHeadOptions = {"omitLineBreaks":true};
 
-const entryIds = ["node_modules/nuxt/dist/app/entry.js"];
+const entryIds = [];
 
 // @ts-expect-error private property consumed by vite-generated url helpers
 globalThis.__buildAssetsURL = buildAssetsURL;
@@ -290,12 +282,21 @@ const handler = defineRenderHandler(async (event) => {
 			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			ssrError.status = ssrError.statusCode = Number.parseInt(status);
 		}
+		if (typeof ssrError.data === "string") {
+			try {
+				ssrError.data = destr(ssrError.data);
+			} catch {}
+		}
 		setSSRError(ssrContext, ssrError);
 	}
 	// Get route options (for `ssr: false`, `isr`, `cache` and `noScripts`)
 	const routeOptions = getRouteRules(event);
 	// Whether we are prerendering route or using ISR/SWR caching
-	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && ((routeOptions.isr || routeOptions.cache));
+	const _PAYLOAD_EXTRACTION = !ssrContext.noSSR && (NUXT_RUNTIME_PAYLOAD_EXTRACTION);
+	// When NUXT_PAYLOAD_INLINE is true (payloadExtraction: 'client'), we inline the full payload
+	// in the HTML to avoid a separate _payload.json fetch on initial load (which would trigger a
+	// second render or lambda invocation). The _payload.json endpoint still works for client-side nav.
+	const _PAYLOAD_INLINE = !_PAYLOAD_EXTRACTION || NUXT_PAYLOAD_INLINE;
 	const isRenderingPayload = (_PAYLOAD_EXTRACTION || false) && PAYLOAD_URL_RE.test(ssrContext.url);
 	if (isRenderingPayload) {
 		const url = ssrContext.url.substring(0, ssrContext.url.lastIndexOf("/")) || "/";
@@ -348,25 +349,14 @@ const handler = defineRenderHandler(async (event) => {
 	// Setup head
 	const { styles, scripts } = getRequestDependencies(ssrContext, renderer.rendererContext);
 	// 1. Preload payloads and app manifest
-	if (_PAYLOAD_EXTRACTION && !NO_SCRIPTS) {
+	// Skip preload when inlining full payload in HTML (no separate fetch needed for initial load)
+	if (_PAYLOAD_EXTRACTION && !_PAYLOAD_INLINE && !NO_SCRIPTS) {
 		ssrContext.head.push({ link: [{
 			rel: "preload",
 			as: "fetch",
 			crossorigin: "anonymous",
 			href: payloadURL
 		} ] }, headEntryOptions);
-	}
-	if (ssrContext["~preloadManifest"] && !NO_SCRIPTS) {
-		ssrContext.head.push({ link: [{
-			rel: "preload",
-			as: "fetch",
-			fetchpriority: "low",
-			crossorigin: "anonymous",
-			href: buildAssetsURL(`builds/meta/${ssrContext.runtimeConfig.app.buildId}.json`)
-		}] }, {
-			...headEntryOptions,
-			tagPriority: "low"
-		});
 	}
 	// 2. Styles
 	if (inlinedStyles.length) {
@@ -395,17 +385,16 @@ const handler = defineRenderHandler(async (event) => {
 				ssrContext.modules?.delete(id);
 			}
 		}
-		// TODO: add priorities based on Capo
 		ssrContext.head.push({ link: getPreloadLinks(ssrContext, renderer.rendererContext) }, headEntryOptions);
 		ssrContext.head.push({ link: getPrefetchLinks(ssrContext, renderer.rendererContext) }, headEntryOptions);
 		// 5. Payloads
-		ssrContext.head.push({ script: _PAYLOAD_EXTRACTION ? renderPayloadJsonScript({
+		ssrContext.head.push({ script: _PAYLOAD_INLINE ? renderPayloadJsonScript({
+			ssrContext,
+			data: ssrContext.payload
+		})  : renderPayloadJsonScript({
 			ssrContext,
 			data: splitPayload(ssrContext).initial,
 			src: payloadURL
-		})  : renderPayloadJsonScript({
-			ssrContext,
-			data: ssrContext.payload
 		})  }, {
 			...headEntryOptions,
 			tagPosition: "bodyClose",

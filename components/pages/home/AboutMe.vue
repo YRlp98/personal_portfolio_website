@@ -21,8 +21,6 @@
 import AboutMeInfo from "./AboutMeInfo.vue";
 import SocialNetwork from "../../widgets/SocialNetwork.vue";
 import TitleBackground from "../../backgrounds/TitleBackground.vue";
-import changeDirection from "../../../assets/mixins/changeDirection";
-import changeAlign from "../../../assets/mixins/changeAlign";
 
 export default {
 	name: "AboutMe",
@@ -31,17 +29,22 @@ export default {
 		SocialNetwork,
 		TitleBackground,
 	},
+	setup() {
+		const { changeDirection, changeAlign } = useDirection()
+		const i18n = useI18n()
+		return {
+			changeDirection,
+			changeAlign,
+			activeLang: computed(() => i18n.locale.value),
+		}
+	},
 	data() {
 		return {
 		};
 	},
-	computed: {
-	  activeLang() { return this.$i18n.locale; },
-	},
-	mixins: [changeDirection, changeAlign],
 
 	mounted() {
-		if (process.client) {
+		if (import.meta.client) {
 			this.$nextTick(() => {
 				this.$gsap.from(".aboutMe-avatar", {
 					opacity: 0,
